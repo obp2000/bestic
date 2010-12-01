@@ -4,23 +4,19 @@ module ApplicationHelper
  
   def content( opts = {} )
     opts1 = lambda { [ ( self[:object].class.content rescue false ) || self[:objects].first.class.content,
-                                     ( self[:object].class.partial rescue false ) || self[:objects].first.class.partial,
-                                    self[:duration] || DURATION ] }
-    content1, partial, duration = opts1.bind( opts )[]
-    with_options :partial => partial, :object => opts[:object], :locals => { :objects => opts[:objects] } do |with_opts|
+                                     ( self[:object].class.partial rescue false ) || self[:objects].first.class.partial ] }
+    content1, partial = opts1.bind( opts )[]
+    with_options :partial => partial, :object => opts[:object], :complete => "attach_js",
+            :locals => { :objects => opts[:objects] } do |with_opts|
       if ( opts[:object].class.insert_html rescue false )
         action :remove, content1
         with_opts.insert_html :after, "tabs"
       else
         with_opts.action :replace_html, content1
       end
-      delay( duration ) do
-        call("attach_js")
-        call("attach_mColorPicker") if opts[:object].class  == Colour 
-        show_notice
-      end
-      check_cart_links      
     end
+    show_notice
+    check_cart_links  
   end 
  
   def show_notice( opts = {} )
@@ -67,7 +63,8 @@ module ApplicationHelper
     delay( DURATION ) do    
       send action1, content, opts
       visual_effect :appear, content, :duration => DURATION unless action1 == :remove
-      call("attach_yoxview")     
+      call("attach_yoxview")
+      call( "attach_mColorPicker" ) if opts[:object].class  == Colour           
     end
   end
   
@@ -83,6 +80,7 @@ module ApplicationHelper
         end
         with_partial.replace *opts[:object].create_or_update_replace_args unless opts[:object].class == Photo rescue nil      
       end
+      call( "attach_mColorPicker" ) if opts[:object].class  == Colour       
     end
     replace *opts[:object].create_or_update_replace_form_args rescue nil    
     check_cart_totals( opts )
