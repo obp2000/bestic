@@ -1,0 +1,18 @@
+- remote_form_for contact do |f|
+  = f.error_messages
+  %div
+    = f.label( :name, Contact.name_rus.colon )
+    = f.text_field :name
+  %div
+    = f.label( :email, Contact.email_rus.colon )
+    = f.text_field :email
+  %div
+    = f.label( :phone, Contact.phone_rus.colon )
+    = f.text_field :phone
+  %div
+    = f.label( :icq, Contact.icq_rus.colon )
+    = f.text_field :icq    
+  %div
+    = f.label( :address, Contact.address_rus.colon )
+    = f.text_area :address, :rows => 3
+    = image_submit_tag Contact.save_image, :title => Contact.save_title

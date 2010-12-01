@@ -1,0 +1,6 @@
+.ui-widget-content{ :id => object.class.list_tag }
+  = link_to_close_window object
+  = will_paginate objects rescue nil
+  = render :partial => object.class.new_partial, :object => object unless object.class == Contact
+  = render :partial => object.class.edit_partial, :collection => objects
+  = draggable_element object.class.list_tag

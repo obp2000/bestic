@@ -1,0 +1,378 @@
+$body-color: #c74809
+$body-background-color: #FFF9E5
+
+$tr-hover-background-color: #fedd70
+
+$a-link-visited-color: #0074c7
+$a-hover-color: white   
+$a-hover-background-color: #ccc
+$a-active-color: #EEB420
+$a-focus-color: #710909
+$a-focus-background-color: #fedd70
+
+$input-color: #00008B
+$input-background-color: #E3F2F7
+$input-border-color: #00008B 
+
+$input-submit-color: #00008B
+$input-submit-background-color: #ADD8E6
+$input-submit-border-color: #00008B
+  
+$input-focus-border-color: red  
+
+$header-border-bottom-color: #c74809
+$header-h3-color: #c74809
+
+$shadow-color: grey
+
+$cart_hover-cart_items-div-color: #8f8e8c
+$cart_hover-cart_items-div-border-color: #a9cf23
+
+$catalog_items-img-border-color: #00a7ec
+
+$table-td-th-border-color: #c74809
+
+$table-tr-even-color: #00FFEE
+
+$show-img-border-color: #00a7ec
+
+$legend-color: #00008B
+
+$errorExplanation-color: red
+$errorExplanation-background-color: #f0f0f0
+
+$body-background-image: "/stylesheets/images/ui-bg_highlight-soft_100_feeebd_1x100_h.png"
+$header-background-image: "/stylesheets/images/ui-bg_highlight-soft_100_feeebd_1x100.png"
+$input-submit-hover-background-image: "/images/package-installed-updated.png"
+$body-font-family: Verdana, Geneva, Arial, Helvetica, sans-serif
+
+$wrapper-width: 98%
+$nav-top: 90px
+$nav-left: 0
+$nav-width: 230px
+$body-font-size: 80%
+$body-line-height: 1.6em
+$content-margin-left: 245px
+$content-margin-right: 0
+$content-width: 1200px
+$input-width: 280px
+$input-submit-height: 30px
+$margin: 0.2em
+$padding: 0.3em
+$catalog_item-width: 470px
+$catalog_item-height: 130px
+$catalog_item-margin: 10px
+$catalog_item-img-border-color: $show-img-border-color
+$catalog_item-thumbs-a-max-width: 120px
+$catalog_item-form-max-width: 100px
+$catalog_item-blurb-max-width: 140px
+$catalog_item-form-line-height: 1.2em
+$catalog_item-colours-sizes-margin-top: -2px
+$header-padding-top: 10px
+$header-height: 60px
+$header-border-bottom-width: 4px
+$errorExplanation-width: 30em
+$table-margin-right: 10px
+$edit-label-width: 60px
+$new_order-label-width: 200px
+$thumbs-font-size: 0.8em
+$thumbs-line-height: 1em
+$input-text-item_price-width: 50px
+$textarea-forum_post_body-width: 600px
+$textarea-photo_comment-width: 120px
+$input-submit-padding-left: 2em
+$input-radio-checkbox-margin-right: -3px
+$header-form-margin-right: 80px
+$form_blurb-margin-top: 135px
+$fieldset-margin-bottom: 1em
+$edit-top-left: 2em
+$notice-top-left: 40%
+$nav-h3-img-margin-left: 15px
+$pagination-font-size: 120%
+$pagination-padding-top: 10px
+$forum_post-a-margin-right: 20px
+$notice-padding: 1em
+
+body
+  font: $body-font-size $body-font-family
+  line:
+    height: $body-line-height
+  color: $body-color
+  background:
+    color: $body-background-color
+    image: url($body-background-image)
+    repeat: repeat-y
+    
+h1
+  text-align: center
+  
+table
+  border: 1px solid $table-td-th-border-color
+  th
+    &:hover
+      cursor: default
+  tr
+    &:hover
+      cursor: pointer
+    a
+      display: block
+  label
+    font:
+      weight: bold
+  
+td, th
+  border: 1px solid $table-td-th-border-color
+  text-align: left
+tr
+  &:hover
+    background-color: $tr-hover-background-color
+  &:nth_child(even)
+    color: $table-tr-even-color  
+ 
+a
+  &:link, &:visited
+    color: $a-link-visited-color
+    background:
+      color: transparent
+    text-decoration: none
+  &:hover
+    color: $a-hover-color
+    background:
+      color: $a-hover-background-color
+  &:active
+    color: $a-active-color
+  &:focus
+    color: $a-focus-color
+    background:
+      color: $a-focus-background-color
+  padding:
+    left: 0
+  margin:
+    left: 0 
+  
+fieldset
+  margin:
+    bottom: $fieldset-margin-bottom
+
+input[type="text"], textarea
+  color: $input-color
+  background:
+    color: $input-background-color
+  border: 1px inset $input-border-color
+  width: $input-width
+  &:focus
+    border: 1px solid $input-focus-border-color
+  &#item_price
+    width: $input-text-item_price-width
+  &#forum_post_body
+    width: $textarea-forum_post_body-width
+  &.photo_comment
+    width: $textarea-photo_comment-width
+
+input[type="submit"]
+  padding:
+    left: $input-submit-padding-left
+  color: $input-submit-color
+  border: 1px outset $input-submit-border-color
+  height: $input-submit-height
+  &:hover
+    cursor: pointer
+  &:hover
+    background:
+      image: url($input-submit-hover-background-image)
+      repeat: no-repeat  
+
+input[type="radio"], input[type="checkbox"]
+  margin:
+    right: $input-radio-checkbox-margin-right
+    left: 0
+  padding:
+    left: 0
+
+img, form *, h2, h3, #cart *
+  margin: $margin
+  
+form, fieldset, td, th, dl, #cart
+  padding: $padding
+
+img
+  padding:
+    bottom: 0
+  margin:
+    bottom: 0
+
+.align_right
+  text-align: right
+
+#wrapper
+  position: relative
+  width: $wrapper-width
+  margin:
+    right: auto
+    left: auto
+
+#header
+  font:
+    family: "Comic Sans MS"
+  padding:
+    top: $header-padding-top
+  border:
+    bottom: $header-border-bottom-width solid $header-border-bottom-color
+  height: $header-height
+  form, h3, h5, >a, >img
+    float: left
+  form, >a
+    margin:
+      right: $header-form-margin-right
+  h3
+    text:
+      align: right
+    font:
+      style: italic
+  h5
+    a
+      color: red
+
+#content
+  clear: both
+  margin:
+    left: $content-margin-left
+    right: $content-margin-right
+
+#nav
+  position: absolute
+  top: $nav-top
+  left: $nav-left
+  width: $nav-width
+  h3
+    img
+      margin:
+        left: $nav-h3-img-margin-left
+
+.category
+  display: block
+
+#form_categories .category
+  display: inline
+    
+.cart_item
+  padding: $padding
+  font:
+    size: small
+
+.cart_hover
+  .cart_item
+    border:
+      color: $cart_hover-cart_items-div-border-color
+    color: $cart_hover-cart_items-div-color
+
+.catalog_item
+  float: left
+  width: $catalog_item-width
+  height: $catalog_item-height
+  margin:
+    top: $catalog_item-margin
+    right: $catalog_item-margin 
+  padding: $padding
+  border:
+    width: 0
+  a
+    display: block
+  form
+    float: left
+    max-width: $catalog_item-form-max-width
+    padding: 0
+    line:
+      height: $catalog_item-form-line-height
+    .colours, .sizes
+      margin:
+        top: $catalog_item-colours-sizes-margin-top
+  .blurb
+    float: left
+    max-width: $catalog_item-blurb-max-width
+
+.thumbs
+  float: left
+  a
+    float: left
+    max-width: $catalog_item-thumbs-a-max-width
+    img
+      border: 1px solid $catalog_item-img-border-color
+      display: block
+    font:
+      size: $thumbs-font-size
+    line:
+      height: $thumbs-line-height
+  
+.pagination
+  clear: both
+  padding:
+    top: $pagination-padding-top
+  font:
+    size: $pagination-font-size
+    weight: bold
+
+.clear
+  clear: both
+
+.textile_toolbar, .textile_area
+  display: inline
+
+table, #item_content, #order_details
+  float: left
+  margin:
+    right: $table-margin-right
+
+#new_forum_post, .new_processed_order
+  label
+    float: left
+    width: $new_order-label-width
+    
+.forum_post
+  a
+    margin:
+      right: $forum_post-a-margin-right
+
+#colours, #sizes, #categories, #photos, #contacts
+  position: absolute
+  top: $edit-top-left
+  left: $edit-top-left
+  z-index: 9
+  div
+    border:
+      width: 0
+  label
+    float: left
+    width: $edit-label-width
+
+.photo
+  float: left
+
+#form_blurb
+  margin:
+    top: $form_blurb-margin-top
+
+#order_processed
+  color: red
+
+#upload_frame
+  display: none
+
+#notice
+  font:
+    weight: bolder
+  padding: $notice-padding
+  position: fixed
+  top: $notice-top-left
+  left: $notice-top-left
+  z-index: 10
+
+.fieldWithErrors
+  border: 1px solid red
+
+#errorExplanation
+  color: $errorExplanation-color
+  width: $errorExplanation-width
+  h2, p
+    display: none
+ 

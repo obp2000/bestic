@@ -1,0 +1,28 @@
+%h3 Новый администратор
+- form_for @user, :url => users_path do |f|
+  = error_messages_for :user
+  %p
+    = f.label( :login, User.login_rus )
+    %br
+    = f.text_field :login
+  %p
+    = f.label( :email, User.email_rus )
+    %br= f.text_field :email
+  %p
+    = f.label( :last_name, User.last_name_rus )
+    %br
+    = f.text_field :last_name
+  %p
+    = f.label( :first_name, User.first_name_rus )
+    %br
+    = f.text_field :first_name
+  %p
+    = f.label( :password, User.password_rus )
+    %br
+    = f.password_field :password
+  %p
+    = f.label( :password_confirmation, User.password_confirmation_rus )
+    %br
+    = f.password_field :password_confirmation
+  %p= submit_tag User.submit_text
+  

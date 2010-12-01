@@ -1,0 +1,5 @@
+%tr
+  %td= h category.name if category.name
+  %td= h category.season.name
+  %td= link_to 'Редактировать', edit_category_path(category)
+  %td= link_to 'Удалить', category, :confirm => 'Удалить вид одежды?', :method => :delete

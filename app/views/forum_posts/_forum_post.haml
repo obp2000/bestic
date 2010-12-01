@@ -1,0 +1,7 @@
+%div[ forum_post ]{ :style => forum_post.style } 
+  %b= link_to_remote h( forum_post.subject ), :url => forum_post_path( forum_post ), :method => :get
+  автор:
+  = h forum_post.name
+  &middot;&middot;&middot;
+  = date_time_rus forum_post.created_at
+  = link_to_delete forum_post if self.current_user

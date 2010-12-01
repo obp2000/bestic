@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>YoxView demo #2 - customizing with options</title>
+		<link rel="Stylesheet" type="text/css" href="style.css" />
+		<script type="text/javascript" src="javascripts/yoxview/yoxview-init.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#yoxview").yoxview({
+					lang: "ja",
+					backgroundColor: "#000099",
+					autoPlay: true
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div>
+			<h1>YoxView demo #2 - customizing with options</h1>
+			<p>In this example, three options were used, to change the behavior and appearance of YoxView:
+				<ul>
+					<li><strong>lang: &quot;ja&quot;</strong> - display labels and help in Japanese.</li>
+					<li><strong>backgroundColor: &quot;#000099&quot;</strong> - YoxView's background is blue rather than the usual black.</li>
+					<li><strong>autoPlay: true</strong> - YoxView opens in slideshow mode.</li>
+				</ul>
+			</p>
+			<br />
+			Click on the thumbnails to open YoxView:
+			<div id="yoxview">
+				<a href="photos/0000/0067/SV100032.JPG"><img src="/photos/0000/0067/SV100032_small.JPG?1276365329" alt="Sv100032_small"></a>
+
+			</div>
+			<hr />
+			<br />
+			The full options list can be found in the <a href="http://www.yoxigen.com/yoxview/usage.aspx#options">YoxView usage page</a>.
+		</div>
+	</body>
+</html>

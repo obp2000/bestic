@@ -1,0 +1,2 @@
+#page.content :content => "item_content", :partial => "show"
+page.content @object.show_options

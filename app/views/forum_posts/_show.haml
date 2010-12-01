@@ -1,0 +1,10 @@
+%fieldset.ui-widget-content  
+  %b= ForumPost.subject_rus.colon
+  = h @object.subject
+  %b= ForumPost.name_rus.colon
+  = h @object.name
+  %br
+  %b= ForumPost.body_rus.colon 
+  = h @object.body
+  %br
+  = link_to_reply_to @object

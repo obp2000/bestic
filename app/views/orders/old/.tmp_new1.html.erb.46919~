@@ -1,0 +1,60 @@
+<%= error_messages_for 'order' %> 
+<p><em>Содержимое Вашего заказа можно увидеть в Корзине справа.</em></p>
+<% form_for @order, :url => order_path do |form| %> 
+
+  <fieldset> 
+    <legend>Контактная информация</legend>
+	 
+    <p><label for="order_email">E-mail</label><br/> 
+    <%= form.text_field :email %></p>
+	 
+    <p><label for="order_phone_number">Контактный телефон</label><br/> 
+    <%= form.text_field :phone_number %></p>
+  </fieldset> 
+  
+  <fieldset> 
+    <legend>Адрес доставки</legend>
+	 
+    <p><label for="order_ship_to_first_name">Имя</label><br/> 
+    <%= form.text_field :ship_to_first_name %></p>
+	
+    <p><label for="order_ship_to_last_name">Фамилия</label><br/> 
+    <%= form.text_field :ship_to_last_name %></p>
+	
+    <p><label for="order_ship_to_address">Адрес</label><br/> 
+    <%= form.text_field :ship_to_address %></p>
+	
+    <p><label for="order_ship_to_city">Город</label><br/> 
+    <%= form.text_field :ship_to_city %></p>
+	
+    <p><label for="order_ship_to_postal_code">Почтовый индекс</label><br/> 
+    <%= form.text_field :ship_to_postal_code %></p>
+	 
+    <p><label for="order_ship_to_country">Страна</label><br/>
+	<%= country_select( :order, :ship_to_country, 'Russian Federation' ) %></p> 
+  </fieldset>
+  
+  <fieldset>
+    <legend>Платёжная информация</legend> 
+    <p><label for="order_card_type">Тип кредитной карты</label><br/>
+	<%= form.select( :card_type,
+				  [ "Visa", "MasterCard", "Discover", "Maestro" ], :selected => @order.card_type ) %></p>
+				   
+    <p><label for="order_card_expiration_month">Срок действия кредитной карты</label><br/> 
+	<%= form.select( :card_expiration_month,
+				  %w(1 2 3 4 5 6 7 8 9 10 11 12), :selected => @order.card_expiration_month ) %> / 
+	
+	<%= form.select( :card_expiration_year,
+				  %w(2006 2007 2008 2009 2010 2011), :selected => @order.card_expiration_year ) %></p> 
+    
+	<p><label for="order_card_number">Номер кредитной карты</label><br/> 
+    <%= form.text_field :card_number %></p> 
+    
+	<p><label for="order_card_verification_value"><abbr title="Card Verification Value">CVV</abbr> /
+	<abbr title="Card Validation Check">CVC</abbr></label><br/> 
+      <%= form.text_field :card_verification_value %></p> 
+  </fieldset> 
+    
+  <p><%= submit_tag "Разместить заказ" %></p>
+<% end %> 
+  

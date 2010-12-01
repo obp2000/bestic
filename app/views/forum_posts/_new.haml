@@ -1,0 +1,15 @@
+- remote_form_for @object, :html => { :class => "ui-widget-content" } do |f|
+  = f.error_messages
+  = f.hidden_field :parent_id
+  %p
+    = f.label( :name, ForumPost.name_rus.colon )
+    = f.text_field :name
+  %p
+    = f.label( :subject, ForumPost.subject_rus.colon )
+    = f.text_field :subject, :size => 100
+  %p
+    = f.label( :body, ForumPost.body_rus.colon )
+    %br
+    = f.text_area :body, :rows => 5
+    = submit_form f, ForumPost.new_submit_text
+    

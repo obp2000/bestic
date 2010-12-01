@@ -1,0 +1,7 @@
+#order_notice.ui-widget-content.ui-corner-all
+  %h3= flash[:notice]
+  %div
+    В ближайшее время наши менеджеры свяжутся с Вами.
+    %br
+    В случае необходимости используйте <b>номер заказа
+    = session[:order_id].to_s + ".</b>"

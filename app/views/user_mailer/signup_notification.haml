@@ -1,0 +1,7 @@
+Ваша учётная запись успешно создана.
+Имя пользователя:
+= @user.login
+Пароль:
+= @user.password
+Для активации Вашей учётной записи перейдите, пожалуйста, по этой ссылке:
+= url_for(:host => 'localhost:3001', :controller => "users", :action => "activate", :id => @user.activation_code)

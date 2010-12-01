@@ -1,0 +1,15 @@
+#link_to_new_order_form
+  = render :partial => "carts/link_to_new_order_form"
+%div
+  %b
+    = ITOGO.colon
+    %span#cart_total_items
+      = session.cart.total_items
+    = "#{SHT} / "
+    %span#cart_total_sum
+      = roubles session.cart.total_sum
+    = "#{RUB}"
+#cart_items
+  = render :partial => 'cart_items/cart_item', :collection => session.cart.cart_items
+#link_to_clear_cart
+  = render :partial => "carts/link_to_clear_cart"

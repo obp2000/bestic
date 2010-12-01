@@ -1,0 +1,32 @@
+!!! Strict
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => "text/html; charset=UTF-8"}
+    %title= ADMIN_TITLE
+    
+    = javascript_include_tag items_javascripts
+    = stylesheet_link_tag items_stylesheets
+      
+  %body
+    #header
+      %h1 Администрирование магазина BEST&C
+      
+    #tabs.ui-tabs
+      %ul.ui-tabs-nav.ui-widget-header.ui-helper-clearfix
+        - with_options( :method => :get ) do |get|
+          %li.ui-state-default
+            = get.link_to_remote Order.class_name_rus_cap.pluralize, :url => orders_path
+          %li.ui-state-default
+            = get.link_to_remote Item.class_name_rus_cap.pluralize, :url => items_path
+          %li.ui-state-default
+            = get.link_to_remote Contact.class_name_rus_cap, :url => contacts_path
+          %li.ui-state-default
+            = get.link_to "Назад в магазин", catalog_items_path
+          %li.ui-state-default
+            = get.link_to User.logout_text, logout_path
+    
+    #content{ :style => "margin-left: 10px;" }
+      = yield
+
+    %iframe#upload_frame{ :name => "upload_frame" }
+          

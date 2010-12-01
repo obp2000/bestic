@@ -1,0 +1,9 @@
+%tr
+  - @size11 = Size.find(size)
+  %td
+    - remote_form_for :size, :url => size_path(@size = Size.find(size)), :method => :put do |f|
+      = f.error_messages
+      = f.text_field :name
+      = f.submit "Обновить"
+  %td= link_to_remote 'Удалить', :url => size_path(size), :confirm => 'Удалить размер?', :method => :delete
+

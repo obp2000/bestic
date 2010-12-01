@@ -1,0 +1,5 @@
+%span{ :style => "margin-left: -2px" }
+  - colours_array = colour.html_code.split
+  - colours_array.each_with_index do |colour1, i|
+    - style = "background-color: #{colour1}; border: 1px solid black; margin-left: -#{i == 0 ? 0 : 6}px; margin-right: 0;"
+    %span{ :title => colour.name, :style => style }= "&nbsp;&nbsp;" * ( colours_array.size > 1 ? 1 : 2 ) 

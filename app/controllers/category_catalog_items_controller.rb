@@ -1,0 +1,3 @@
+class CategoryCatalogItemsController < CatalogItemsController
+
+end

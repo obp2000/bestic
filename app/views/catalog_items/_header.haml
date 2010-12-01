@@ -1,0 +1,13 @@
+- form_remote_tag :url => search_catalog_items_path, :html => { :id => "search_box" } do
+  = text_field_tag :q, "", :size => 20
+  = image_submit_tag CatalogItem.search_image, :title => CatalogItem.search_title
+- with_options( :method => :get ) do |get|
+  = get.link_to_remote image_tag(ForumPost.link_image) + ForumPost.index_page_title, :url => forum_posts_path
+  = get.link_to_remote image_tag(Contact.link_image) + Contact.class_name_rus_cap, :url => contact_path( Contact.first )
+%h3
+  одежда для
+  %br
+  русских тоев
+= image_tag "bestic.png"
+%h5
+  = link_to DEMO, items_path

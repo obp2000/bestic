@@ -1,0 +1,21 @@
+= page_title
+%dl.ui-widget-content
+  %dd
+    = image_tag Contact.name_image
+    = @object.name
+  %br
+  %dd
+    = image_tag Contact.email_image
+    = mail_to @object.email, nil, :subject => Contact.email_subject
+  %br
+  %dd
+    = image_tag Contact.phone_image
+    = @object.phone
+  %br
+  %dd
+    = image_tag Contact.icq_image
+    = @object.icq
+  %br
+  %dd
+    = image_tag Contact.address_image
+    = @object.address

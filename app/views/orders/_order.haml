@@ -1,0 +1,12 @@
+%tr[ order ]{ :onclick => "$.get('#{order_path(order)}')" }
+  %td= order.id
+  %td{ :id => "order_status_#{order.id}" }= order.class::STATUS_RUS
+  %td.align_right= roubles order.total
+  %td.align_right= order.items.size
+  %td.align_right= date_time_rus order.created_at
+  %td.align_right{ :id => "order_updated_#{order.id}" }
+    - if order.closed?
+      = date_time_rus order.updated_at
+    - else
+      = link_to_close_processed_order order
+  %td= link_to_delete order

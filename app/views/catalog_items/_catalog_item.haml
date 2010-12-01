@@ -1,0 +1,14 @@
+.ui-widget-content.catalog_item{ :id => "catalog_item_#{catalog_item.id}" }
+  .thumbs.yoxview= render :partial => "shared/photo", :collection => catalog_item.photos 
+  - form_remote_tag :url => cart_item_path(catalog_item), :method => :put do
+    %h4
+      = link_to_remote catalog_item.name, :url => catalog_item_path( catalog_item ), :method => :get
+      %div
+        = roubles( catalog_item.price ) + " " + RUB
+        = image_submit_tag *Cart.add_image_with_options
+    - [ "size", "colour" ].each do |attr| 
+      %div{ :class => attr.tableize }
+        = render :partial => "catalog_items/attr_with_any", :locals => { :object => catalog_item, :attr => attr }
+  .blurb= catalog_item.blurb
+= draggable_element "catalog_item_#{catalog_item.id}", :revert => true
+      

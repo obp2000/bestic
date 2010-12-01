@@ -1,0 +1,2 @@
+ page.visual_effect :fade, "photo_#{@photo.id}", :duration => 1
+ #page["#photo_#{@photo.id}"].fadeOut(1000)

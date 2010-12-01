@@ -1,0 +1,15 @@
+%div
+  = page_title
+  %table{:summary => @page_title, :id => @object.class.name.tableize  }
+    %caption= will_paginate @objects
+    %tr
+      - with_options( :method => :get ) do |get|
+        %th{:scope => "col"}= get.link_to_remote Item.name_rus, :url => items_path(:sort_by => "name")
+        %th{:scope => "col"}= get.link_to_remote Size.class_name_rus_cap.pluralize.split.first, :url => items_path(:sort_by => "sizes")
+        %th{:scope => "col"}= get.link_to_remote Colour.class_name_rus_cap.pluralize, :url => items_path(:sort_by => "colours")
+        %th{:scope => "col"}= get.link_to_remote Category.class_name_rus_cap, :url => items_path(:sort_by => "category")
+        %th{:scope => "col"}= get.link_to_remote Item.price_rus, :url => items_path(:sort_by => "price")
+        %th{:scope => "col"}= get.link_to_remote image_tag(Item.new_image, :title => Item.new_title), :url => new_item_path
+    = render :partial => 'item', :collection => @objects
+  #item_content
+    = render :partial => @object.class.new_or_edit_partial

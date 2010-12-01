@@ -1,0 +1,9 @@
+= page_title
+%fieldset#forum.ui-widget-content
+  = link_to_new_forum_post
+  = ForumPost.no_forum_posts_text if @objects.empty?
+  #posts= render :partial => 'forum_post', :collection => @objects
+  = will_paginate @objects
+#post
+#post_new
+ 

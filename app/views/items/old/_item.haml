@@ -1,0 +1,8 @@
+%tr
+  %td= link_to_remote h( item.name ), :url => item, :update => "item_content", :method => :get
+  %td= item.sizes.map( &:name ).join(', ')
+  %td= item.colours_string
+  %td= h item.category.name
+  %td.align_right=  number_to_currency(item.price, :unit => "", :precision => 0, :delimiter => " ")
+  %td= link_to_remote 'Редактировать', :url => edit_item_path(item), :method => :get, :update => "item_content"
+  %td= link_to 'Удалить', item, :confirm => 'Удалить товар?', :method => :delete

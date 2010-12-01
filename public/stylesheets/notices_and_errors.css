@@ -1,0 +1,10 @@
+#notice { font-weight: bolder; padding: 2%; position: fixed; top: 40%; left: 40%;
+				-moz-box-shadow: grey 0.5em 0.5em 0.5em; z-index: 10; }
+
+.fieldWithErrors { border: 2px solid red; }
+
+#errorExplanation { border: 0.2em solid red; margin: 2%; padding: 2%; background-color: #f0f0f0; display: inline; }
+
+#errorExplanation h2 { height: 0%; visibility: hidden; }
+
+#errorExplanation p { height: 0%; visibility: hidden; }

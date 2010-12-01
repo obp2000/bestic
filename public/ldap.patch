@@ -1,0 +1,31 @@
+diff --git a/app/models/auth_source_ldap.rb b/app/models/auth_source_ldap.rb
+index 5a6789a..72d44c8 100644
+--- a/app/models/auth_source_ldap.rb
++++ b/app/models/auth_source_ldap.rb
+@@ -30,7 +30,11 @@ class AuthSourceLdap < AuthSource
+     return nil if login.blank? || password.blank?
+     attrs = []
+     # get user's DN
+-    ldap_con = initialize_ldap_con(self.account, self.account_password)
++    if (self.account == "") && (self.account_password == nil)
++      ldap_con = initialize_anon_ldap_con()
++    else
++      ldap_con = initialize_ldap_con(self.account, self.account_password)
++    end
+     login_filter = Net::LDAP::Filter.eq( self.attr_login, login ) 
+     object_filter = Net::LDAP::Filter.eq( "objectClass", "*" ) 
+     dn = String.new
+@@ -77,6 +81,13 @@ private
+     ) 
+   end
+   
++  def initialize_anon_ldap_con()
++    Net::LDAP.new( {:host => self.host,
++                    :port => self.port,
++                    :encryption => (self.tls ? :simple_tls : nil)}
++    )
++  end
++
+   def self.get_attr(entry, attr_name)
+     entry[attr_name].is_a?(Array) ? entry[attr_name].first : entry[attr_name]
+   end

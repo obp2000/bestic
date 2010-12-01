@@ -1,0 +1,8 @@
+- remote_form_for @size, :url => size_path(@size), :method => :put do |f|
+  = f.error_messages
+  %dl
+    %dt Название
+    %dd= f.text_field :name
+  %p= f.submit "Обновить"
+
+    

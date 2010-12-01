@@ -1,0 +1,12 @@
+%p 
+  %b Показать:
+  - with_options( :method => :get ) do |get|
+    = get.link_to_remote VSE, :url => orders_path
+    = "//"
+    = get.link_to_remote ProcessedOrder::STATUS_RUS_NAV, :url => processed_orders_path
+    %b
+      (
+      %span#order_processed= ProcessedOrder.count
+      ) 
+    = "//"
+    = get.link_to_remote ClosedOrder::STATUS_RUS_NAV, :url => closed_orders_path

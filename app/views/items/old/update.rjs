@@ -1,0 +1,3 @@
+page.remotipart_response do
+  page.alert('sssss')
+end  

@@ -1,0 +1,237 @@
+body {
+  font: 80% Verdana, Geneva, Arial, Helvetica, sans-serif;
+  line-height: 1.6em;
+  color: #c74809;
+  background-color: #fff9e5;
+  background-image: url("/stylesheets/images/ui-bg_highlight-soft_100_feeebd_1x100_h.png");
+  background-repeat: repeat-y; }
+
+h1 {
+  text-align: center; }
+
+table {
+  border: 1px solid #c74809; }
+  table th:hover {
+    cursor: default; }
+  table tr:hover {
+    cursor: pointer; }
+  table tr a {
+    display: block; }
+  table label {
+    font-weight: bold; }
+
+td, th {
+  border: 1px solid #c74809;
+  text-align: left; }
+
+tr:hover {
+  background-color: #fedd70; }
+tr:nth_child(even) {
+  color: #00ffee; }
+
+a {
+  padding-left: 0;
+  margin-left: 0; }
+  a:link, a:visited {
+    color: #0074c7;
+    background-color: transparent;
+    text-decoration: none; }
+  a:hover {
+    color: white;
+    background-color: #cccccc; }
+  a:active {
+    color: #eeb420; }
+  a:focus {
+    color: #710909;
+    background-color: #fedd70; }
+
+fieldset {
+  margin-bottom: 1em; }
+
+input[type="text"], textarea {
+  color: #00008b;
+  background-color: #e3f2f7;
+  border: 1px inset #00008b;
+  width: 280px; }
+  input[type="text"]:focus, textarea:focus {
+    border: 1px solid red; }
+  input[type="text"]#item_price, textarea#item_price {
+    width: 50px; }
+  input[type="text"]#forum_post_body, textarea#forum_post_body {
+    width: 600px; }
+  input[type="text"].photo_comment, textarea.photo_comment {
+    width: 120px; }
+
+input[type="submit"] {
+  padding-left: 2em;
+  color: #00008b;
+  border: 1px outset #00008b;
+  height: 30px; }
+  input[type="submit"]:hover {
+    cursor: pointer; }
+  input[type="submit"]:hover {
+    background-image: url("/images/package-installed-updated.png");
+    background-repeat: no-repeat; }
+
+input[type="radio"], input[type="checkbox"] {
+  margin-right: -3px;
+  margin-left: 0;
+  padding-left: 0; }
+
+img, form *, h2, h3, #cart * {
+  margin: 0.2em; }
+
+form, fieldset, td, th, dl, #cart {
+  padding: 0.3em; }
+
+img {
+  padding-bottom: 0;
+  margin-bottom: 0; }
+
+.align_right {
+  text-align: right; }
+
+#wrapper {
+  position: relative;
+  width: 98%;
+  margin-right: auto;
+  margin-left: auto; }
+
+#header {
+  font-family: "Comic Sans MS";
+  padding-top: 10px;
+  border-bottom: 4px solid #c74809;
+  height: 60px; }
+  #header form, #header h3, #header h5, #header > a, #header > img {
+    float: left; }
+  #header form, #header > a {
+    margin-right: 80px; }
+  #header h3 {
+    text-align: right;
+    font-style: italic; }
+  #header h5 a {
+    color: red; }
+
+#content {
+  clear: both;
+  margin-left: 245px;
+  margin-right: 0; }
+
+#nav {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  width: 230px; }
+  #nav h3 img {
+    margin-left: 15px; }
+
+.category {
+  display: block; }
+
+#form_categories .category {
+  display: inline; }
+
+.cart_item {
+  padding: 0.3em;
+  font-size: small; }
+
+.cart_hover .cart_item {
+  border-color: #a9cf23;
+  color: #8f8e8c; }
+
+.catalog_item {
+  float: left;
+  width: 470px;
+  height: 130px;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 0.3em;
+  border-width: 0; }
+  .catalog_item > * {
+    vertical-align: top;
+    display: table-cell; }
+  .catalog_item form {
+    padding: 0;
+    line-height: 1.2em; }
+    .catalog_item form * {
+      vertical-align: top; }
+    .catalog_item form .colours, .catalog_item form .sizes {
+      margin-top: -2px; }
+  .catalog_item .blurb {
+    color: #c74809;
+    max-width: 140px;
+    margin-left: 4px; }
+
+.thumbs {
+  float: left; }
+  .thumbs a {
+    float: left;
+    max-width: 120px;
+    font-size: 0.8em;
+    line-height: 1em; }
+    .thumbs a img {
+      border: 1px solid #00a7ec;
+      display: block; }
+
+.pagination {
+  clear: both;
+  padding-top: 10px;
+  font-size: 120%;
+  font-weight: bold; }
+
+.clear {
+  clear: both; }
+
+.textile_toolbar, .textile_area {
+  display: inline; }
+
+table, #item_content, #order_details {
+  float: left;
+  margin-right: 10px; }
+
+#new_forum_post label, .new_processed_order label {
+  float: left;
+  width: 200px; }
+
+.forum_post a {
+  margin-right: 20px; }
+
+#colours, #sizes, #categories, #photos, #contacts {
+  position: absolute;
+  top: 2em;
+  left: 2em;
+  z-index: 9; }
+  #colours div, #sizes div, #categories div, #photos div, #contacts div {
+    border-width: 0; }
+  #colours label, #sizes label, #categories label, #photos label, #contacts label {
+    float: left;
+    width: 60px; }
+
+.photo {
+  float: left; }
+
+#form_blurb {
+  margin-top: 135px; }
+
+#order_processed {
+  color: red; }
+
+#upload_frame {
+  display: none; }
+
+#notice {
+  font-weight: bolder;
+  padding: 1em;
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  z-index: 10; }
+
+.fieldWithErrors {
+  border: 1px solid red; }
+
+#errorExplanation {
+  color: red;
+  width: 30em; }
+  #errorExplanation h2, #errorExplanation p {
+    display: none; }

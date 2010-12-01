@@ -1,0 +1,3 @@
+class ClosedOrdersController < OrdersController
+  
+end

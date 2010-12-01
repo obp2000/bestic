@@ -1,0 +1,4 @@
+- form_for upload_photo, :html => { :multipart => true,  :target => "upload_frame" } do |f|
+  = f.error_messages
+  = f.file_field :uploaded_data
+  = image_submit_tag Photo.upload_image, :title => Photo.upload_title

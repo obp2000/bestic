@@ -1,0 +1,8 @@
+= "Уважаемый(ая) #{@order.ship_to_first_name} !"
+= "Ваш заказ номер #{@order.id} принят."
+В ближайшее время наши менеджеры свяжутся с Вами.
+Информация о заказе:
+= render :partial => 'order_notice/order_item', :collection => @order.order_items
+= "Общая сумма заказа: #{@order.total.to_i} #{RUB}"
+Спасибо за заказ!
+С уважением, интернет-магазин BEST&C.

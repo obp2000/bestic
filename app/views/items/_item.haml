@@ -1,0 +1,7 @@
+%tr[ item ]{ :onclick => "$.get('#{edit_item_path(item)}')" }
+  %td= item.name
+  - [ "sizes", "colours" ].each do |attr|
+    %td= render_attrs item.send( attr )
+  %td= h item.category.name rescue nil
+  %td.align_right= roubles item.price
+  %td= link_to_delete item

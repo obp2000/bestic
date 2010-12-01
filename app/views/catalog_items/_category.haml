@@ -1,0 +1,2 @@
+- season1 = season + "_" rescue ""
+= link_to_remote category.name + " (#{category.send( season1 + 'catalog_items' ).size})", :url => send( "category_#{season1}catalog_items_path", category ), :method => :get, :complete => "attach_js()", :html => { :class => "category" } 

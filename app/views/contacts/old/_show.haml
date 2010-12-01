@@ -1,0 +1,21 @@
+= page_title
+%dl#contacts.ui-widget-content
+  %dd
+    = image_tag "loginmanager.png"
+    = @object.name
+  %br
+  %dd
+    = image_tag "mail_generic.png"
+    = mail_to @object.email, nil, :subject => "Сообщение от пользователя интернет-магазина BEST&C"
+  %br
+  %dd
+    = image_tag "kcall.png"
+    = @object.phone
+  %br
+  %dd
+    = image_tag "icq_protocol.png"
+    = "1234567890"
+  %br
+  %dd
+    = image_tag "kfm_home.png"
+    = @object.address

@@ -1,0 +1,11 @@
+<% if @forum_posts.size > 0 %>
+<div><%= link_to 'Новое сообщение' , new_forum_post_path %></div>
+<p>
+<%= render :partial => 'forum_post', :collection => @forum_posts %>
+</p>
+<% else %>
+В форуме пока ещё нет сообщений. <%= link_to 'Будьте первым!' , new_forum_post_path %>
+<% end %>
+<br/>
+
+<%= will_paginate @forum_posts %>

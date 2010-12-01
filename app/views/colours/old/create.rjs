@@ -1,0 +1,5 @@
+#page.insert_html :bottom, :colours, :partial => "colour", :locals => { :colour => @colour }
+#page.show_notice
+#page.visual_effect :fade, :errorExplanation, :duration => 1
+
+page.create1 @colour

@@ -1,0 +1,8 @@
+- remote_form_for size do |f|
+  = f.error_messages
+  = f.text_field :name
+  = image_submit_tag Size.save_image, :title => Size.save_title
+  - unless size.new_record?
+    = link_to_delete size
+    = link_to_add_to_item size
+      

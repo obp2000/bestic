@@ -1,0 +1,28 @@
+%fieldset.ui-widget-content.yoxview
+  %div
+    %b= Order.id_rus
+    = @object.id
+  %div
+    %b= Order.ship_to_first_name_rus
+    = @object.ship_to_first_name
+  %div
+    %b= Order.email_rus
+    = @object.email
+  %div
+    %b= Order.phone_number_rus
+    = h @object.phone_number
+  - unless @object.ship_to_city.blank?
+    %div
+      %b= Order.ship_to_city_rus 
+      = h @object.ship_to_city
+  - unless @object.ship_to_address.blank?  
+    %div
+      %b= Order.ship_to_address_rus
+      = h @object.ship_to_address
+  - unless @object.comments.blank?
+    %div
+      %b= Order.comments_rus
+      = h @object.comments
+  %div
+    %b= Order.details_title.colon
+  = render :partial => 'order_item', :collection => @object.order_items

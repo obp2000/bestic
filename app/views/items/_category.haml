@@ -1,0 +1,4 @@
+%span[ category ]
+  - if category
+    = hidden_field_tag "item[category_id]", category.id
+    = category.name

@@ -1,0 +1,12 @@
+-form_for(@photo, :html => { :multipart => true }) do |f|
+
+  = f.error_messages
+  %dl
+    %td
+      = image_tag("#{@photo.name}") unless @photo.name.empty?
+    %dt Выберите фотографию
+    %dd= file_field 'upload', 'datafile'
+   
+  %p= f.submit submit_label
+
+    

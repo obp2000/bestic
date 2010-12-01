@@ -1,0 +1,11 @@
+%fieldset.ui-widget-content
+  %h3= @object.name
+  - [ "sizes", "colours" ].each do |attr|
+    = render_attrs @object.send( attr )  
+  = @object.category.name rescue nil
+  = @object.type.constantize.season_name
+  %p
+    = roubles @object.price
+    = RUB  
+  %p= @object.blurb
+  .thumbs.yoxview= render :partial => "shared/photo", :collection => @object.photos

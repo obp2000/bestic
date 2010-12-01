@@ -1,0 +1,9 @@
+<tr>  
+  <td align="right"><%= order.id %></td> 
+  <td align="right"><%= order.status %></td> 
+  <td align="right"><%= order.total %></td> 
+  <td align="right"><%= order.books.size %></td> 
+  <td align="right"><%= order.created_at.strftime("%Y-%m-%d %I:%M") %></td> 
+  <td align="right"><%= order.updated_at.strftime("%Y-%m-%d %I:%M") %></td> 
+  <td><%= link_to "Просмотр", admin_order_path(order) %></td> 
+</tr> 

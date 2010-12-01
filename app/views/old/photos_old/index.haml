@@ -1,0 +1,17 @@
+%h1 Список фотографий
+
+%table
+  = render :partial => 'photos/photo', :collection => @photos
+%br
+
+-form_for( Photo.new, :html => { :multipart => true } ) do |f|
+
+  = f.error_messages
+  %dl
+    %dt Выберите фотографию
+    %dd= file_field 'upload', 'datafile'
+  %p= f.submit "Добавить"
+
+
+
+

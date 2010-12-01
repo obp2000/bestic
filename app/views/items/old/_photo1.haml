@@ -1,0 +1,10 @@
+%fieldset.ui-widget-content.ui-corner-all.shadow
+  -new_or_existing = photo.new_record? ? 'new' : 'existing'
+  -prefix = "item[#{new_or_existing}_photo_attributes][]"
+  = link_to( image_tag(photo.public_filename :small), photo.public_filename, :class => "yoxview" ) unless photo.new_record?
+  - fields_for prefix, photo do |photo_form|
+    = photo_form.file_field :uploaded_data if photo.new_record?
+    = link_to_function image_tag("delete.png", :title => "Удалить фотографию"), "if (confirm('Удалить фотографию?')) $(this).parents('fieldset').remove()"
+    %br
+    = photo_form.text_area :comment, :rows => 1
+

@@ -1,0 +1,170 @@
+# coding: utf-8
+# Methods added to this helper will be available to all templates in the application.
+module ApplicationHelper
+ 
+  def content( opts = {} )
+    object, objects, content1, partial, duration = opts[:object], opts[:objects], opts[:content], opts[:partial], ( opts[:duration] || DURATION )
+#    p object, objects, content1, partial, duration    
+    duration1 = select( "##{content1}" ).first ? duration : 0
+    visual_effect :fade, content1, :duration => duration1    
+    delay( duration1 ) do
+      with_options :partial => partial, :object => object, :locals => { :objects => objects } do |with_opts|
+        if ( opts[:object].insert_html rescue false )
+          remove content1
+          with_opts.insert_html :after, "tabs"
+        else
+          with_opts.replace_html content1
+#          replace_html content1, :partial => partial, :object => object     
+        end
+      end
+      hide content1      
+      visual_effect :appear, content1, :duration => duration
+      call("attach_js")
+      call("attach_mColorPicker") if opts[:object].class  == Colour 
+      delay(duration) { show_notice }
+      check_cart_links      
+    end
+  end 
+ 
+  def show_notice( opts = {} )
+    duration_appear = 1
+    duration_fade = opts[:delay] || duration_appear
+    insert_html :top, :content, :partial => "shared/notice"
+    hide :notice
+    visual_effect :appear, :notice, :duration => duration_appear
+    delay( duration_appear ) do
+      visual_effect :fade, :notice, :duration => duration_fade
+      delay(duration_fade) { remove :notice }
+    end
+  end
+
+  def show1( opts = {} )
+    content :content => opts[:object].appear_content, :partial => "show"    
+    fade_appear( opts[:object].fade_content, opts[:object].appear_content )
+  end
+
+  def link_to_back( object )
+    link_to_function image_tag( *object.class.back_image_with_title ) do |page|
+      page.fade_appear( object.appear_content, object.fade_content )      
+    end
+  end 
+
+  def fade_appear( fade, appear )
+    with_options :duration => DURATION do | with_duration |
+      with_duration.visual_effect :fade, fade
+      delay(DURATION) do
+        with_duration.visual_effect :appear, appear
+      end
+    end
+  end
+
+  def new_or_edit( opts = {} )
+    if ( opts[:object].replace_html1 rescue false )
+      content opts
+#      replace_html opts[:content], :partial => opts[:partial], :object => opts[:object]      
+    else
+      replace opts[:content], :partial => opts[:partial], :object => opts[:object]
+    end
+    check_cart_links
+    visual_effect :fade, :post, :duration => DURATION
+    visual_effect :fade, :reply, :duration => DURATION
+  end
+  
+  def create_or_update( opts = {} )
+    remove opts[:content] rescue nil
+    if ( opts[:object].amount > 0 rescue true )
+      insert_html :bottom, opts[:object].list_tag, :partial => opts[:partial], :object => opts[:object] unless opts[:object].class == Photo rescue nil
+    end
+    replace opts[:object].new_tag, :partial => opts[:partial], :object => opts[:object].class.new unless opts[:object].class == Photo rescue nil    
+    replace "form_" + opts[:object].list_tag, :partial => "items_" + opts[:object].new_or_edit_partial, :object => opts[:object] rescue nil
+    check_cart_totals( opts )
+    check_cart_links
+    visual_effect :highlight, opts[:content], :duration => HIGHLIGHT_DURATION
+    show_notice( :delay => opts[:object].duration_fade )
+    visual_effect :fade, :errorExplanation, :duation => DURATION 
+    call("attach_yoxview")
+  end
+  
+  def destroy1( opts = {} )
+    opts[:objects] = [opts[:objects]] unless opts[:objects].respond_to?(:each)   
+    opts[:objects].each do |object|
+      remove object.edit_tag      
+      remove object.tag
+    end
+    check_cart_totals( opts )    
+    check_cart_links
+    replace_html "order_processed", ProcessedOrder.count
+    show_notice
+  end
+
+  def check_cart_links
+    replace_html "link_to_new_order_form", :partial => "carts/link_to_new_order_form"
+    replace_html "link_to_clear_cart", :partial => "carts/link_to_clear_cart"       
+  end
+
+  def check_cart_totals( opts )
+    replace_html "cart_total_items", opts[:session].cart.total_items
+    replace_html "cart_total_sum", opts[:session].cart.total_sum
+  end
+
+  def link_to_add_to_item( object )
+    link_to_function image_tag( *object.class.add_to_item_image_with_title ) do |page|
+      page.add_to_item( object )
+    end
+  end
+
+  def add_to_item( object )
+    if Item.new.respond_to?( object.class.name.underscore )
+#      replace_html *object.add_to_item_with_options
+      replace_html "form_#{object.list_tag}", :partial => "items/#{object.class.name.underscore}", :object => object
+    else
+      remove object.tag
+#      insert_html :bottom, *object.add_to_item_with_options
+      insert_html :bottom, "form_#{object.list_tag}", :partial => "items/#{object.class.name.underscore}", :object => object
+    end
+    call("attach_yoxview") if object.class.attach_yoxview?    
+  end
+
+  def red_star
+    "<span style='color: red'>*</span>"
+  end
+    
+  def roubles( arg )
+    number_to_currency( arg, :unit => "", :precision => 0, :delimiter => " ")  
+  end
+
+  def date_time_rus( arg )
+    arg.strftime("%d.%m.%yг.&nbsp;%H:%M:%S") rescue ""
+  end
+
+  def do_not_show( cart )
+    controller_name == 'processed_orders' or cart.cart_items.empty?
+  end
+  
+  def link_to_show_photo( photo, show_comment = true )
+    link_to image_tag( photo.public_filename(:small) ) + ( show_comment ? photo.comment : "" ), photo.public_filename
+#    photo_public_filename = lambda { | small | photo.public_filename( small )  }
+#    link_to image_tag( photo_public_filename.call :small ) + ( show_comment ? photo.comment : "" ), photo_public_filename.call    
+  end
+  
+  def page_title
+    "<h2>#{@page_title}</h2>"
+  end
+  
+  def link_to_delete( object )
+    link_to_remote image_tag( *object.delete_image_with_title ),
+          :url => url_for( :controller => object.class.name.tableize, :action => "destroy", :id => object ),
+          :method => :delete, :confirm => object.delete_title        
+  end
+  
+  def link_to_show( object )
+    link_to_remote h( object.subject_or_name ),
+          :url => url_for( :controller => object.class.controller, :action => "show", :id => object.item_id_or_id ),
+          :method => :get
+  end
+  
+  def submit_form( f, label )
+    f.submit label, :onclick => "$(this).fadeOut().fadeIn()"
+  end
+  
+end

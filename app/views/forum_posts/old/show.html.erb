@@ -1,0 +1,11 @@
+<dl>
+  <dt>Имя</dt>
+  <dd><%= h @forum_post.name %></dd>
+  <dt>Тема</dt>
+  <dd><%= h @forum_post.subject %></dd>
+  <dt>Сообщение</dt>
+  <dd><%= h @forum_post.body %></dd>
+</dl>
+
+<%= link_to 'Ответить', reply_forum_post_path(@forum_post) %> |
+<%= link_to 'Назад в форум', forum_posts_path %>

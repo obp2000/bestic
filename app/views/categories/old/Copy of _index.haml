@@ -1,0 +1,19 @@
+%h3 Список видов одежды
+
+%table#categories_table
+  %tr
+    %tt
+      %b Название
+    %tt
+      %b Сезон одежды
+
+  = for @category in Category.all
+    %tr
+      %td(id="category_#{@category.id}")
+
+        = render :partial => "category", :locals => { :category => @category } 
+      %td= link_to_remote 'Удалить', :url => category_path(@category), :confirm => 'Удалить вид одежды?', :method => :delete
+
+  %tr
+    %td#category_new
+      = render :partial => "category_new" 

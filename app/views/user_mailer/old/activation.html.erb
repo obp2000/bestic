@@ -1,0 +1,6 @@
+<%= @user.login %>, Ваша учетная запись успешно активирована.  
+
+Для входа на наш сайт перейдите, пожалуйста, по этой ссылке:
+<%= url_for(:host => 'localhost:3000', :controller => "sessions",
+			:action => "create", :user => @user.login,
+			:password => @user.password)  %>

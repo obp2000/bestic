@@ -1,0 +1,4 @@
+page.insert_html :top, "content", :partial => "shared/notice"
+page.visual_effect :fade, 'notice', :duration => 0
+page.visual_effect :appear, 'notice', :duration => 2
+page.delay(3) { page.visual_effect :fade, 'notice', :duration => 2 }

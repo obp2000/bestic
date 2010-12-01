@@ -1,0 +1,33 @@
+<%= render :partial => 'navigation' %> 
+<p> 
+  Всего, руб.: <%= @order.total %> 
+</p> 
+<h2>Контактная информация</h2> 
+<dl> 
+  <dt>Номер заказа</dt> 
+  <dd><%= @order.id %></dd> 
+  <dt>E-mail</dt> 
+  <dd><%= @order.email %></dd> 
+  <dt>Контактный телефон</dt> 
+  <dd><%= @order.phone_number %></dd> 
+</dl> 
+<h2>Адрес доставки</h2> 
+<dl> 
+  <dt>Имя</dt> 
+  <dd><%= @order.ship_to_first_name %></dd> 
+  <dt>Фамилия</dt> 
+  <dd><%= @order.ship_to_last_name %></dd> 
+  <dt>Адрес</dt> 
+  <dd><%= @order.ship_to_address %></dd> 
+  <dt>Город</dt> 
+  <dd><%= @order.ship_to_city %></dd> 
+  <dt>Почтовый индекс</dt> 
+  <dd><%= @order.ship_to_postal_code %></dd> 
+  <dt>Страна</dt> 
+  <dd><%= @order.ship_to_country %></dd> 
+</dl>
+<h2>Детали заказа</h2>
+<%= render :partial => 'order_item', :collection => @order.order_items %> 
+<p> 
+  <%= link_to "Закрыть заказ", admin_order_path(@order), :method => :delete unless @order.closed? %> 
+</p> 

@@ -1,0 +1,35 @@
+- remote_form_for @object, :html => { :class => "ui-widget-content" } do |f|
+  = f.error_messages
+  %p
+    %b= f.label( :name, Item.name_rus.colon + red_star )
+    = f.text_field :name
+    %b= f.label( :price, Item.price_rus.colon + red_star )
+    = f.text_field :price
+  %br
+  %p
+    %b= f.label( :category_id, Category.class_name_rus_cap.split.first.colon + red_star )
+    %span#form_categories= render :partial => "category", :object => @object.category
+    = link_to_change Category
+    %b= f.label( :season_id, SEASON.colon + red_star )
+    - [ SummerCatalogItem, WinterCatalogItem ].each do |season|
+      = f.radio_button :type, season
+      = image_tag season.season_icon, :size => "24x24"
+  %br
+  %p
+    - [ Size, Colour ].each do |attr_class|
+      %b= attr_class.class_name_rus_cap.pluralize.split.first.colon
+      %span{ :id => "form_#{attr_class.name.tableize}" }= render :partial => "attr", :collection => @object.send( attr_class.name.tableize )
+      = link_to_change attr_class
+  %br  
+  %p
+    %span#form_photos= render :partial => "photo", :collection => @object.photos
+    = link_to_change Photo
+  %br
+  %p
+    %div#form_blurb= f.text_area :blurb, :rows => 3
+  %b= Item.created_at_rus.colon
+  = date_time_rus @object.created_at
+  %b= Item.updated_at_rus.colon
+  = date_time_rus @object.updated_at
+  = image_submit_tag Item.submit_image, :title => Item.submit_title
+  = textile_editor_initialize

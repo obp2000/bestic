@@ -1,0 +1,6 @@
+<h1>Загрузка фотографий</h1>
+<% form_for @photo, :html => { :multipart => true } do |f| %>
+	<p><label for="upload_file">Выберите фотографию</label> : 
+	<%= file_field 'upload', 'datafile' %></p>
+	<%= submit_tag "Загрузить" %>
+<% end %>

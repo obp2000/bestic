@@ -1,0 +1,16 @@
+<%= error_messages_for 'forum_post' %>
+
+<% form_for @forum_post do |form| %>
+  <%= form.hidden_field :parent_id %>
+  <p><label for="post_name">Имя</label><br/>
+  <%= form.text_field :name %></p>
+  <p><label for="post_subject">Тема</label><br/>
+  <%= form.text_field :subject %></p>
+  <p><label for="post_body">Сообщение</label><br/>
+  <%= form.text_area :body %></p>
+  <%= submit_tag "Отправить сообщение" %>
+<% end %>
+  
+<%= link_to 'Назад в форум', forum_posts_path %>  
+  
+

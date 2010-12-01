@@ -1,0 +1,52 @@
+#source 'vendor/RedCloth'
+#source 'http://rubyforge.org'
+source :gemcutter
+
+gem 'rails', '2.3.10'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem 'thinking-sphinx'
+gem "RedCloth", :platforms => :ruby
+gem "responds_to_parent"
+gem "haml"
+gem "jrails"
+# gem "webrat"
+gem "mysql"
+gem "mongrel"
+
+gem "sphinx"
+# gem "rmagick", "2.12.0"
+# gem "captcha"
+gem "restful_authentication"
+gem "cgi_multipart_eof_fix"
+gem "rest-client"
+gem "launchy"
+gem "json_pure"
+# gem "webrat"
+# gem "nokogiri"
+   
+
+# Use unicorn as the web server
+# gem 'unicorn'
+
+# Deploy with Capistrano
+# gem 'capistrano'
+
+# To use debugger
+# gem 'ruby-debug'
+
+# Bundle the extra gems:
+# gem 'bj'
+# gem 'nokogiri'
+# gem 'sqlite3-ruby', :require => 'sqlite3'
+# gem 'aws-s3', :require => 'aws/s3'
+
+# Bundle gems for the local environment. Make sure to
+# put test-only gems in this group so their generators
+# and rake tasks are available in development mode:
+
+ group :development, :test do
+  gem 'webrat'
+ end

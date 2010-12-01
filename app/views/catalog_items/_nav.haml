@@ -1,0 +1,11 @@
+#accordionResizer
+  #left_accordion.ui-corner-all
+    - [ SummerCatalogItem, WinterCatalogItem, CatalogItem ].each do |season_class|
+      %h3= link_to_season( season_class )
+      %div
+        - Category.all_of( season_class ).each do |category|
+          = link_to_category( category, season_class )       
+    %h3#cart_header= link_to image_tag( Cart.nav_image ) + Cart.nav_text
+    #cart
+      = render :partial => "carts/cart"
+= set_drop_receiving_element "cart"

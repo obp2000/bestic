@@ -1,0 +1,3 @@
+class CategoryWinterCatalogItemsController < CategoryCatalogItemsController
+
+end

@@ -1,0 +1,251 @@
+html, body, div, span, applet, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre,a, abbr, acronym, address, big, cite,
+code,del, dfn, em, font, img, ins, kbd, q, s, samp,small, strike, strong, sub, sup, tt, var,b, u, i, center,dl, dt, dd, ol, ul, li,fieldset,
+form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0; 
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+	cart
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after{
+	content: '';
+	content: none;
+}
+/* все элементы в фокусе (на которые перешли, например, Tab'ом) имеют единый вид */
+:focus {
+	outline: 0;
+}
+/* не забывайте обозначить удаления и вставки */
+ins {
+	text-decoration: none;
+}
+del { text-decoration: line-through;}
+/* а таблицам вручную придётся прописывать 'cellspacing="0"' в HTML */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+body  {
+	font-family:"Monotype Corsiva", Segoe UI, Arial, sans-serif;
+	min-height: 1000px;
+	cursor:default;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-align: center;
+	text-align: center;
+	margin: 3px;
+}
+
+td {
+  vertical-align: top;
+}
+
+pre {
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+}
+
+a:active {
+	color:#EEB420;
+}
+
+a:hover {
+	background-color:#ccc;
+}
+
+dl {
+	padding-left: 20px;
+}
+
+.align_left {
+	text-align: left;
+}
+
+.align_right {
+	text-align: right;
+}
+
+.colour_sample {
+	background-color:#0000FF;
+}
+
+#top_panel {
+	width: 700px;
+	text-align: center;
+	margin-left: 300px;
+	padding: 0px;
+}
+
+#left_panel {
+  font-size: 14px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 180px;
+}
+
+#category_names{
+	text-align: left;
+}
+
+#categories h3 a {
+	text-align: center;
+}
+
+a:link {
+	text-align: left;
+}
+
+#content, #details {
+	margin-left: 190px;
+}
+
+.catalog_items_table {
+	text-align: left;
+	width: 99.9%;
+	margin-bottom: 2px;
+}
+
+.catalog_items_table .left_cell {
+	width: 40%;
+	text-align: left;
+	font-size:smaller;
+}
+
+#clear_cart_link, #to_cart_link {
+	text-align: center;
+}
+
+#cart {
+	padding:2px;
+	margin:2px;
+}
+
+.cart_item {
+  	float: none;
+	border: 2px solid #58A986;	
+}
+
+.ui-tabs .ui-tabs-hide {
+
+}
+
+#items {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  margin: 1px;
+  border: 2px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+}
+
+#admin {
+	text-align: center;
+}
+
+.order_details {
+	padding-left: 70px;
+}
+
+.ui-widget, .ui-widget-content, .ui-widget-header, .ui-widget-overlay, .ui-widget-shadow {
+	padding: 0px;
+	margin: 0px;
+	font-family: "Monotype Corsiva";
+	cursor:default;
+}
+
+
+
+
+
+
+
+
+.fieldWithErrors {
+
+  border: 2px solid red;
+
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+#loginlogout {
+  background-color: #ccc; 
+  padding: 8px; 
+  width: 100px; 
+  position: absolute; 
+  top: 0px; 
+  right: 10px;
+}
+
+.pagination {
+
+}
+
+#notice {
+  font-weight: bolder;
+  border: 2px solid #58A986;
+  padding: 20px;
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  -moz-box-shadow: black 10px 5px 5px;
+
+}
+
+#item_notice {
+  font-weight: bolder;
+  border: 2px solid #58A986;
+  padding: 20px;
+  position: fixed;
+  top: 40%;
+  left: 40%;
+}

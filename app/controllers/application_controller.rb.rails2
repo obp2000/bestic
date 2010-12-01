@@ -1,0 +1,112 @@
+# Filters added to this controller apply to all controllers in the application.
+# Likewise, all the methods added will be available for all controllers.
+
+class ApplicationController < ActionController::Base
+#  attr_accessor :cart
+  helper :all # include all helpers, all the time
+    
+  layout proc{ |c| c.request.xhr? ? false : "application" }
+
+  # See ActionController::RequestForgeryProtection for details
+  # Uncomment the :secret if you're not using the cookie session store
+  protect_from_forgery
+  # :secret => 'd5ebb0195fbf794c1cf10debdde5e21c'
+  
+  # See ActionController::Base for details 
+  # Uncomment this to filter the contents of submitted sensitive data parameters
+  # from your application log (in this case, all fields with names like "password"). 
+  # filter_parameter_logging :password
+  
+  include AuthenticatedSystem
+  
+  def index( *class_const )
+    class_const = class_const[0] ? class_const[0] : controller_name.classify.constantize
+    @objects, @object = (@class_const = class_const).all_and_new( params )
+    page_title
+    if request.xhr?
+      render_action1
+    else
+      render class_const.not_xhr_index_render if class_const.respond_to?( :not_xhr_index_render )
+    end
+  end
+
+  def show( class_const )
+    @object = (@class_const = class_const).find( params[:id] )
+    page_title
+    render_action1    
+  end
+
+  def new( class_const )
+    @object = (@class_const = class_const).new
+    page_title
+    render_action1    
+  end
+
+  def edit( class_const )
+    @object = (@class_const = class_const).find( params[:id] )
+    render_action1
+  end
+
+  def create( class_const, captcha_validated = nil )
+    @object = (@class_const = class_const).new_object( params, session )
+    session[:captcha_validated] = captcha_validated
+    if @object.save_object( session )
+      flash_notice
+      if class_const == Photo
+        responds_to_parent do
+          render_action1
+        end
+      else
+        render_action1        
+      end
+    else
+      render_action1( "new" )      
+    end
+  end
+
+  def update( class_const )
+    @object, success = (@class_const = class_const).update_object( params, session )
+    if success
+      flash_notice
+      render_action1
+    else
+      render_action1( "edit" )
+    end
+  end
+
+  def destroy( class_const )
+    @objects = @object = (@class_const = class_const).destroy_object( params, session )
+    flash_notice
+    render_action1
+  end
+    
+  private
+
+    def page_title
+      @page_title = action_with_suffix( nil, "page_title" )
+    end
+
+    def flash_notice
+      if notice = action_with_suffix( nil, "notice" )
+        flash.now[:notice] = notice          
+      end
+    end  
+  
+    def render_action1( *args )
+      if render_hash = action_with_suffix( args[0], "render" )
+        render render_hash
+      end
+    end
+  
+    def action_with_suffix( action, suffix )
+      action_suffix = "#{action ||= action_name}_#{suffix}"
+      [ @class_const, @object ].each do |obj|
+        result = obj.send_if_respond( action_suffix )
+        if result
+          return result
+        end
+      end
+      nil
+    end
+
+end

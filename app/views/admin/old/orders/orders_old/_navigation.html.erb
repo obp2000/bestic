@@ -1,0 +1,7 @@
+<p> 
+  Показать: <%= link_to "Все", admin_orders_path %>, 
+  <%= link_to "open", admin_orders_path( :status => 'open' ) %>, 
+  <%= link_to "processed", admin_orders_path( :status => 'processed' ) %>, 
+  <%= link_to "closed", admin_orders_path( :status => 'closed' ) %>, 
+  <%= link_to "failed", admin_orders_path( :status => 'failed' ) %> 
+</p>

@@ -1,0 +1,11 @@
+Обязательные:
+after_commit - не запускается Mongrel, нужен для thinking-sphinx
+gem_plugin - не запускается Mongrel
+riddle - нужен для thinking-sphinx
+cgi_multipart_eof_fix - не запускается Mongrel
+rest-client --version 1.4.0 - нужен для heroku stack
+mime-types - нужен для rest-client
+launchy --version 0.3.2 - нужен для heroku stack
+json_pure --version 1.2.0 - нужен для heroku stack
+rack --version 1.1.0 - нужен для heroku db:push
+      

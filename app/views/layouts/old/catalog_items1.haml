@@ -1,0 +1,46 @@
+!!! Strict
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => "text/html; charset=UTF-8"}
+    %title= @page_title || "Магазин одежды для той-терьеров"
+    = javascript_include_tag :defaults
+    = javascript_include_tag "jquery.min", "jquery-ui.min"
+    
+    = stylesheet_link_tag "style1", "jquery.ui.theme", "jquery.ui.accordion"
+      
+  %body
+    = debug(assigns)
+    = debug(params)
+    
+    - if controller.controller_name == "catalog_items" and controller.action_name == "index"
+      #categories(class="ui-accordion ui-widget ui-helper-reset")
+        %h5(class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top")
+          %span(class="ui-icon ui-icon-triangle-1-s")
+          %a(href="#")= "&nbsp;&nbsp;&nbsp;" + Season.find(1).name
+        %div(class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active")
+          %ul
+            - for category in Category.find_all_by_season_id(1)
+              %li.ui-accordion-li-fix= link_to_remote category.name, :url => catalog_items_path(:category_id => category), :method => :get, :update => "content"
+            %li.ui-accordion-li-fix= link_to_remote "Все товары", :url => catalog_items_path, :method => :get, :update => "content" 
+        %h5(class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top")
+          %span(class="ui-icon ui-icon-triangle-1-s")
+          %a(href="#")= "&nbsp;&nbsp;&nbsp;" + Season.find(2).name
+        %div(class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active")
+          %ul
+            - for category in Category.find_all_by_season_id(2)
+              %li.ui-accordion-li-fix= link_to_remote category.name, :url => catalog_items_path(:category_id => category), :method => :get, :update => "content"
+            %li.ui-accordion-li-fix= link_to_remote "Все товары", :url => catalog_items_path, :method => :get, :update => "content" 
+      
+    #content
+      %h2= "#{@page_title}" if @page_title
+      - if flash[:notice]
+        #notice 
+          %p(style="color: green")= flash[:notice]
+      = yield
+          
+
+         
+    - if @cart and (controller.action_name != "show")
+      #shopping_cart
+        = render :partial => "carts/cart_notice"  if flash[:cart_notice]
+        = render :partial => "carts/cart"

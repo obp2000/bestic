@@ -1,0 +1,17 @@
+.kradio-unselected {
+	float: left;
+	margin-right: 30px;
+	font-weight: bold;
+	padding: 5px 15px 5px 10px;
+	background: url(accept_bw_16.png) 10px 50% no-repeat #eee;
+	border: 1px solid #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	cursor: pointer;
+}
+
+
+.kradio-selected {
+	color: #eee;
+	background: url(/images/accept_16.png) 10% 50% no-repeat #222;
+}

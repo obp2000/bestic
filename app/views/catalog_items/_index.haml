@@ -1,0 +1,5 @@
+#catalog_items
+  = page_title
+  = render :partial => 'catalog_items/catalog_item', :collection => @objects
+  = will_paginate @objects
+#details

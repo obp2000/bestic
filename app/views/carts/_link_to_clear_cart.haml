@@ -1,0 +1,1 @@
+= link_to_remote image_tag(Cart.clear_image) + Cart.clear_text, :url => cart_path, :method => :delete unless do_not_show( session.cart )

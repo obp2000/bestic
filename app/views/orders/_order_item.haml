@@ -1,0 +1,8 @@
+= link_to_show_order_item order_item
+= render_attrs order_item.size rescue nil
+= render_attrs order_item.colour rescue nil
+= order_item.amount
+= SHT + ","
+= roubles order_item.order_item_sum
+= RUB
+%br

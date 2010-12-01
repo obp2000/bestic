@@ -1,0 +1,16 @@
+﻿!!! Strict
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => "text/html; charset=UTF-8"}
+    %title= APPLICATION_TITLE
+    = javascript_include_tag application_javascripts
+    = stylesheet_link_tag application_stylesheets
+       
+  %body
+    #wrapper
+      #header
+        = render :partial => "catalog_items/header"
+      #nav
+        = render :partial => "catalog_items/nav" unless controller_name == "sessions" or controller_name == "users"
+      #content
+        = yield

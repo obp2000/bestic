@@ -1,0 +1,8 @@
+%h1 Размер
+%dl
+  %dt Название
+  %dd=  @photo.name
+  %dd
+    = image_tag("#{@photo.name}") unless @photo.name.empty?
+= link_to 'Редактировать', edit_photo_path(@photo)
+= link_to 'Назад', photos_path

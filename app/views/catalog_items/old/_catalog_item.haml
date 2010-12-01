@@ -1,0 +1,26 @@
+- div_for catalog_item, :class => "ui-widget-content ui-corner-all shadow" do
+  %table
+    %tr
+      %td
+        - form_remote_tag :url => cart_item_path(catalog_item), :method => :put do
+          %div
+            = link_to_remote catalog_item.name, :url => catalog_item_path(catalog_item), :method => :get
+            = "&nbsp;/ "
+            =  number_to_currency(catalog_item.price, :unit => "", :precision => 0, :delimiter => " ") + " руб. "
+            = image_submit_tag("basket_add.png")
+          - for size in catalog_item.sizes
+            = radio_button_tag("size_id", size.id) if catalog_item.sizes.size > 1
+            = size.name + "&nbsp;&nbsp;&nbsp;"
+          %br
+          - for colour in catalog_item.colours
+            = radio_button_tag("colour_id", colour.id) if catalog_item.colours.size > 1
+            %span(style = "background-color:##{colour.html_code}; color: white;")= colour.name
+      %td
+        = content_tag( :div, textilize_without_paragraph( catalog_item.blurb ) ) unless catalog_item.blurb.blank?
+      %td
+        %table
+          %tr
+            - catalog_item.photos.each do |photo|
+              %td
+                = link_to image_tag(photo.public_filename(:small)), photo.public_filename, :popup => true
+                %pre= word_wrap(photo.comment, 15)

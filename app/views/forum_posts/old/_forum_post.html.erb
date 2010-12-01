@@ -1,0 +1,5 @@
+<% div_for( forum_post, :style =>"margin-left: #{forum_post.depth*20}px" ) do %>
+  <%= link_to (h forum_post.subject), forum_post %>&nbsp;&nbsp;&nbsp;
+  автор: <%= h forum_post.name %> &middot;
+  <%= forum_post.created_at.strftime("%d.%m.%Y %H:%M:%S") %>
+<% end %>

@@ -1,0 +1,7 @@
+- remote_form_for category do |f|
+  = f.error_messages
+  = f.text_field :name
+  = image_submit_tag Category.save_image, :title => Category.save_title
+  - unless category.new_record?
+    = link_to_delete category
+    = link_to_add_to_item category

@@ -1,0 +1,2 @@
+= radio_button_tag "colour_id", ( colour.id rescue 0 ), checked, :style => "visibility: " + visibility
+= render :partial => "shared/colour", :object => colour rescue "Любой"

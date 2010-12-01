@@ -1,0 +1,17 @@
+%div{ :id => @object.class.name.tableize }
+  = page_title
+  = render :partial => 'orders/navigation'
+  %table{:summary => Order.index_page_title}
+    %caption
+      = will_paginate @objects
+    %tr
+      %th{:scope => "col"}= Order.id_rus
+      %th{:scope => "col"}= Order.status_header_rus
+      %th{:scope => "col"}= Order.total_rus
+      %th{:scope => "col"}= Order.count_rus
+      %th{:scope => "col"}= Order.created_at_rus
+      %th{:scope => "col"}= Order.updated_at_rus
+      %th{:scope => "col"}
+    = render :partial => 'orders/order', :collection => @objects
+  #order_details
+  #item_content
