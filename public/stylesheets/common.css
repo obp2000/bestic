@@ -30,6 +30,7 @@ tr:nth_child(even) {
   color: #00ffee; }
 
 a {
+  font-size: 100%;
   padding-left: 0;
   margin-left: 0; }
   a:link, a:visited {
