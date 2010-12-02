@@ -56,7 +56,7 @@
     
 # for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; name.underscore; end
-    def replace_html1; false; end      
+    def replace; :replace; end      
   
 # for "shared/create_or_update.rjs"  
     def create_or_update_partial; new_or_edit_partial; end

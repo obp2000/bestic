@@ -49,7 +49,7 @@ class ProcessedOrder < Order
 
 # for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; "new"; end
-    def replace_html1; true; end
+    def replace; :replace_html; end
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; new_or_edit_partial; end      

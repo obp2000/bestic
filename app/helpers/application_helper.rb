@@ -6,8 +6,7 @@ module ApplicationHelper
     opts1 = lambda { [ ( self[:object].class.content rescue false ) || self[:objects].first.class.content,
                                      ( self[:object].class.partial rescue false ) || self[:objects].first.class.partial ] }
     content1, partial = opts1.bind( opts )[]
-    with_options :partial => partial, :object => opts[:object], :complete => "attach_js",
-            :locals => { :objects => opts[:objects] } do |with_opts|
+    with_options :partial => partial, :object => opts[:object], :locals => { :objects => opts[:objects] } do |with_opts|
       if ( opts[:object].class.insert_html rescue false )
         action :remove, content1
         with_opts.insert_html :after, "tabs"
@@ -52,7 +51,7 @@ module ApplicationHelper
   def new_or_edit( opts = {} )
     opts1 = lambda { |replace| [ replace, content_for_new_or_edit,
             { :partial => self.class.new_or_edit_partial, :object => self } ]  }
-    action *opts1.bind( opts[:object] )[ opts[:object].class.replace_html1 ? :replace_html : :replace ]             
+    action *opts1.bind( opts[:object] )[ opts[:object].class.replace ]             
     check_cart_links
     visual_effect :fade, :post, :duration => DURATION
     visual_effect :fade, :reply, :duration => DURATION
@@ -63,7 +62,7 @@ module ApplicationHelper
     delay( DURATION ) do    
       send action1, content, opts
       visual_effect :appear, content, :duration => DURATION unless action1 == :remove
-      call("attach_yoxview")
+      call( "attach_js" )      
       call( "attach_mColorPicker" ) if opts[:object].class  == Colour           
     end
   end

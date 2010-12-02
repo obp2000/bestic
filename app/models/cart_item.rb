@@ -14,8 +14,7 @@ class CartItem < ActiveRecord::Base
     def update_object( params, session )
       conditions_hash = lambda { |session1| { :item_id => self[:id].gsub(/catalog_item_/, ""), :size_id => self[:size_id],
                       :colour_id => self[:colour_id], :cart_id => session1.cart.id } }
-      [ ( first( :conditions => conditions_hash.bind( params )[ session ] ).update_amount( 1 ) rescue 
-                      create( conditions_hash.bind( params )[ session ].merge( :amount => 1 ) ) ), true ]
+      [ update_cart_item( conditions_hash.bind( params )[ session ] ), true ]
     end
 
     def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end  
@@ -56,5 +55,11 @@ class CartItem < ActiveRecord::Base
 
 # for "shared/create_or_update.rjs"
   def content_for_create_or_update; tag; end
+
+  private
+  
+    def self.update_cart_item( conditions )
+      first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge( :amount => 1 ) )      
+    end
     
 end

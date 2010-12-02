@@ -88,7 +88,7 @@ class Item < ActiveRecord::Base
       
 # for "shared/new_or_edit.rjs"
     def new_or_edit_partial; "form"; end
-    def replace_html1; true; end      
+    def replace; :replace_html; end      
   
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; edit_partial; end
