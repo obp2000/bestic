@@ -50,6 +50,11 @@ class ProcessedOrder < Order
 # for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; "new"; end
     def replace; :replace_html; end
+    def after_new_or_edit_block
+      lambda do |page, object|
+          page.check_cart_links
+      end
+    end        
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; new_or_edit_partial; end      

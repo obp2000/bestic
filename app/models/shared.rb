@@ -8,4 +8,4 @@ module Shared
     def new_render; { :template => "shared/new_or_edit.rjs" }; end
     def edit_render; { :template => "shared/new_or_edit.rjs" }; end
 
-end 
+end

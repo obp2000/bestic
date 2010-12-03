@@ -60,19 +60,53 @@ class ForumPost < ActiveRecord::Base
     def show_render; { :template => "shared/show.rjs" }; end         
 #    def destroy_render; { :template => "shared/show.rjs" }; end        
     def destroy_render; { :template => "shared/destroy.rjs" }; end
-#    def new_render; { :template => "shared/new_or_edit.rjs" }; end
-#    def reply_render; { :action => "new" }; end  
+    def new_render; { :template => "shared/new_or_edit.rjs" }; end
+    def reply_render; { :template => "shared/reply.rjs" }; end
+    def create_render; { :template => "shared/create_or_update.rjs" }; end       
 
 # for "shared/index.rjs"  
     def partial; "index"; end
     def content; "content"; end
-    def insert_html; false; end
+    include IndexBlock
       
 # for "shared/show.rjs"
     def fade_content; "post_new";  end
-    def appear_content; "post"; end      
+    def appear_content; "post"; end
+      
+# for "shared/new.rjs"
+    def new_or_edit_partial; "new"; end
+    def replace; :replace_html; end  
+      
+    def after_new_or_edit_block
+      lambda do |page, object|
+        page.visual_effect :fade, :post, :duration => DURATION
+        page.visual_effect :fade, :reply, :duration => DURATION
+      end
+    end       
+    
+    def after_reply_block
+      lambda do |page, object|
+        page.visual_effect :fade, :reply, :duration => DURATION
+      end
+    end 
+
+    def create_or_update_block
+      lambda do |page, object, session|
+        opts = lambda do
+          place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+          [ place, content, { :partial => self.class.name.underscore, :object => self } ]      
+        end
+        page.insert_html *opts.bind( object )[]
+        page.visual_effect :fade, :post, :duration => DURATION
+#        page.visual_effect :fade, :post_new, :duration => DURATION
+        page.visual_effect :fade, :new_forum_post, :duration => DURATION        
+      end
+    end
+
 
   end
+
+  def content_for_new_or_edit; "post_new";  end
 
   def create_notice; root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"; end
 

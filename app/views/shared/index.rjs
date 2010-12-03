@@ -1,1 +1,1 @@
-page.content :object => @object, :objects => @objects
+page.index :objects => @objects

@@ -2,7 +2,8 @@ class ForumPostsController < ApplicationController
   before_filter :login_required, :only => [ :destroy ]
   
   def reply
-    @object = ForumPost.reply( params )
+    @object = controller_name.classify.constantize.reply( params )
+    page_title    
     render_action1    
   end
   

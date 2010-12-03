@@ -33,7 +33,14 @@ class Cart < ActiveRecord::Base
       
 #for "shared/index
     def partial; "carts/cart"; end
-    def content; "cart"; end       
+    def content; "cart"; end
+      
+    def after_destroy_block
+      lambda do |page, object, session|
+        page.check_cart_links
+        page.check_cart_totals( session )
+      end
+    end        
     
   end
 

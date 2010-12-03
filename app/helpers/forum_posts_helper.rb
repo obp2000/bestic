@@ -1,33 +1,16 @@
 module ForumPostsHelper
   
-  def reply
-    visual_effect :appear, :post_new
-    replace_html "post_new", :partial => "new"     
-    visual_effect :fade, :reply
-  end
-
-  def new_forum_post
-    visual_effect :fade, :post
-    reply
-  end
-  
-  def create_forum_post( forum_post )
-    opts = lambda do
-      place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-      [ place, content, { :partial => self.class.name.underscore, :object => self } ]      
-    end
-    insert_html *opts.bind( forum_post )[]
-    with_options :duration => DURATION do |with_duration|
-      with_duration.visual_effect :fade, :post
-      with_duration.visual_effect :fade, :post_new
-    end
-    show_notice
-  end
-
-#  def destroy_forum_posts( forum_posts )
-#    forum_posts.each do |forum_post|
-#      destroy1( forum_post )
+#  def create_forum_post( forum_post )
+#    opts = lambda do
+#      place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+#      [ place, content, { :partial => self.class.name.underscore, :object => self } ]      
 #    end
+#    insert_html *opts.bind( forum_post )[]
+#    with_options :duration => DURATION do |with_duration|
+#      with_duration.visual_effect :fade, :post
+#      with_duration.visual_effect :fade, :post_new
+#    end
+#    show_notice
 #  end
   
   def link_to_reply_to( forum_post )

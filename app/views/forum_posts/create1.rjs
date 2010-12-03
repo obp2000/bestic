@@ -1,0 +1,1 @@
+page.create_forum_post @object

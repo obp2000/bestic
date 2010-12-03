@@ -69,7 +69,36 @@
       
     def new_tag; "new_#{name.underscore}"; end
       
-    def insert_html; true; end
+    def index_block
+      lambda do |page, objects|
+        page.action :remove, content
+        page.insert_html :after, "tabs",  :partial => partial, :locals => { :objects => objects }
+        objects.first.class.after_index_block[ page, objects ] rescue nil        
+      end
+    end
+    
+    def create_or_update_block
+      lambda do |page, object, session|
+        page.visual_effect :fade, object.content_for_create_or_update, :duration => DURATION
+        page.delay( DURATION ) do      
+          page.remove object.content_for_create_or_update
+          opts = lambda { [ :bottom, self.class.list_tag, { :object => self, :partial => self.class.create_or_update_partial } ] }
+          page.insert_html *opts.bind( object )[]
+          object.class.after_create_or_update_block[ page, object, session ] rescue nil
+        end
+      end
+    end
+
+    def destroy_block
+      lambda do |page, objects, session|
+        objects.each do |object|
+          page.action :remove, object.edit_tag      
+          page.action :remove, object.tag
+        end
+        objects.first.class.after_destroy_block[ page, objects, session ] rescue nil        
+      end
+    end
+      
       
     def duration_fade; DURATION; end
       

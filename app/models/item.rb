@@ -96,7 +96,7 @@ class Item < ActiveRecord::Base
 # for "shared/index.rjs"
     def partial; "index"; end
     def content; "content"; end
-    def insert_html; false; end
+    include IndexBlock          
       
 # for "shared/show.rjs"
     def fade_content; "item_content";  end

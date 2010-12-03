@@ -35,6 +35,14 @@ class Category < ActiveRecord::Base
         category.send( season_class.name.tableize ).size == 0
       end
     end
+    
+    def after_create_or_update_block
+      lambda do |page, object, session|
+          opts = lambda { [ self.class.new_tag, { :object => self.class.new, :partial => self.class.create_or_update_partial } ] }
+          page.replace *opts.bind( object )[]                       
+          page.replace object.tag, :partial => "items/" + object.class.new_or_edit_partial, :object => object          
+      end
+    end    
       
   end
    

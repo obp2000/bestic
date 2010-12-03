@@ -47,6 +47,12 @@ class Photo < ActiveRecord::Base
     def responds_to_parent; true; end
       
     def new_partial; "upload_photo"; end      
+    
+    def after_index_block
+      lambda do |page, objects|
+        page.call("attach_yoxview")
+      end
+    end       
   
   end 
 

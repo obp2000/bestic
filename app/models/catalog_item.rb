@@ -61,7 +61,7 @@ class CatalogItem < Item
 # for "shared/index.rjs"
     def partial; "catalog_items/index"; end
     def content; "content"; end
-    def insert_html; false; end
+    include IndexBlock
       
 # for "shared/show.rjs"
     def fade_content; "catalog_items";  end
