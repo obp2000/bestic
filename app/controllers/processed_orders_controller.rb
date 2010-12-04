@@ -6,10 +6,10 @@ class ProcessedOrdersController < OrdersController
     super captcha_validated?
   end
 
-  def close 
-    @object = ProcessedOrder.find params[ :id ] 
-    @object.close
-    flash.now[ :notice ] = @object.close_notice
+  def close
+    @object = controller_name.classify.constantize.close_object( params, session )
+    flash_notice
+    render_action1   
   end
   
 end

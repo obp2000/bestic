@@ -48,12 +48,25 @@ class Photo < ActiveRecord::Base
       
     def new_partial; "upload_photo"; end      
     
-    def after_index_block
-      lambda do |page, objects|
-        page.call("attach_yoxview")
-      end
-    end       
+#    def after_index_block
+#      lambda do |page, objects|
+#        page.call("attach_yoxview")
+#      end
+#    end       
   
+    def add_to_item_block
+      lambda do |page, object|
+        page.remove object.tag
+        page.insert_html :bottom, "form_#{object.class.list_tag}", { :partial => "items/photo", :object => object }  
+      end
+    end  
+  
+    def after_add_to_item_block
+      lambda do |page, objects|
+        page.call( "attach_yoxview" )
+      end
+    end   
+    
   end 
 
 end

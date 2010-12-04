@@ -38,11 +38,19 @@ class Category < ActiveRecord::Base
     
     def after_create_or_update_block
       lambda do |page, object, session|
-          opts = lambda { [ self.class.new_tag, { :object => self.class.new, :partial => self.class.create_or_update_partial } ] }
-          page.replace *opts.bind( object )[]                       
-          page.replace object.tag, :partial => "items/" + object.class.new_or_edit_partial, :object => object          
+        opts = lambda { [ self.class.new_tag, { :object => self.class.new, :partial => self.class.create_or_update_partial } ] }
+        page.replace *opts.bind( object )[]                       
+        page.replace object.tag, :partial => "items/" + object.class.new_or_edit_partial, :object => object          
       end
     end    
+
+    def add_to_item_block
+      lambda do |page, object|
+        opts = lambda { [ :replace_html, "form_#{self.class.list_tag}",
+                { :partial => "items/#{self.class.name.underscore}", :object => self } ] }
+        page.action *opts.bind( object )[]                      
+      end
+    end         
       
   end
    

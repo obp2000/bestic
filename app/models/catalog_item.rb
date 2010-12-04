@@ -1,5 +1,7 @@
 # coding: utf-8
 class CatalogItem < Item
+#  cattr_accessor :not_xhr_index_render
+#  @@not_xhr_index_render = { :partial => "index", :layout => "application" }
 
   PER_PAGE = 8
   SEARCH_PER_PAGE = 8  
@@ -19,17 +21,14 @@ class CatalogItem < Item
     def catalog_items( params ); all; end
 
     def search_results( params )
-      search_params1 = lambda { [ self[:q], { :page => self[:page], :per_page => CatalogItem::SEARCH_PER_PAGE,
+      search_params1 = lambda { [ self[ :q ], { :page => self[ :page ], :per_page => CatalogItem::SEARCH_PER_PAGE,
                 :order => :id, :sort_mode => :desc } ] }
-#      @search_amount = ( results = search( *params.search_params ) ).size #rescue 0
       @search_amount = ( results = search( *search_params1.bind( params )[] ) ).size
       @q = params[ :q ]
       results
     end
 
-    def index_page_title
-      "Каталог #{class_name_rus}ов#{': ' + season_name}#{': ' + @category.name rescue ''}"          
-    end
+    def index_page_title; "Каталог #{class_name_rus}ов#{': ' + season_name}#{': ' + @category.name rescue ''}"; end
 
     def search_page_title
       if @search_amount > 0
@@ -39,7 +38,7 @@ class CatalogItem < Item
       end
     end
 
-    def category( params ); @category = Category.find params[:category_id]; end
+    def category( params ); @category = Category.find params[ :category_id ]; end
     
     def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
 

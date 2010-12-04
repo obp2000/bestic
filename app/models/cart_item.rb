@@ -26,36 +26,15 @@ class CartItem < ActiveRecord::Base
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; "cart_items/cart_item"; end
-    def create_or_update_block
-      lambda do |page, object, session|
-        page.visual_effect :fade, object.content_for_create_or_update, :duration => DURATION
-        page.delay( DURATION ) do      
-          page.remove object.content_for_create_or_update
-          opts = lambda { [ :bottom, self.class.list_tag, { :object => self,
-                      :partial => self.class.create_or_update_partial } ] }
-          page.insert_html *opts.bind( object )[]
-          object.class.after_create_or_update_block[ page, object, session ] rescue nil
-        end
-      end
-    end
     
     def after_create_or_update_block
       lambda do |page, object, session|
+        page.remove object.tag unless object.amount > 0
         page.check_cart_links
         page.check_cart_totals( session )
       end
-    end     
-
-    def destroy_block
-      lambda do |page, objects, session|
-        objects.each do |object|
-          page.action :remove, object.edit_tag      
-          page.action :remove, object.tag
-        end
-        object.class.after_create_or_update_block[ page, objects, session ] rescue nil        
-      end
-    end      
-      
+    end
+    alias_method :after_destroy_block, :after_create_or_update_block
       
 #for "shared/index
     def partial; "carts/cart"; end

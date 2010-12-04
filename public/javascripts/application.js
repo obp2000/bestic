@@ -21,19 +21,7 @@ $(function() {
 
 function attach_js() {
 	attach_yoxview();
-
 	attach_shadowOn();
-
-/*
-	attach_jniceit();
-*/
-
-/*
-	$("form input").filter(":checkbox,:radio").checkbox();
-
-	attach_jRounded(); 
-*/
-
 }
 
 function attach_yoxview() {

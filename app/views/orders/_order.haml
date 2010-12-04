@@ -8,5 +8,5 @@
     - if order.closed?
       = date_time_rus order.updated_at
     - else
-      = link_to_close_processed_order order
+      = link_to_close order
   %td= link_to_delete order

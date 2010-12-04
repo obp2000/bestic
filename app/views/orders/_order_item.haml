@@ -1,6 +1,6 @@
 = link_to_show_order_item order_item
-= render_attrs order_item.size rescue nil
-= render_attrs order_item.colour rescue nil
+- [ "size", "colour" ].each do |attr|
+  = render_attrs order_item.send( attr ) rescue nil
 = order_item.amount
 = SHT + ","
 = roubles order_item.order_item_sum

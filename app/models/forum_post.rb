@@ -80,13 +80,13 @@ class ForumPost < ActiveRecord::Base
     def after_new_or_edit_block
       lambda do |page, object|
         page.visual_effect :fade, :post, :duration => DURATION
-        page.visual_effect :fade, :reply, :duration => DURATION
+        page.visual_effect :fade, :link_to_reply, :duration => DURATION
       end
     end       
     
     def after_reply_block
       lambda do |page, object|
-        page.visual_effect :fade, :reply, :duration => DURATION
+        page.visual_effect :fade, :link_to_reply, :duration => DURATION
       end
     end 
 
@@ -98,11 +98,9 @@ class ForumPost < ActiveRecord::Base
         end
         page.insert_html *opts.bind( object )[]
         page.visual_effect :fade, :post, :duration => DURATION
-#        page.visual_effect :fade, :post_new, :duration => DURATION
         page.visual_effect :fade, :new_forum_post, :duration => DURATION        
       end
     end
-
 
   end
 

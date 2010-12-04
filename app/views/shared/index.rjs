@@ -1,1 +1,1 @@
-page.index :objects => @objects
+page.index @objects

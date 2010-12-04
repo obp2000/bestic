@@ -36,7 +36,8 @@ class Cart < ActiveRecord::Base
     def content; "cart"; end
       
     def after_destroy_block
-      lambda do |page, object, session|
+      lambda do |page, objects, session|
+        p "eeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
         page.check_cart_links
         page.check_cart_totals( session )
       end

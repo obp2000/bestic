@@ -1,1 +1,1 @@
-page.new_or_edit :object => @object
+page.new_or_edit @object

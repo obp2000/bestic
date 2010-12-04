@@ -27,7 +27,14 @@ class ProcessedOrder < Order
   
   class << self
     
+    def close_object( params, session )
+      ( object = find params[:id] ).close
+      object      
+    end
+    
     def new_render; { :template => "shared/new_or_edit.rjs" }; end
+    def create_render; { :template => "shared/create_or_update.rjs" }; end
+    def close_render; { :template => "shared/close.rjs" }; end           
 
     def new_page_title; "Оформление #{class_name_rus}а"; end  
   
@@ -46,6 +53,8 @@ class ProcessedOrder < Order
     def captcha_text; "Введите, пожалуйста, проверочный код:"; end
     
     def submit_text; "Разместить #{class_name_rus}"; end
+      
+    def duration_fade; 20; end 
 
 # for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; "new"; end
@@ -57,7 +66,22 @@ class ProcessedOrder < Order
     end        
       
 # for "shared/create_or_update.rjs"
-    def create_or_update_partial; new_or_edit_partial; end      
+    def create_or_update_partial; new_or_edit_partial; end
+      
+    def create_or_update_block
+      lambda do |page, object, session|
+        page.delay( object.class.duration_fade ) { page.redirect_to "/" }
+      end
+    end          
+
+    def close_block
+      lambda do |page, object|
+        page.action :replace_html, object.status_tag, ClosedOrder::STATUS_RUS
+        page.action :replace_html, object.updated_tag, page.date_time_rus( object.updated_at )
+        page.action :replace_html, "order_processed", ProcessedOrder.count
+        page.visual_effect :fade, object.close_tag, :duration => DURATION        
+      end
+    end       
       
   end
   
@@ -89,4 +113,3 @@ class ProcessedOrder < Order
   def duration; 20; end
       
 end
-

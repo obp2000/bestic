@@ -2,14 +2,15 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
  
-  def index( opts = {} )
-    opts[ :objects ].first.class.index_block[ page, opts[ :objects ] ]
+  def index( objects )
+    objects.first.class.index_block[ page, objects ]
+    objects.first.class.after_index_block[ page, objects ] rescue nil     
     show_notice
   end 
  
-  def show1( opts = {} )
-    action :replace_html, opts[:object].class.appear_content, :partial => "show"
-    fade_appear *opts[:object].class.fade_appear_args
+  def show1( object )
+    action :replace_html, object.class.appear_content, :partial => "show"
+    fade_appear *object.class.fade_appear_args
   end
 
   def fade_appear( fade, appear )
@@ -19,34 +20,45 @@ module ApplicationHelper
     end
   end
 
-  def new_or_edit( opts = {} )
+  def new_or_edit( object )
     opts1 = lambda { |replace| [ replace, content_for_new_or_edit,
             { :partial => self.class.new_or_edit_partial, :object => self } ]  }
-    action *opts1.bind( opts[:object] )[ opts[:object].class.replace ]
+    action *opts1.bind( object )[ object.class.replace ]
     delay( DURATION ) do       
-      opts[:object].class.after_new_or_edit_block[ page, opts[:object] ] rescue nil
+      object.class.after_new_or_edit_block[ page, object ] rescue nil
     end
   end
 
-  def reply( opts = {} )
+  def reply( object )
     opts1 = lambda { |replace| [ replace, content_for_new_or_edit,
             { :partial => self.class.new_or_edit_partial, :object => self } ]  }
-    action *opts1.bind( opts[:object] )[ opts[:object].class.replace ]
+    action *opts1.bind( object )[ object.class.replace ]
     delay( DURATION ) do       
-      opts[:object].class.after_reply_block[ page, opts[:object] ] rescue nil
+      object.class.after_reply_block[ page, object ] rescue nil
     end
   end  
   
-  def create_or_update( opts = {} )
-    opts[ :object ].class.create_or_update_block[ page, opts[ :object ], opts[ :session ] ]    
-    visual_effect :highlight, opts[:object].content_for_create_or_update, :duration => HIGHLIGHT_DURATION
-    show_notice( :delay => opts[:object].class.duration_fade )
+  def create_or_update( object, session, action_name )
+    object.class.create_or_update_block[ page, object, session ]
+    delay( DURATION ) do        
+      object.class.after_create_or_update_block[ page, object, session ] rescue nil
+    end
+    show_notice( :delay => object.class.duration_fade )    
+    visual_effect :highlight, object.content_for_create_or_update, :duration => HIGHLIGHT_DURATION
     visual_effect :fade, :errorExplanation, :duation => DURATION 
   end
   
-  def destroy1( opts = {} )
-    opts[ :objects ] = [ opts[:objects ] ] unless opts[ :objects ].respond_to?( :each )   
-    opts[ :objects ].first.class.destroy_block[ page, opts[ :objects ], opts[ :session ] ]  
+  def destroy1( objects, session )
+    objects = objects.to_array   
+    objects.first.class.destroy_block[ page, objects, session ]
+    delay( DURATION ) do   
+      objects.first.class.after_destroy_block[ page, objects, session ]# rescue nil
+    end
+    show_notice
+  end
+
+  def close( object )
+    object.class.close_block[ page, object ]  
     show_notice
   end
 
@@ -55,7 +67,6 @@ module ApplicationHelper
     delay( DURATION ) do    
       send action1, content, opts
       visual_effect :appear, content, :duration => DURATION unless action1 == :remove
-      call( "attach_js" )      
     end
   end
     
@@ -94,14 +105,8 @@ module ApplicationHelper
   end
 
   def add_to_item( object )
-    opts = lambda { |partial| [ "form_#{self.class.list_tag}", { :partial => "items/#{partial}", :object => self } ] }
-    if Item.new.respond_to?( object.class.name.underscore )
-      action :replace_html, *opts.bind( object )[ object.class.name.underscore ]  
-    else
-      remove object.tag
-      insert_html :bottom, *opts.bind( object )[ "attr" ]  
-    end
-    call("attach_yoxview") if object.class.attach_yoxview?    
+    object.class.add_to_item_block[ page, object ]
+    object.class.after_add_to_item_block[ page, object ] rescue nil     
   end
 
   def red_star
@@ -130,8 +135,9 @@ module ApplicationHelper
   end
   
   def link_to_delete( object )
-    link_to_remote image_tag( *object.delete_image_with_title ), :url => send( "#{object.class.name.underscore}_path", object  ),
-          :method => :delete, :confirm => object.delete_title        
+    opts = lambda { |image, url| [ image, { :url => url, :method => :delete, :confirm => delete_title } ] }
+    link_to_remote *opts.bind( object )[ image_tag( *object.delete_image_with_title ),
+            send( "#{object.class.name.underscore}_path", object ) ]
   end
   
   def submit_form( f, label )
@@ -153,7 +159,7 @@ module ApplicationHelper
   end
   
   def render_attrs( attrs )
-    attrs = [ attrs ] unless attrs.is_a?( Array )
+    attrs = attrs.to_array
     return "Любой" if attrs.first.id.blank?
     opts = lambda { [  :partial => "shared/#{first.class.name.underscore}", :collection => self,
           :spacer_template => "shared/comma" ] }
@@ -161,11 +167,19 @@ module ApplicationHelper
   end
 
   def render_options( objects )
-    objects = [ objects ] unless objects.is_a?( Array )
+    objects = objects.to_array    
     opts = lambda { [ :partial => "catalog_items/attr", :collection => self,
           :locals => { :checked => (  first.new_record? || !self.second ),
           :visibility => ( second || first.new_record? ) ? "visible" : "hidden" } ] }
     render *opts.bind( objects ).call
   end
-   
+
+end
+
+class Object
+  
+  def to_array
+    is_a?( Array ) ? self : to_a 
+  end
+  
 end

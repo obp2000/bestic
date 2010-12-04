@@ -1,7 +1,7 @@
 .ui-widget-content[ cart_item ]
   = link_to_remote cart_item.name, :url => catalog_item_path( cart_item.item.id ), :method => :get  
-  = render_attrs cart_item.size rescue nil
-  = render_attrs cart_item.colour rescue nil
+  - [ "size", "colour" ].each do |attr|
+    = render_attrs cart_item.send( attr ) rescue nil  
   %p
     = "#{roubles cart_item.price} #{RUB} / #{cart_item.amount} #{SHT}"
     = link_to_delete cart_item unless do_not_show( session.cart )

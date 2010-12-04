@@ -38,8 +38,6 @@
 
     def updated_at_rus; "Изменён"; end      
 
-    def attach_yoxview?; false; end       
-
     def add_to_item_image_with_title; [ add_to_item_image, { :title => add_to_item_title } ]; end
 
     def change_title; "Изменить #{class_name_rus.pluralize}"; end  
@@ -73,9 +71,16 @@
       lambda do |page, objects|
         page.action :remove, content
         page.insert_html :after, "tabs",  :partial => partial, :locals => { :objects => objects }
-        objects.first.class.after_index_block[ page, objects ] rescue nil        
       end
     end
+    
+    def after_index_block
+      lambda do |page, objects|
+        page.delay( DURATION ) do
+          page.call( "attach_js" )
+        end
+      end
+    end      
     
     def create_or_update_block
       lambda do |page, object, session|
@@ -84,8 +89,14 @@
           page.remove object.content_for_create_or_update
           opts = lambda { [ :bottom, self.class.list_tag, { :object => self, :partial => self.class.create_or_update_partial } ] }
           page.insert_html *opts.bind( object )[]
-          object.class.after_create_or_update_block[ page, object, session ] rescue nil
         end
+      end
+    end
+
+    def after_create_or_update_block
+      lambda do |page, object, session|
+        opts = lambda { [ :bottom, self.class.list_tag, { :object => self, :partial => self.class.create_or_update_partial } ] }      
+        page.insert_html *opts.bind( object )[]
       end
     end
 
@@ -95,10 +106,15 @@
           page.action :remove, object.edit_tag      
           page.action :remove, object.tag
         end
-        objects.first.class.after_destroy_block[ page, objects, session ] rescue nil        
       end
     end
       
+    def add_to_item_block
+      lambda do |page, object|
+        page.remove object.tag
+        page.insert_html :bottom, "form_#{object.class.list_tag}", { :partial => "items/attr", :object => object }  
+      end
+    end      
       
     def duration_fade; DURATION; end
       

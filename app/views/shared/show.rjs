@@ -1,1 +1,1 @@
-page.show1 :object => @object
+page.show1 @object
