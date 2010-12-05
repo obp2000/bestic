@@ -26,6 +26,8 @@ class Size < ActiveRecord::Base
 
     def change_image; "pencil-ruler.png"; end
       
+    def index_text; "Размеры"; end      
+      
     def after_create_or_update_block
       lambda do |page, object, session|
           opts = lambda { [ self.class.new_tag, { :object => self.class.new, :partial => self.class.create_or_update_partial } ] }

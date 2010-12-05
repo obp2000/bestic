@@ -22,6 +22,8 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural "сезон", "сезоны"
   inflect.plural "размер одежды", "размеры одежды"
   inflect.plural "пользователь", "пользователи"
+  inflect.uncountable "Назад в магазин"
+  inflect.uncountable "Форум"  
 
   inflect.plural "Товар", "Товары"
   inflect.plural "Цвет", "Цвета"

@@ -52,7 +52,7 @@ module ApplicationHelper
     objects = objects.to_array   
     objects.first.class.destroy_block[ page, objects, session ]
     delay( DURATION ) do   
-      objects.first.class.after_destroy_block[ page, objects, session ]# rescue nil
+      objects.first.class.after_destroy_block[ page, objects, session ] rescue nil
     end
     show_notice
   end
@@ -134,11 +134,45 @@ module ApplicationHelper
     "<h2>#{@page_title}</h2>"
   end
   
+  def link_to_index( class_const, params = nil )
+    name = class_const.send( params[ :sort_by ] ).first.class.index_text rescue class_const.class_name_rus_cap.pluralize rescue ""
+#    link_to_remote *class_const.link_to_index_block.bind( class_const )[ ( send( *class_const.index_image_with_title ) rescue "" ) + 
+#            ( name rescue "" ), send( *class_const.plural_path( params ) ) ]
+    image = ""
+    image = image_tag( *class_const.index_image_with_title ) if ( class_const.index_image_with_title rescue false ) 
+
+    link_to_remote image +
+              name, send( *class_const.plural_path( params ) ), :method => :get        
+  end    
+
+  def link_to_show( object )
+    link_to_remote *object.class.link_to_show_block.bind( object )[ ( send( *object.class.show_image_with_title ) rescue "" ) + 
+            ( object.class.class_name_rus_cap.pluralize rescue "" ), send( *object.single_path ) ] rescue object.class.deleted_notice     
+  end  
+  
+  def link_to_new( class_const )
+    link_to_remote *class_const.link_to_new_block.bind( class_const )[ send( *class_const.new_image_with_title ) + 
+            ( class_const.new_text rescue "" ), send( *class_const.new_path ) ]
+  end  
+  
+  def link_to_reply_to( object )
+    link_to_remote *object.class.link_to_reply_block.bind( object )[ send( *object.class.reply_image_with_title ) + 
+            ( object.class.reply_text rescue "" ), send( *object.class.reply_path ) ]          
+  end  
+  
   def link_to_delete( object )
-    opts = lambda { |image, url| [ image, { :url => url, :method => :delete, :confirm => delete_title } ] }
-    link_to_remote *opts.bind( object )[ image_tag( *object.delete_image_with_title ),
-            send( "#{object.class.name.underscore}_path", object ) ]
+    link_to_remote *object.class.link_to_delete_block.bind( object )[ send( *object.delete_image_with_title ) +
+    ( object.class.delete_text rescue "" ), send( *object.single_path ) ]
   end
+  
+  def link_to_close( object )
+    link_to_remote *object.class.link_to_close_block.bind( object )[ send( *object.close_image_with_title ),
+            send( *object.close_path ) ]            
+  end  
+  
+  def link_to_logout( class_const )
+    link_to class_const.logout_text, logout_path
+  end  
   
   def submit_form( f, label )
     f.submit label, :onclick => "$(this).fadeOut().fadeIn()"

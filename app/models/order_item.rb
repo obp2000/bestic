@@ -12,7 +12,7 @@ class OrderItem < ActiveRecord::Base
 
   class << self
 
-    def deleted_item_notice; "#{class_name_rus_cap} удалён из каталога!"; end  
+#    def deleted_item_notice; "#{class_name_rus_cap} удалён из каталога!"; end  
 
     def class_name_rus; "товар"; end
 

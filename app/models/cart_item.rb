@@ -2,6 +2,7 @@
 class CartItem < ActiveRecord::Base
   belongs_to :cart
   belongs_to :item
+  belongs_to :catalog_item, :foreign_key => :item_id  
   belongs_to :size
   belongs_to :colour
   

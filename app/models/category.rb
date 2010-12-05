@@ -50,7 +50,9 @@ class Category < ActiveRecord::Base
                 { :partial => "items/#{self.class.name.underscore}", :object => self } ] }
         page.action *opts.bind( object )[]                      
       end
-    end         
+    end
+    
+    def index_text; "Вид одежды"; end     
       
   end
    

@@ -1,4 +1,4 @@
-= link_to_show_order_item order_item
+= link_to_show order_item.item
 - [ "size", "colour" ].each do |attr|
   = render_attrs order_item.send( attr ) rescue nil
 = order_item.amount

@@ -1,1 +1,1 @@
-= link_to_remote image_tag(ProcessedOrder.new_image) + ProcessedOrder.new_text, :url => new_processed_order_path, :method => :get unless do_not_show( session.cart )
+= link_to_new ProcessedOrder unless do_not_show( session.cart )

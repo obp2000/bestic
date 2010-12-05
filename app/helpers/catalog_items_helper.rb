@@ -16,5 +16,9 @@ module CatalogItemsHelper
               { :style => "visibility: " + visibility1 } ] }
     radio_button_tag *opts.bind( attr )[ checked, visibility ]
   end
+  
+  def link_to_index_local( class_const )
+    link_to class_const.index_text, send( *class_const.plural_path ), :method => :get
+  end
 
 end

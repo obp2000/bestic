@@ -17,9 +17,9 @@ class Contact < ActiveRecord::Base
   extend Shared 
   class << self
   
-    def class_name_rus; "контакты"; end
+    def class_name_rus; "контакт"; end
 
-    def class_name_rus_cap; "Контакты"; end  
+    def class_name_rus_cap; "Контакт"; end  
 
     def show_page_title; class_name_rus_cap; end
 
@@ -27,7 +27,7 @@ class Contact < ActiveRecord::Base
 
     def save_image; "document-save.png"; end
 
-    def link_image; "contacts.png"; end
+    def show_image; "contacts.png"; end
   
     def name_rus; "Имя"; end
 

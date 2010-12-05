@@ -16,7 +16,7 @@ class Order < ActiveRecord::Base
   
     def class_name_rus; "заказ"; end  
 
-    def class_name_rus_cap; "Заказ"; end    
+    def class_name_rus_cap; "Все заказ"; end    
   
     def all_and_new( params ); [ paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ), new ]; end
     

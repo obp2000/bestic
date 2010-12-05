@@ -56,6 +56,7 @@ class Colour < ActiveRecord::Base
       end
     end      
       
+    def index_text; "Цвета"; end       
       
   end
     

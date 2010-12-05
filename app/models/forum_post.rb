@@ -20,7 +20,7 @@ class ForumPost < ActiveRecord::Base
     
     def class_name_rus; "сообщение"; end  
 
-    def class_name_rus_cap; "Сообщение"; end  
+    def class_name_rus_cap; "Форум"; end  
 
     def all_and_new( params ); [ paginate( :page => params[:page], :order =>  'root_id desc, lft',  :per_page => 15 ), nil ]; end
 
@@ -34,13 +34,14 @@ class ForumPost < ActiveRecord::Base
 
     def destroy_notice; "Ветвь сообщений удалена"; end
 
-    def index_page_title; "Форум"; end
+    def index_text; "Форум"; end
 
     def controller; "forum_posts"; end
   
     def new_image; "document-edit.png"; end
+    alias_method :reply_image, :new_image
   
-    def link_image; "agt_forum.png"; end
+    def index_image; "agt_forum.png"; end
   
     def new_text; "Новая тема"; end
 
@@ -100,6 +101,10 @@ class ForumPost < ActiveRecord::Base
         page.visual_effect :fade, :post, :duration => DURATION
         page.visual_effect :fade, :new_forum_post, :duration => DURATION        
       end
+    end
+
+    def link_to_show_block
+      lambda { |image, url| [ subject, { :url => url, :method => :get } ] }         
     end
 
   end

@@ -27,6 +27,8 @@ class ProcessedOrder < Order
   
   class << self
     
+    def class_name_rus_cap; "Заказ для исполнения"; end        
+    
     def close_object( params, session )
       ( object = find params[:id] ).close
       object      
@@ -48,7 +50,7 @@ class ProcessedOrder < Order
     
     def close_confirm; "Закрыть #{class_name_rus}?"; end
 
-    def close_image_with_title; [ close_image, { :title => close_title } ]; end
+#    def close_image_with_title; [ close_image, { :title => close_title } ]; end
       
     def captcha_text; "Введите, пожалуйста, проверочный код:"; end
     

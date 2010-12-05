@@ -10,9 +10,9 @@ class Cart < ActiveRecord::Base
 
     def destroy_object( params, session ); session.cart.clear_cart; end
     
-    def clear_image; "basket_close.png"; end
+    def delete_image; "basket_close.png"; end
   
-    def clear_text; "Очистить корзину"; end
+    def delete_text; "Очистить корзину"; end
   
     def nav_image; "basket.png"; end
   
@@ -58,6 +58,8 @@ class Cart < ActiveRecord::Base
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 
   def destroy_notice; "Корзина очищена"; end
+
+  def delete_title; nil; end   
 
   def update_notice; "Добавлен товар"; end
 

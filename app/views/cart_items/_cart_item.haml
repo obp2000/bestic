@@ -1,5 +1,5 @@
 .ui-widget-content[ cart_item ]
-  = link_to_remote cart_item.name, :url => catalog_item_path( cart_item.item.id ), :method => :get  
+  = link_to_show cart_item.catalog_item
   - [ "size", "colour" ].each do |attr|
     = render_attrs cart_item.send( attr ) rescue nil  
   %p

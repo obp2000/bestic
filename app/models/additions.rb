@@ -120,10 +120,79 @@
       
     def fade_appear_args; [ fade_content, appear_content ]; end
 
-    def appear_fade_args; [ appear_content, fade_content ]; end      
+    def appear_fade_args; [ appear_content, fade_content ]; end
+      
+    def link_to_delete_block 
+      lambda { |image, url| [ image, { :url => url, :method => :delete, :confirm => delete_title } ] }
+    end
+
+    def link_to_close_block 
+      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => close_tag },
+            :confirm => self.class.close_confirm } ] }
+    end  
+  
+    def link_to_index_block
+      lambda { |image, url| [ image, { :url => url, :method => :get } ] }      
+    end  
+  
+    def link_to_show_block
+      lambda { |image, url| [ image, { :url => url, :method => :get } ] }      
+    end
+
+    def link_to_new_block
+      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => "link_to_new" } } ] } 
+    end
+
+    def link_to_reply_block
+      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => "link_to_reply" } } ] } 
+    end
+
+    def index_image_with_title
+      [ index_image, { :title => ( index_title rescue nil ) } ]
+    end
+
+    def new_image_with_title
+      [ "image_tag", new_image, { :title => ( new_title rescue nil ) } ]
+    end   
+  
+    def reply_image_with_title
+      [ "image_tag", reply_image, { :title => ( reply_title rescue "" ) } ]
+    end  
+  
+    def show_image_with_title
+      [ "image_tag", show_image, { :title => ( show_title rescue "" ) } ]
+    end  
+  
+    def plural_path( params = nil )
+    [ "#{name.tableize}_path", params ]
+    end   
+
+    def new_path
+      [ "new_#{name.underscore}_path", self ]
+    end   
+
+    def reply_path
+      [ "reply_#{name.underscore}_path", self ]
+    end   
   
   end
   
+  def single_path
+    [ "#{self.class.name.underscore}_path", self ]
+  end
+
+  def close_path
+    [ "close_#{self.class.name.underscore}_path", self ]
+  end
+    
+  def delete_image_with_title
+    [ "image_tag", self.class.delete_image, { :title => delete_title } ]
+  end    
+
+  def close_image_with_title
+    [ "image_tag", self.class.close_image, { :title => self.class.close_title } ]
+  end
+    
   def update_object( params, session ); update_attributes( params[self.class.name.underscore] ); end
   
   def save_object( session ); save; end
@@ -136,7 +205,7 @@
 
   def destroy_notice; "#{self.class.class_name_rus_cap} удалён."; end  
   
-  def delete_image_with_title; [ self.class.delete_image, { :title => delete_title } ]; end
+#  def delete_image_with_title; [ self.class.delete_image, { :title => delete_title } ]; end
 
   def subject_or_name; respond_to?( :subject ) ? subject : name; end
     

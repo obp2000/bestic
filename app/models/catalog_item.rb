@@ -12,6 +12,8 @@ class CatalogItem < Item
 
   class << self
     
+    def index_text; "Назад в магазин"; end       
+    
     def controller; "catalog_items"; end
 
     def all_and_new( params )

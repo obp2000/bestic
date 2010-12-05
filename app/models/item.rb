@@ -76,6 +76,12 @@ class Item < ActiveRecord::Base
 
     def name_rus; "Название"; end     
    
+#    def sizes_rus; "Размеры"; end
+      
+    def colours_rus; "Цвета"; end
+      
+    def category_rus; "Вид одежды"; end
+   
     def price_rus; "Цена"; end  
    
     def submit_image; "document-save.png"; end
@@ -85,6 +91,8 @@ class Item < ActiveRecord::Base
     def new_image; "newdoc.png"; end
 
     def new_title; "Добавить "; end
+      
+    def deleted_notice; "#{class_name_rus_cap} удалён из каталога!"; end        
       
 # for "shared/new_or_edit.rjs"
     def new_or_edit_partial; "form"; end
