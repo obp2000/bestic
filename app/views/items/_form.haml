@@ -31,5 +31,5 @@
   = date_time_rus @object.created_at
   %b= Item.updated_at_rus.colon
   = date_time_rus @object.updated_at
-  = image_submit_tag Item.submit_image, :title => Item.submit_title
+  = submit_to Item
   = textile_editor_initialize

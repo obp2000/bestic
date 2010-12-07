@@ -15,6 +15,10 @@
     end     
     
     def new_object( params, session ); new params[ name.underscore ]; end
+
+    def create_render_block
+      lambda { render :template => "shared/create_or_update.rjs" }
+    end
     
     def back_image; "back1.png"; end
 
@@ -29,10 +33,14 @@
     def close_window_image; "close.png"; end
 
     def close_window_title; "Закрыть окно"; end
+      
+    def submit_image_with_options
+      [ "image_submit_tag", submit_image, { :title => submit_title } ]
+    end    
  
-    def save_image; "document-save-16.png"; end
+    def submit_image; "document-save-16.png"; end
 
-    def save_title; "Сохранить"; end
+    def submit_title; "Сохранить"; end
   
     def created_at_rus; "Создан"; end  
 
@@ -68,47 +76,20 @@
     def new_tag; "new_#{name.underscore}"; end
       
     def index_block
-      lambda do |page, objects|
-        page.action :remove, content
-        page.insert_html :after, "tabs",  :partial => partial, :locals => { :objects => objects }
+      lambda do |page|
+        page.action :remove, first.class.content
+        page.insert_html :after, "tabs",  :partial => first.class.partial, :locals => { :objects => self }
       end
     end
     
     def after_index_block
-      lambda do |page, objects|
+      lambda do |page|
         page.delay( DURATION ) do
           page.call( "attach_js" )
         end
       end
     end      
-    
-    def create_or_update_block
-      lambda do |page, object, session|
-        page.visual_effect :fade, object.content_for_create_or_update, :duration => DURATION
-        page.delay( DURATION ) do      
-          page.remove object.content_for_create_or_update
-          opts = lambda { [ :bottom, self.class.list_tag, { :object => self, :partial => self.class.create_or_update_partial } ] }
-          page.insert_html *opts.bind( object )[]
-        end
-      end
-    end
-
-    def after_create_or_update_block
-      lambda do |page, object, session|
-        opts = lambda { [ :bottom, self.class.list_tag, { :object => self, :partial => self.class.create_or_update_partial } ] }      
-        page.insert_html *opts.bind( object )[]
-      end
-    end
-
-    def destroy_block
-      lambda do |page, objects, session|
-        objects.each do |object|
-          page.action :remove, object.edit_tag      
-          page.action :remove, object.tag
-        end
-      end
-    end
-      
+     
     def add_to_item_block
       lambda do |page, object|
         page.remove object.tag
@@ -121,77 +102,158 @@
     def fade_appear_args; [ fade_content, appear_content ]; end
 
     def appear_fade_args; [ appear_content, fade_content ]; end
-      
-    def link_to_delete_block 
-      lambda { |image, url| [ image, { :url => url, :method => :delete, :confirm => delete_title } ] }
-    end
-
-    def link_to_close_block 
-      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => close_tag },
-            :confirm => self.class.close_confirm } ] }
-    end  
-  
-    def link_to_index_block
-      lambda { |image, url| [ image, { :url => url, :method => :get } ] }      
-    end  
-  
-    def link_to_show_block
-      lambda { |image, url| [ image, { :url => url, :method => :get } ] }      
-    end
 
     def link_to_new_block
-      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => "link_to_new" } } ] } 
+      lambda do |helper|
+        image = helper.image_tag( *self.new_image_with_title ) rescue ""
+        text = new_text rescue ""
+        helper.link_to_remote image + text, :url => helper.send( *self.new_path ), :method => :get,
+                :html => { :id => "link_to_new" }
+      end
     end
 
-    def link_to_reply_block
-      lambda { |image, url| [ image, { :url => url, :method => :get, :html => { :id => "link_to_reply" } } ] } 
+    def link_to_index_block
+      lambda do |helper, params|
+        image = helper.image_tag( *self.index_image_with_title ) rescue ""
+        text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] + "_rus" ) ) rescue class_name_rus_cap.pluralize rescue ""
+        helper.link_to_remote image + text, :url => helper.send( *self.plural_path( params ) ), :method => :get  
+      end
     end
 
-    def index_image_with_title
-      [ index_image, { :title => ( index_title rescue nil ) } ]
+    def link_to_season_block
+      lambda do |page|
+        page.link_to_remote page.image_tag( season_icon ) + season_name + " (#{count})",
+                :url => page.send( *self.plural_path ), :method => :get, :complete => "attach_js()"
+      end      
     end
 
-    def new_image_with_title
-      [ "image_tag", new_image, { :title => ( new_title rescue nil ) } ]
-    end   
-  
-    def reply_image_with_title
-      [ "image_tag", reply_image, { :title => ( reply_title rescue "" ) } ]
-    end  
-  
-    def show_image_with_title
-      [ "image_tag", show_image, { :title => ( show_title rescue "" ) } ]
-    end  
-  
-    def plural_path( params = nil )
-    [ "#{name.tableize}_path", params ]
-    end   
+    def index_image_with_title; [ index_image, { :title => ( index_title rescue "" ) } ]; end
 
-    def new_path
-      [ "new_#{name.underscore}_path", self ]
-    end   
+    def new_image_with_title; [ new_image, { :title => ( new_title rescue "" ) } ]; end   
+  
+    def reply_image_with_title; [ reply_image, { :title => ( reply_title rescue "" ) } ]; end  
+  
+    def show_image_with_title; [ show_image, { :title => ( show_title rescue "" ) } ]; end
+      
+    def submit_image_with_title; [ submit_image, { :title => ( submit_title rescue "" ) } ]; end
+  
+    def plural_path( params = nil ); [ "#{name.tableize}_path", params ]; end   
 
-    def reply_path
-      [ "reply_#{name.underscore}_path", self ]
-    end   
+    def new_path; [ "new_#{name.underscore}_path" ]; end   
   
   end
-  
-  def single_path
-    [ "#{self.class.name.underscore}_path", self ]
+
+  def show_block
+    lambda do |page|
+      page.action :replace_html, self.class.appear_content, :partial => "show"
+      page.fade_appear *self.class.fade_appear_args      
+    end
   end
 
-  def close_path
-    [ "close_#{self.class.name.underscore}_path", self ]
+  def after_show_block
+    lambda do |page|
+      page.call( "attach_yoxview" )     
+    end
   end
-    
-  def delete_image_with_title
-    [ "image_tag", self.class.delete_image, { :title => delete_title } ]
+
+  def new_or_edit_block
+    lambda do |page|
+#      opts1 = lambda { |replace| [ self.class.replace, content_for_new_or_edit,
+#              { :partial => self.class.new_or_edit_partial, :object => self } ]  }
+      page.action self.class.replace, content_for_new_or_edit, :partial => self.class.new_or_edit_partial, :object => self 
+    end
+  end  
+
+  def create_or_update_block
+    lambda do |page, session|
+      page.visual_effect :fade, content_for_create_or_update, :duration => DURATION
+      page.delay( DURATION ) do      
+        page.remove content_for_create_or_update
+        page.insert_html :bottom, self.class.list_tag, :object => self, :partial => self.class.create_or_update_partial 
+      end
+    end
+  end
+
+  def after_create_or_update_block
+    lambda do |page, session|
+      page.insert_html :bottom, self.class.list_tag, :object => self, :partial => self.class.create_or_update_partial
+    end
+  end
+
+  def destroy_block
+    lambda do |page|
+      page.action :remove, edit_tag rescue nil      
+      page.action :remove, tag rescue nil
+    end
+  end
+
+  def link_to_category_block
+    lambda do |page, seasons|
+      page.link_to_remote name + " (#{send( seasons ).size})", :url => page.send( "category_#{seasons}_path", self ),
+              :method => :get, :complete => "attach_js()", :html => { :class => "category" }    
+    end      
+  end
+
+  def render_attrs_block
+    lambda do |page|
+      page.render :partial => "shared/#{first.class.name.underscore}", :collection => self,
+              :spacer_template => "shared/comma"
+    end
+  end
+
+  def render_options_block
+    lambda do |page|
+      page.render :partial => "catalog_items/attr", :collection => self,
+              :locals => { :checked => ( first.new_record? || !self.second ),
+              :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
+    end
+  end
+
+
+  def link_to_show_block
+    lambda do |helper|
+      image = helper.image_tag( *self.class.show_image_with_title ) rescue ""
+      text = ( self.class.show_text rescue helper.html_escape( subject ) ) rescue name rescue ""
+      helper.link_to_remote image + text, :url => helper.send( *self.single_path ), :method => :get rescue self.class.deleted_notice
+    end
+  end
+
+  def link_to_delete_block 
+    lambda do |helper|
+      image = helper.image_tag( *self.delete_image_with_title ) rescue ""
+      text = self.class.delete_text rescue ""
+      helper.link_to_remote image + text, :url => helper.send( *self.single_path ), :method => :delete, :confirm => delete_title 
+    end
+  end
+
+  def link_to_close_block 
+    lambda do |helper|
+      image = helper.image_tag( *self.close_image_with_title ) rescue ""
+      text = self.class.close_text rescue ""
+      helper.link_to_remote image + text, :url => helper.send( *self.close_path ), :method => :get,
+          :html => { :id => close_tag }, :confirm => self.class.close_confirm
+      end
   end    
 
-  def close_image_with_title
-    [ "image_tag", self.class.close_image, { :title => self.class.close_title } ]
-  end
+  def link_to_reply_block 
+    lambda do |helper|
+      image = helper.image_tag( *self.class.reply_image_with_title ) rescue ""
+      text = self.class.reply_text rescue ""    
+      helper.link_to_remote image + text, :url => helper.send( *self.reply_path ), :method => :get,
+          :html => { :id => "link_to_reply" } 
+      end
+  end  
+  
+  
+  def single_path; [ "#{self.class.name.underscore}_path", self ]; end
+
+  def close_path; [ "close_#{self.class.name.underscore}_path", self ]; end
+
+  def reply_path; [ "reply_#{self.class.name.underscore}_path", self ]; end       
+    
+  def delete_image_with_title; [ self.class.delete_image, { :title => ( delete_title rescue "" ) } ]; end    
+
+  def close_image_with_title; [ self.class.close_image, { :title => self.class.close_title } ]; end
     
   def update_object( params, session ); update_attributes( params[self.class.name.underscore] ); end
   
@@ -204,8 +266,6 @@
   def update_notice; "#{self.class.class_name_rus_cap} удачно обновлён."; end
 
   def destroy_notice; "#{self.class.class_name_rus_cap} удалён."; end  
-  
-#  def delete_image_with_title; [ self.class.delete_image, { :title => delete_title } ]; end
 
   def subject_or_name; respond_to?( :subject ) ? subject : name; end
     

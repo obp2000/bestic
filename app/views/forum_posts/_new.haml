@@ -11,5 +11,5 @@
     = f.label( :body, ForumPost.body_rus.colon )
     %br
     = f.text_area :body, :rows => 5
-    = submit_form f, ForumPost.new_submit_text
+    = submit_to ForumPost
     

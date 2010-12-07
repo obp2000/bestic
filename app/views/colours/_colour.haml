@@ -4,7 +4,7 @@
   = f.text_field :html_code
   = link_to_function image_tag( *Colour.add_html_code_to_colour_image_with_title ), Colour.add_html_code_to_colour_js_string
   = content_tag :input, "", :type => "color", :hex => true, :value => "#ffffff"
-  = image_submit_tag Colour.save_image, :title => Colour.save_title
+  = submit_to Colour
   - unless colour.new_record?
     = render_attrs colour
     = link_to_delete colour

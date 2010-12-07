@@ -41,23 +41,22 @@ class Colour < ActiveRecord::Base
 
     def add_html_code_to_colour_js_string; "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"; end
       
-    def after_create_or_update_block
-      lambda do |page, object, session|
-          opts = lambda { [ self.class.new_tag, { :object => self.class.new, :partial => self.class.create_or_update_partial } ] }
-          page.replace *opts.bind( object )[]                       
-          page.replace object.tag, :partial => "items/" + object.class.new_or_edit_partial, :object => object          
-          page.call( "attach_mColorPicker" )
-      end
-    end      
-
-    def after_new_or_edit_block
-      lambda do |page, object|
-          page.call( "attach_mColorPicker" )
-      end
-    end      
-      
     def index_text; "Цвета"; end       
       
   end
+
+  def after_new_or_edit_block
+    lambda do |page|
+      page.call( "attach_mColorPicker" )
+    end
+  end
+
+  def after_create_or_update_block
+    lambda do |page, session|
+      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
+      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
+      page.call( "attach_mColorPicker" )
+    end
+  end       
     
 end

@@ -36,7 +36,7 @@ class ForumPost < ActiveRecord::Base
 
     def index_text; "Форум"; end
 
-    def controller; "forum_posts"; end
+#    def controller; "forum_posts"; end
   
     def new_image; "document-edit.png"; end
     alias_method :reply_image, :new_image
@@ -46,8 +46,12 @@ class ForumPost < ActiveRecord::Base
     def new_text; "Новая тема"; end
 
     def reply_text; "Ответить"; end
+      
+    def submit_image_with_options
+      [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]
+    end
   
-    def new_submit_text; "Отправить"; end
+    def submit_text; "Отправить"; end
 
     def no_forum_posts_text; "В форуме пока ещё нет сообщений. Будьте первым!"; end
     
@@ -77,36 +81,36 @@ class ForumPost < ActiveRecord::Base
 # for "shared/new.rjs"
     def new_or_edit_partial; "new"; end
     def replace; :replace_html; end  
-      
-    def after_new_or_edit_block
-      lambda do |page, object|
-        page.visual_effect :fade, :post, :duration => DURATION
-        page.visual_effect :fade, :link_to_reply, :duration => DURATION
-      end
-    end       
-    
-    def after_reply_block
-      lambda do |page, object|
-        page.visual_effect :fade, :link_to_reply, :duration => DURATION
-      end
-    end 
 
-    def create_or_update_block
-      lambda do |page, object, session|
-        opts = lambda do
-          place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-          [ place, content, { :partial => self.class.name.underscore, :object => self } ]      
-        end
-        page.insert_html *opts.bind( object )[]
-        page.visual_effect :fade, :post, :duration => DURATION
-        page.visual_effect :fade, :new_forum_post, :duration => DURATION        
-      end
+  end
+
+  def after_new_or_edit_block
+    lambda do |page|
+      page.visual_effect :fade, :post, :duration => DURATION
+      page.visual_effect :fade, :link_to_reply, :duration => DURATION
     end
+  end  
 
-    def link_to_show_block
-      lambda { |image, url| [ subject, { :url => url, :method => :get } ] }         
+  def reply_block
+    lambda do |page|
+      page.action self.class.replace, content_for_new_or_edit, :partial => self.class.new_or_edit_partial, :object => self
     end
+  end 
 
+  def after_reply_block
+    lambda do |page|
+      page.visual_effect :fade, :link_to_reply, :duration => DURATION
+    end
+  end 
+
+
+  def create_or_update_block
+    lambda do |page, session|
+      place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+      page.insert_html place, content, :partial => self.class.name.underscore, :object => self
+      page.visual_effect :fade, :post, :duration => DURATION
+      page.visual_effect :fade, :new_forum_post, :duration => DURATION        
+    end
   end
 
   def content_for_new_or_edit; "post_new";  end

@@ -60,14 +60,14 @@ class Order < ActiveRecord::Base
 # for "shared/show.rjs"
     def fade_content; "item_content";  end
     def appear_content; "order_details"; end
-      
-    def after_destroy_block
-      lambda do |page, objects, session|
-        page.action :replace_html, "order_processed", ProcessedOrder.count
-      end
-    end       
   
   end
+
+  def after_destroy_block
+    lambda do |page, session|
+      page.action :replace_html, "order_processed", ProcessedOrder.count
+    end
+  end 
 
   def total; order_items.total; end
 

@@ -78,9 +78,9 @@ class Item < ActiveRecord::Base
    
 #    def sizes_rus; "Размеры"; end
       
-    def colours_rus; "Цвета"; end
+#    def colours_rus; "Цвета"; end
       
-    def category_rus; "Вид одежды"; end
+#    def category_rus; "Вид одежды"; end
    
     def price_rus; "Цена"; end  
    

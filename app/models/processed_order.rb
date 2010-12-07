@@ -56,36 +56,41 @@ class ProcessedOrder < Order
     
     def submit_text; "Разместить #{class_name_rus}"; end
       
-    def duration_fade; 20; end 
+    def duration_fade; 20; end
+      
+    def submit_image_with_options
+      [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]
+    end      
 
 # for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; "new"; end
     def replace; :replace_html; end
-    def after_new_or_edit_block
-      lambda do |page, object|
-          page.check_cart_links
-      end
-    end        
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; new_or_edit_partial; end
       
-    def create_or_update_block
-      lambda do |page, object, session|
-        page.delay( object.class.duration_fade ) { page.redirect_to "/" }
-      end
-    end          
-
-    def close_block
-      lambda do |page, object|
-        page.action :replace_html, object.status_tag, ClosedOrder::STATUS_RUS
-        page.action :replace_html, object.updated_tag, page.date_time_rus( object.updated_at )
-        page.action :replace_html, "order_processed", ProcessedOrder.count
-        page.visual_effect :fade, object.close_tag, :duration => DURATION        
-      end
-    end       
-      
   end
+
+  def after_new_or_edit_block
+    lambda do |page|
+        page.check_cart_links
+    end
+  end
+
+  def create_or_update_block
+    lambda do |page, session|
+      page.delay( self.class.duration_fade ) { page.redirect_to "/" }
+    end
+  end  
+
+  def close_block
+    lambda do |page|
+      page.action :replace_html, status_tag, ClosedOrder::STATUS_RUS
+      page.action :replace_html, updated_tag, page.date_time_rus( updated_at )
+      page.action :replace_html, "order_processed", ProcessedOrder.count
+      page.visual_effect :fade, close_tag, :duration => DURATION        
+    end
+  end 
   
   def save_object( session )
     self.captcha_validated = session[:captcha_validated]

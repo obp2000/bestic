@@ -15,4 +15,4 @@
   %div
     = f.label( :address, Contact.address_rus.colon )
     = f.text_area :address, :rows => 3
-    = image_submit_tag Contact.save_image, :title => Contact.save_title
+    = submit_to Contact

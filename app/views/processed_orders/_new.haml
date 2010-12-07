@@ -1,5 +1,5 @@
 = page_title
-- remote_form_for @object, :url => processed_orders_path do |f|
+- remote_form_for @object do |f|
   = f.error_messages
   %fieldset.ui-widget-content
     %div
@@ -25,4 +25,4 @@
     = ProcessedOrder.captcha_text + red_star
     = captcha_block
   %div= red_star + " - " + REQUIRED_FIELDS
-  %div= submit_form f, ProcessedOrder.submit_text
+  %div= submit_to ProcessedOrder 

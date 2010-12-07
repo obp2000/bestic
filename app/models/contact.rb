@@ -19,7 +19,9 @@ class Contact < ActiveRecord::Base
   
     def class_name_rus; "контакт"; end
 
-    def class_name_rus_cap; "Контакт"; end  
+    def class_name_rus_cap; "Контакт"; end
+      
+    def show_text; class_name_rus_cap.pluralize; end       
 
     def show_page_title; class_name_rus_cap; end
 

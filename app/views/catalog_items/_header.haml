@@ -1,9 +1,8 @@
 - form_remote_tag :url => search_catalog_items_path, :html => { :id => "search_box" } do
   = text_field_tag :q, "", :size => 20
-  = image_submit_tag CatalogItem.search_image, :title => CatalogItem.search_title
-- with_options( :method => :get ) do |get|
-  = link_to_index ForumPost
-  = link_to_show Contact.first
+  = submit_to CatalogItem
+= link_to_index ForumPost
+= link_to_show Contact.first
 %h3
   одежда для
   %br

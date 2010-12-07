@@ -47,7 +47,8 @@ class ApplicationController < ActionController::Base
     session[ :captcha_validated ] = captcha_validated
     flash_notice    
     if @object.save_object( session )
-      ( controller_name.classify.constantize.responds_to_parent rescue nil ) ? responds_to_parent { render_action1 } : render_action1        
+#      ( controller_name.classify.constantize.responds_to_parent rescue nil ) ? responds_to_parent { render_action1 } : render_action1      
+      controller_name.classify.constantize.create_render_block.bind( self )[]
     else
       render_action1( "new" )      
     end

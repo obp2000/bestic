@@ -30,7 +30,7 @@ class Photo < ActiveRecord::Base
 
     def change_title; "Изменить #{class_name_rus.pluralize}"; end
 
-    def save_comments_title; "Сохранить комментарии"; end
+    def submit_title; "Сохранить"; end
 
     def upload_image; "load.png"; end
 
@@ -46,14 +46,12 @@ class Photo < ActiveRecord::Base
      
     def responds_to_parent; true; end
       
-    def new_partial; "upload_photo"; end      
-    
-#    def after_index_block
-#      lambda do |page, objects|
-#        page.call("attach_yoxview")
-#      end
-#    end       
-  
+    def new_partial; "upload_photo"; end
+
+    def create_render_block
+      lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }
+    end
+ 
     def add_to_item_block
       lambda do |page, object|
         page.remove object.tag
@@ -65,8 +63,15 @@ class Photo < ActiveRecord::Base
       lambda do |page, objects|
         page.call( "attach_yoxview" )
       end
+
     end   
-    
+   
   end 
+
+  def after_create_or_update_block
+    lambda do |page, session|
+      page.call( "attach_yoxview" )
+    end
+  end   
 
 end

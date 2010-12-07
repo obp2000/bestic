@@ -5,7 +5,7 @@
       = link_to_show catalog_item
       %div
         = roubles( catalog_item.price ) + " " + RUB
-        = image_submit_tag *Cart.add_image_with_options
+        = submit_to Cart
     - [ "size", "colour" ].each do |attr| 
       %div{ :class => attr.tableize }
         = render :partial => "catalog_items/attr_with_any", :locals => { :object => catalog_item, :attr => attr }

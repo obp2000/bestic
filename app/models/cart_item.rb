@@ -20,28 +20,28 @@ class CartItem < ActiveRecord::Base
 
     def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end  
 
-    def controller; "catalog_items"; end  
+#    def controller; "catalog_items"; end  
       
     def update_render; { :template => "shared/create_or_update.rjs" }; end
     def destroy_render; { :template => "shared/create_or_update.rjs" }; end
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; "cart_items/cart_item"; end
-    
-    def after_create_or_update_block
-      lambda do |page, object, session|
-        page.remove object.tag unless object.amount > 0
-        page.check_cart_links
-        page.check_cart_totals( session )
-      end
-    end
-    alias_method :after_destroy_block, :after_create_or_update_block
-      
+     
 #for "shared/index
     def partial; "carts/cart"; end
     def content; "cart"; end      
 
   end
+
+  def after_create_or_update_block
+    lambda do |page, session|
+      page.remove tag unless amount > 0 rescue nil
+      page.check_cart_links
+      page.check_cart_totals( session )
+    end
+  end
+  alias_method :after_destroy_block, :after_create_or_update_block
 
   def update_amount( i ); update_attribute :amount, amount + i; self; end   
   

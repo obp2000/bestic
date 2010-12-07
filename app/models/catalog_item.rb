@@ -14,7 +14,7 @@ class CatalogItem < Item
     
     def index_text; "Назад в магазин"; end       
     
-    def controller; "catalog_items"; end
+#    def controller; "catalog_items"; end
 
     def all_and_new( params )
       [ catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" ), nil ]
@@ -58,7 +58,11 @@ class CatalogItem < Item
     def season_name; "Все сезоны"; end
 
     def season_icon; "amor.png"; end
-      
+
+    def submit_image_with_options
+      [ "image_submit_tag", search_image, { :title => search_title } ]
+    end
+     
 # for "shared/index.rjs"
     def partial; "catalog_items/index"; end
     def content; "content"; end

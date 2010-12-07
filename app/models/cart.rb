@@ -18,30 +18,22 @@ class Cart < ActiveRecord::Base
   
     def nav_text; "Корзина"; end
     
-    def add_image; "basket_add.png"; end
-
-    def add_over_image; "basket_add_over.png"; end
-
-    def add_title; "Добавить этот #{Item.class_name_rus} в корзину"; end
-      
-    def add_image_with_options
-      [ add_image, { :title => add_title, :onmouseover => "$(this).attr('src', 'images/#{add_over_image}')",
-          :onmouseout => "$(this).attr('src', 'images/#{add_image}')", :onclick => "$(this).fadeOut().fadeIn()" } ]
+    def submit_image_with_options
+      [ "image_submit_tag", submit_image, { :title => submit_title, :onmouseover => "$(this).attr('src', 'images/#{submit_over_image}')",
+          :onmouseout => "$(this).attr('src', 'images/#{submit_image}')", :onclick => "$(this).fadeOut().fadeIn()" } ]
     end
+    
+    def submit_image; "basket_add.png"; end
+
+    def submit_over_image; "basket_add_over.png"; end
+
+    def submit_title; "Добавить этот #{class_name_rus} в корзину"; end 
 
     def destroy_render; { :template => "shared/destroy.rjs" }; end
       
 #for "shared/index
     def partial; "carts/cart"; end
     def content; "cart"; end
-      
-    def after_destroy_block
-      lambda do |page, objects, session|
-        p "eeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-        page.check_cart_links
-        page.check_cart_totals( session )
-      end
-    end        
     
   end
 
