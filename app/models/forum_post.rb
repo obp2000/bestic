@@ -93,7 +93,7 @@ class ForumPost < ActiveRecord::Base
 
   def reply_block
     lambda do |page|
-      page.action self.class.replace, content_for_new_or_edit, :partial => self.class.new_or_edit_partial, :object => self
+      page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
     end
   end 
 
@@ -113,7 +113,7 @@ class ForumPost < ActiveRecord::Base
     end
   end
 
-  def content_for_new_or_edit; "post_new";  end
+  def new_or_edit_tag; "post_new";  end
 
   def create_notice; root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"; end
 

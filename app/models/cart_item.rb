@@ -64,7 +64,7 @@ class CartItem < ActiveRecord::Base
   end
 
 # for "shared/create_or_update.rjs"
-  def content_for_create_or_update; tag; end
+  def create_or_update_tag; tag; end
 
   private
   

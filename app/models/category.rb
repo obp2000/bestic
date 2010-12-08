@@ -35,20 +35,18 @@ class Category < ActiveRecord::Base
         category.send( season_class.name.tableize ).size == 0
       end
     end
-
-    def add_to_item_block
-      lambda do |page, object|
-        opts = lambda { [ :replace_html, "form_#{self.class.list_tag}",
-                { :partial => "items/#{self.class.name.underscore}", :object => self } ] }
-        page.action *opts.bind( object )[]                      
-      end
-    end
     
     def index_text; "Вид одежды"; end     
       
   end
    
   def name_for_title; ": " + name; end
+
+  def add_to_item_block
+    lambda do |page|
+      page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}", :object => self                      
+    end
+  end
 
   def after_create_or_update_block
     lambda do |page, session|

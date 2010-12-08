@@ -42,7 +42,7 @@ module ApplicationHelper
       object.after_create_or_update_block[ self, session ] rescue nil
     end
     show_notice( :delay => object.class.duration_fade )    
-    visual_effect :highlight, object.content_for_create_or_update, :duration => HIGHLIGHT_DURATION
+    visual_effect :highlight, object.create_or_update_tag, :duration => HIGHLIGHT_DURATION
     visual_effect :fade, :errorExplanation, :duation => DURATION 
   end
   
@@ -107,8 +107,8 @@ module ApplicationHelper
   end
 
   def add_to_item( object )
-    object.class.add_to_item_block[ page, object ]
-    object.class.after_add_to_item_block[ page, object ] rescue nil     
+    object.add_to_item_block[ self ]
+    object.after_add_to_item_block[ self ] rescue nil     
   end
 
   def red_star
@@ -128,8 +128,7 @@ module ApplicationHelper
   end
   
   def link_to_show_photo( photo, show_comment = true )
-    opts = lambda { |image, show_comment1| [ image + ( show_comment1 ? comment || "" : "" ), public_filename ] }
-    link_to *opts.bind( photo )[ image_tag( photo.public_filename( :small ) ), show_comment ]
+    photo.link_to_show_photo_block[ self, show_comment ]
   end
   
   def page_title
@@ -163,10 +162,6 @@ module ApplicationHelper
   def link_to_logout( class_const )
     link_to class_const.logout_text, logout_path
   end
-  
-  def submit_form
-    
-  end
 
   def submit_to( class_const )
     send( *class_const.submit_image_with_options )    
@@ -188,10 +183,6 @@ module ApplicationHelper
 
   def render_options( objects )
     objects = objects.to_array    
-#    opts = lambda { [ :partial => "catalog_items/attr", :collection => self,
-#          :locals => { :checked => ( first.new_record? || !self.second ),
-#          :visibility => ( second || first.new_record? ) ? "visible" : "hidden" } ] }
-#    render *opts.bind( objects ).call
     objects.first.render_options_block.bind( objects )[ self ]
   end
 

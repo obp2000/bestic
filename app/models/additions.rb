@@ -69,9 +69,9 @@
       
   # for "shared/index.rjs"
     def partial; "shared/index"; end
-    def content; list_tag; end      
+    def content; index_tag; end      
       
-    def list_tag; name.tableize; end
+    def index_tag; name.tableize; end
       
     def new_tag; "new_#{name.underscore}"; end
       
@@ -90,13 +90,6 @@
       end
     end      
      
-    def add_to_item_block
-      lambda do |page, object|
-        page.remove object.tag
-        page.insert_html :bottom, "form_#{object.class.list_tag}", { :partial => "items/attr", :object => object }  
-      end
-    end      
-      
     def duration_fade; DURATION; end
       
     def fade_appear_args; [ fade_content, appear_content ]; end
@@ -143,6 +136,13 @@
   
   end
 
+  def add_to_item_block
+    lambda do |page|
+      page.remove tag
+      page.insert_html :bottom, "form_#{self.class.index_tag}", { :partial => "items/attr", :object => self }
+    end
+  end
+
   def show_block
     lambda do |page|
       page.action :replace_html, self.class.appear_content, :partial => "show"
@@ -158,25 +158,23 @@
 
   def new_or_edit_block
     lambda do |page|
-#      opts1 = lambda { |replace| [ self.class.replace, content_for_new_or_edit,
-#              { :partial => self.class.new_or_edit_partial, :object => self } ]  }
-      page.action self.class.replace, content_for_new_or_edit, :partial => self.class.new_or_edit_partial, :object => self 
+      page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self 
     end
   end  
 
   def create_or_update_block
     lambda do |page, session|
-      page.visual_effect :fade, content_for_create_or_update, :duration => DURATION
+      page.visual_effect :fade, create_or_update_tag, :duration => DURATION
       page.delay( DURATION ) do      
-        page.remove content_for_create_or_update
-        page.insert_html :bottom, self.class.list_tag, :object => self, :partial => self.class.create_or_update_partial 
+        page.remove create_or_update_tag
+        page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self 
       end
     end
   end
 
   def after_create_or_update_block
     lambda do |page, session|
-      page.insert_html :bottom, self.class.list_tag, :object => self, :partial => self.class.create_or_update_partial
+      page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self
     end
   end
 
@@ -209,7 +207,6 @@
     end
   end
 
-
   def link_to_show_block
     lambda do |helper|
       image = helper.image_tag( *self.class.show_image_with_title ) rescue ""
@@ -241,9 +238,8 @@
       text = self.class.reply_text rescue ""    
       helper.link_to_remote image + text, :url => helper.send( *self.reply_path ), :method => :get,
           :html => { :id => "link_to_reply" } 
-      end
+    end
   end  
-  
   
   def single_path; [ "#{self.class.name.underscore}_path", self ]; end
 
@@ -283,21 +279,21 @@
 #####################################
 
 # for "shared/new_or_edit.rjs"
-  def content_for_new_or_edit; new_record? ? self.class.new_tag : edit_tag; end
+  def new_or_edit_tag; new_record? ? self.class.new_tag : edit_tag; end
 
 # for "shared/create_or_update.rjs"
-  def content_for_create_or_update; content_for_new_or_edit; end
+  def create_or_update_tag; new_or_edit_tag; end
     
-  def new_or_edit_args; [ content_for_new_or_edit, { :partial => self.class.new_or_edit_partial, :object => self } ]; end
+  def new_or_edit_args; [ new_or_edit_tag, { :partial => self.class.new_or_edit_partial, :object => self } ]; end
   
-  def add_to_item_args; [ "form_#{self.class.list_tag}", { :partial => "items/attr", :object => self } ]; end
+  def add_to_item_args; [ "form_#{self.class.index_tag}", { :partial => "items/attr", :object => self } ]; end
 
-  def create_or_update_insert_html_args; [  :bottom, self.class.list_tag, { :object => self } ]; end
+  def create_or_update_insert_html_args; [  :bottom, self.class.index_tag, { :object => self } ]; end
 
   def create_or_update_replace_args; [ self.class.new_tag, { :object => self.class.new } ]; end
 
   def create_or_update_replace_form_args
-    [ "form_" + self.class.list_tag, { :partial => "items_" + self.class.new_or_edit_partial, :object => self } ]
+    [ "form_" + self.class.index_tag, { :partial => "items_" + self.class.new_or_edit_partial, :object => self } ]
   end
 
 end

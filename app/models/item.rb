@@ -146,9 +146,9 @@ class Item < ActiveRecord::Base
   end
     
 # for "shared/new_or_edit.rjs"
-  def content_for_new_or_edit; "item_content"; end    
+  def new_or_edit_tag; "item_content"; end    
 
 # for "shared/create_or_update.rjs"
-  def content_for_create_or_update; tag; end
+  def create_or_update_tag; tag; end
    
 end

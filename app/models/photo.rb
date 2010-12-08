@@ -51,21 +51,20 @@ class Photo < ActiveRecord::Base
     def create_render_block
       lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }
     end
- 
-    def add_to_item_block
-      lambda do |page, object|
-        page.remove object.tag
-        page.insert_html :bottom, "form_#{object.class.list_tag}", { :partial => "items/photo", :object => object }  
-      end
-    end  
   
-    def after_add_to_item_block
-      lambda do |page, objects|
-        page.call( "attach_yoxview" )
-      end
+  end 
 
-    end   
-   
+  def add_to_item_block
+    lambda do |page|
+      page.remove object.tag
+      page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/photo", :object => self  
+    end
+  end 
+
+  def after_add_to_item_block
+    lambda do |page|
+      page.call( "attach_yoxview" )
+    end
   end 
 
   def after_create_or_update_block
@@ -73,5 +72,11 @@ class Photo < ActiveRecord::Base
       page.call( "attach_yoxview" )
     end
   end   
+
+  def link_to_show_photo_block
+    lambda do |page, show_comment|
+      page.link_to page.image_tag( public_filename( :small ) ) + ( show_comment ? comment || "" : "" ), public_filename
+    end
+  end
 
 end

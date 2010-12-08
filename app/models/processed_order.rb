@@ -113,10 +113,10 @@ class ProcessedOrder < Order
   def close_notice; "#{self.class.class_name_rus_cap} № #{id} успешно закрыт."; end
 
 # for "shared/new_or_edit.rjs"
-  def content_for_new_or_edit; "content"; end    
+  def new_or_edit_tag; "content"; end    
     
 # for "shared/create_or_update.rjs"
-  def content_for_create_or_update; content_for_new_or_edit; end
+  def create_or_update_tag; new_or_edit_tag; end
   def duration; 20; end
       
 end
