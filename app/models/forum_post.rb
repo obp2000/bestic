@@ -61,13 +61,13 @@ class ForumPost < ActiveRecord::Base
   
     def body_rus; class_name_rus_cap; end
    
-    def index_render; { :template => "shared/index.rjs" }; end
-    def show_render; { :template => "shared/show.rjs" }; end         
+#    def index_render; { :template => "shared/index.rjs" }; end
+#    def show_render; { :template => "shared/show.rjs" }; end         
 #    def destroy_render; { :template => "shared/show.rjs" }; end        
-    def destroy_render; { :template => "shared/destroy.rjs" }; end
-    def new_render; { :template => "shared/new_or_edit.rjs" }; end
-    def reply_render; { :template => "shared/reply.rjs" }; end
-    def create_render; { :template => "shared/create_or_update.rjs" }; end       
+#    def destroy_render; { :template => "shared/destroy.rjs" }; end
+#    def new_render; { :template => "shared/new_or_edit.rjs" }; end
+#    def reply_render; { :template => "shared/reply.rjs" }; end
+#    def create_render; { :template => "shared/create_or_update.rjs" }; end       
 
 # for "shared/index.rjs"  
     def partial; "index"; end

@@ -22,24 +22,24 @@ class ApplicationController < ActionController::Base
   def index
     @objects, @object = controller_name.classify.constantize.all_and_new( params )
     page_title
-    request.xhr? ? render_action1 : render( controller_name.classify.constantize.not_xhr_index_render )
+    render_block_call     
   end
 
   def show
     @object = controller_name.classify.constantize.find( params[:id] )
     page_title
-    render_action1    
+    render_block_call    
   end
 
   def new
     @object = controller_name.classify.constantize.new
     page_title
-    render_action1    
+    render_block_call    
   end
 
   def edit
     @object = controller_name.classify.constantize.find( params[:id] )
-    render_action1
+    render_block_call    
   end
 
   def create( captcha_validated = nil )
@@ -47,47 +47,45 @@ class ApplicationController < ActionController::Base
     session[ :captcha_validated ] = captcha_validated
     flash_notice    
     if @object.save_object( session )
-#      ( controller_name.classify.constantize.responds_to_parent rescue nil ) ? responds_to_parent { render_action1 } : render_action1      
-      controller_name.classify.constantize.create_render_block.bind( self )[]
+      render_block_call    
     else
-      render_action1( "new" )      
+      render_block_call "new"
     end
   end
 
   def update
     @object, success = controller_name.classify.constantize.update_object( params, session )
     flash_notice
-    render_action1( ( "edit" unless success ) )    
+    if success
+      render_block_call
+    else
+      render_block_call "edit"      
+    end
   end
 
   def destroy
     @objects = @object = controller_name.classify.constantize.destroy_object( params, session )
     flash_notice
-    render_action1
+    render_block_call    
   end
     
   private
 
     def page_title
-      @page_title = action_with_suffix( nil, "page_title" )
+      @page_title = controller_name.classify.constantize.send( action_with_suffix( "page_title" ) ) rescue nil
     end
 
     def flash_notice
-      if notice = action_with_suffix( nil, "notice" )
-        flash.now[:notice] = notice          
-      end
+      flash.now[:notice] = @object.send( action_with_suffix( "notice" ) ) rescue nil        
     end  
   
-    def render_action1( *args )
-      if render_hash = action_with_suffix( args[0], "render" )
-        render render_hash
-      end
+    def render_block_call( action1 = nil )
+      controller_name.classify.constantize.send( "#{'not_xhr_' unless request.xhr?}#{action1 || action_name}_render_block" ).bind( self )[]      
     end
   
-    def action_with_suffix( action, suffix )
-      action_suffix = "#{action ||= action_name}_#{suffix}"
+    def action_with_suffix( suffix )
       [ controller_name.classify.constantize, @object ].each do |obj|  
-        if result = obj.send_if_respond( action_suffix )
+        if obj.respond_to?( result = "#{action_name}_#{suffix}" )
           return result
         end
       end

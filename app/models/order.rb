@@ -22,9 +22,9 @@ class Order < ActiveRecord::Base
     
     def index_page_title; "Список #{class_name_rus}ов" + self::STATUS_RUS_NAV; end
     
-    def destroy_render; { :template => "shared/destroy.rjs" }; end
-    def index_render; { :template => "shared/index.rjs" }; end
-    def show_render; { :template => "shared/show.rjs" }; end        
+#    def destroy_render; { :template => "shared/destroy.rjs" }; end
+#    def index_render; { :template => "shared/index.rjs" }; end
+#    def show_render; { :template => "shared/show.rjs" }; end        
 
     def id_rus; "№"; end
     

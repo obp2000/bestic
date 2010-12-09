@@ -6,7 +6,7 @@
   = roubles( @object.price ) + RUB
   %b= Category.class_name_rus_cap.colon
   = @object.category.name rescue nil
-  %b= Season.class_name_rus_cap.colon
+  %b= SEASON.colon
   = @object.type.constantize.season_name
   = submit_to Cart  
   %br

@@ -43,7 +43,7 @@ class Item < ActiveRecord::Base
                 
   end
 
-  extend Shared 
+#  extend Shared 
   class << self
     def class_name_rus; "товар"; end
 
@@ -72,7 +72,9 @@ class Item < ActiveRecord::Base
 
     def index_page_title; "Список #{class_name_rus}ов"; end
 
-    def not_xhr_index_render; { :partial => "index", :layout => "items" }; end
+    def not_xhr_index_render_block
+      lambda { render :partial => "index", :layout => "items" }
+    end      
 
     def name_rus; "Название"; end     
    

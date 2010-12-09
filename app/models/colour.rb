@@ -1,5 +1,5 @@
 # coding: utf-8
-class Colour < ActiveRecord::Base
+class Colour < ItemAttribute
   has_many :items_colours, :dependent => :delete_all
   has_many :items, :through => :items_colours
   
@@ -10,20 +10,16 @@ class Colour < ActiveRecord::Base
 #  validates_uniqueness_of :name
   
   def validate
-
+    super
     errors.add_to_base "Код #{self.class.class_name_rus}а не может быть пустым" if html_code.blank?  
-  
-    errors.add_to_base "Название #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
-   
-    errors.add_to_base "Такое название #{self.class.class_name_rus}а уже есть" if new_record? &&
-                  ( self.class.find :all, :conditions => { :name => name } ).first     
-          
+#    errors.add_to_base "Название #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
+#    errors.add_to_base "Такое название #{self.class.class_name_rus}а уже есть" if new_record? &&
+#                  ( self.class.find :all, :conditions => { :name => name } ).first     
     errors.add_to_base "#{self.class.class_name_rus_cap} с такими кодами уже есть" if new_record? &&
                   ( self.class.find :all, :conditions => { :html_code => html_code } ).first        
-    
   end
 
-  extend Shared 
+#  extend Shared 
   class << self
     def class_name_rus; "цвет"; end   
 

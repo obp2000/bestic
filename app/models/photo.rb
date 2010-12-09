@@ -1,5 +1,5 @@
 # coding: utf-8
-class Photo < ActiveRecord::Base
+class Photo < ItemAttribute
   belongs_to :item
   has_attachment :content_type => :image, :storage => :file_system, :resize_to => '768x512>',
               :thumbnails => { :small => '100x100>' }
@@ -7,12 +7,10 @@ class Photo < ActiveRecord::Base
 #  validates_presence_of :filename
 
   def validate
-   
     errors.add_to_base "Не выбрана #{self.class.class_name_rus} для загрузки" if filename.blank?  
-
   end
 
-  extend Shared 
+#  extend Shared 
   class << self
 
     def class_name_rus; "фотография"; end  
@@ -44,7 +42,7 @@ class Photo < ActiveRecord::Base
       "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"
     end
      
-    def responds_to_parent; true; end
+#    def responds_to_parent; true; end
       
     def new_partial; "upload_photo"; end
 
@@ -54,12 +52,14 @@ class Photo < ActiveRecord::Base
   
   end 
 
-  def add_to_item_block
-    lambda do |page|
-      page.remove object.tag
-      page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/photo", :object => self  
-    end
-  end 
+#  def add_to_item_block
+#    lambda do |page|
+#      page.action :remove, object.tag
+#      page.delay( DURATION ) do 
+#        page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/photo", :object => self
+#      end
+#    end
+#  end 
 
   def after_add_to_item_block
     lambda do |page|

@@ -1,5 +1,5 @@
 # coding: utf-8
-class Category < ActiveRecord::Base
+class Category < ItemAttribute
   has_many :items, :include => [:sizes, :colours, :photos]
   has_many :catalog_items, :include => [:sizes, :colours, :photos]
   has_many :summer_catalog_items, :include => [:sizes, :colours, :photos]
@@ -13,12 +13,13 @@ class Category < ActiveRecord::Base
 #  validates_presence_of :season_id
 #  validates_uniqueness_of :name
   
-  def validate
-    errors.add_to_base "Название вида одежды не может быть пустым" if name.blank?   
-    errors.add_to_base "Такой вид одежды уже есть" if new_record? && (Category.find :all, :conditions => { :name => name }).size > 0     
-  end
+#  def validate
+#    errors.add_to_base "Название вида одежды не может быть пустым" if name.blank?   
+#    errors.add_to_base "Такой #{self.class.class_name_rus} уже есть" if new_record? && 
+#            ( self.class.find :all, :conditions => { :name => name } ).size > 0     
+#  end
 
-  extend Shared 
+#  extend Shared 
   class << self
     def class_name_rus; "вид одежды"; end  
   
@@ -28,7 +29,7 @@ class Category < ActiveRecord::Base
 
     def change_image; "color_line.png"; end
 
-    def name_for_title( params ); find( params[:category_id] ).name_for_title; end
+#    def name_for_title( params ); find( params[:category_id] ).name_for_title; end
       
     def all_of( season_class )
       all.reject do |category|
@@ -40,19 +41,20 @@ class Category < ActiveRecord::Base
       
   end
    
-  def name_for_title; ": " + name; end
+#  def name_for_title; ": " + name; end
 
   def add_to_item_block
     lambda do |page|
-      page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}", :object => self                      
+      page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
+              :object => self                      
     end
   end
 
-  def after_create_or_update_block
-    lambda do |page, session|
-      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
-    end
-  end   
+#  def after_create_or_update_block
+#    lambda do |page, session|
+#      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
+#      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
+#    end
+#  end   
    
 end

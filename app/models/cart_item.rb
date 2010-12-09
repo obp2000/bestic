@@ -36,7 +36,7 @@ class CartItem < ActiveRecord::Base
 
   def after_create_or_update_block
     lambda do |page, session|
-      page.remove tag unless amount > 0 rescue nil
+      page.action :remove, tag unless amount > 0 rescue nil
       page.check_cart_links
       page.check_cart_totals( session )
     end

@@ -16,9 +16,33 @@
     
     def new_object( params, session ); new params[ name.underscore ]; end
 
+    def index_render_block
+      lambda { render :template => "shared/index.rjs" }
+    end
+
+    def show_render_block
+      lambda { render :template => "shared/show.rjs" }
+    end
+
+    def new_render_block
+      lambda { render :template => "shared/new_or_edit.rjs" }
+    end
+    
+    def edit_render_block
+      lambda { render :template => "shared/new_or_edit.rjs" }
+    end    
+
+    def update_render_block
+      lambda { render :template => "shared/create_or_update.rjs" }
+    end
+
     def create_render_block
       lambda { render :template => "shared/create_or_update.rjs" }
     end
+    
+    def destroy_render_block
+      lambda { render :template => "shared/destroy.rjs" }
+    end    
     
     def back_image; "back1.png"; end
 
@@ -78,7 +102,9 @@
     def index_block
       lambda do |page|
         page.action :remove, first.class.content
-        page.insert_html :after, "tabs",  :partial => first.class.partial, :locals => { :objects => self }
+        page.delay( DURATION ) do
+          page.insert_html :after, "tabs",  :partial => first.class.partial, :locals => { :objects => self }
+        end
       end
     end
     
@@ -136,13 +162,6 @@
   
   end
 
-  def add_to_item_block
-    lambda do |page|
-      page.remove tag
-      page.insert_html :bottom, "form_#{self.class.index_tag}", { :partial => "items/attr", :object => self }
-    end
-  end
-
   def show_block
     lambda do |page|
       page.action :replace_html, self.class.appear_content, :partial => "show"
@@ -164,19 +183,18 @@
 
   def create_or_update_block
     lambda do |page, session|
-      page.visual_effect :fade, create_or_update_tag, :duration => DURATION
+      page.action :remove, create_or_update_tag, :duration => DURATION      
       page.delay( DURATION ) do      
-        page.remove create_or_update_tag
         page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self 
       end
     end
   end
 
-  def after_create_or_update_block
-    lambda do |page, session|
-      page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self
-    end
-  end
+#  def after_create_or_update_block
+#    lambda do |page, session|
+#      page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self
+#    end
+#  end
 
   def destroy_block
     lambda do |page|

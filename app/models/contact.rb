@@ -5,16 +5,12 @@ class Contact < ActiveRecord::Base
 #  validates_length_of :phone, :in => 7..20
   
   def validate
-    
     errors.add_to_base "В имени должно быть не менее двух символов" if name.size < 2  
-    
     errors.add_to_base "Неверный формат адреса электронной почты" if email !~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i   
-    
     errors.add_to_base "В номере телефона должно быть не менее семи символов" if phone.size < 7  
-
   end
   
-  extend Shared 
+#  extend Shared 
   class << self
   
     def class_name_rus; "контакт"; end

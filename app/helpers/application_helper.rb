@@ -64,23 +64,27 @@ module ApplicationHelper
     show_notice
   end
 
-  def action( action1, content, opts = {} )
-    visual_effect :fade, content, :duration => DURATION
+  def action( action1, *opts )
+    visual_effect :fade, opts.first, :duration => DURATION
     delay( DURATION ) do    
-      send action1, content, opts
-      visual_effect :appear, content, :duration => DURATION unless action1 == :remove
+      send action1, *opts
+      visual_effect :appear, opts.first, { :duration => DURATION } unless action1 == :remove
     end
+  end
+
+  def insert_html_smooth( *opts )
+ 
   end
     
   def show_notice( opts = {} )
-    duration_appear = 1
-    duration_fade = opts[:delay] || duration_appear
+    appear_duration = 1
+    fade_duration = opts[:delay] || appear_duration
     insert_html :top, :content, :partial => "shared/notice"
     hide :notice
-    visual_effect :appear, :notice, :duration => duration_appear
-    delay( duration_appear ) do
-      visual_effect :fade, :notice, :duration => duration_fade
-      delay( duration_fade ) { remove :notice }
+    visual_effect :appear, :notice, :duration => appear_duration
+    delay( appear_duration ) do
+      visual_effect :fade, :notice, :duration => fade_duration
+      delay( fade_duration ) { remove :notice }
     end
   end
 
