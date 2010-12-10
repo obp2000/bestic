@@ -17,9 +17,9 @@ class Photo < ItemAttribute
 
     def class_name_rus_cap; "Фотография"; end  
  
-    def all_and_new( params )
-      [ paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc",
-                :page => params[:page], :per_page => 5), new ]
+    def all_objects( params )
+      paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc",
+              :page => params[:page], :per_page => 5)
     end
 
     def delete_from_item_title; "Удалить фотографию из товара"; end
@@ -41,9 +41,7 @@ class Photo < ItemAttribute
     def delete_from_item_js_string
       "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"
     end
-     
-#    def responds_to_parent; true; end
-      
+
     def new_partial; "upload_photo"; end
 
     def create_render_block
@@ -52,19 +50,16 @@ class Photo < ItemAttribute
   
   end 
 
-#  def add_to_item_block
-#    lambda do |page|
-#      page.action :remove, object.tag
-#      page.delay( DURATION ) do 
-#        page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/photo", :object => self
-#      end
-#    end
-#  end 
+  def insert_attr
+    "photo"    
+  end
 
   def after_add_to_item_block
-    lambda do |page|
-      page.call( "attach_yoxview" )
-    end
+      lambda do |page|
+        page.delay( DURATION ) do
+          page.call( "attach_yoxview" )
+        end
+      end    
   end 
 
   def after_create_or_update_block

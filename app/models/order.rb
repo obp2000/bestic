@@ -18,7 +18,7 @@ class Order < ActiveRecord::Base
 
     def class_name_rus_cap; "Все заказ"; end    
   
-    def all_and_new( params ); [ paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ), new ]; end
+    def all_objects( params ); paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ); end
     
     def index_page_title; "Список #{class_name_rus}ов" + self::STATUS_RUS_NAV; end
     
@@ -53,13 +53,13 @@ class Order < ActiveRecord::Base
     def show_close_column; ProcessedOrder.count > 0; end
       
 # for "shared/index.rjs"
-    def partial; "orders/index"; end
-    def content; "content"; end
+    def index_partial; "orders/index"; end
+    def index_tag; "content"; end
     include IndexBlock      
       
 # for "shared/show.rjs"
-    def fade_content; "item_content";  end
-    def appear_content; "order_details"; end
+    def fade_tag; "item_content";  end
+    def appear_tag; "order_details"; end
   
   end
 

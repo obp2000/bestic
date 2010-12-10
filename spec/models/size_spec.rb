@@ -33,12 +33,6 @@ describe Size do
     end
   end
 
-  describe ".index_render" do
-    it "returns a shared/index.rjs template" do
-      Size.index_render[:template].should == "shared/index.rjs"
-    end
-  end
-
   describe "#new_object" do
   
     before do

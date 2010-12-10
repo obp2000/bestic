@@ -22,15 +22,15 @@ class CartItem < ActiveRecord::Base
 
 #    def controller; "catalog_items"; end  
       
-    def update_render; { :template => "shared/create_or_update.rjs" }; end
-    def destroy_render; { :template => "shared/create_or_update.rjs" }; end
+#    def update_render; { :template => "shared/create_or_update.rjs" }; end
+#    def destroy_render; { :template => "shared/create_or_update.rjs" }; end
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; "cart_items/cart_item"; end
      
 #for "shared/index
-    def partial; "carts/cart"; end
-    def content; "cart"; end      
+    def index_partial; "carts/cart"; end
+    def index_tag; "cart"; end      
 
   end
 

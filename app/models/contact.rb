@@ -48,13 +48,13 @@ class Contact < ActiveRecord::Base
     def icq_image; "icq_protocol.png"; end
 
     def email_subject; "Сообщение от пользователя интернет-магазина BEST&C"; end
-
-    def update_notice; "#{class_name_rus_cap} успешно обновлены."; end
       
 # for "shared/show.rjs"
-    def fade_content; "content";  end
-    def appear_content; "content"; end        
+    def fade_tag; "content";  end
+    def appear_tag; "content"; end        
 
   end
+
+  def update_notice; "#{self.class.class_name_rus_cap} успешно обновлены."; end
 
 end

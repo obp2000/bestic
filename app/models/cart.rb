@@ -29,11 +29,11 @@ class Cart < ActiveRecord::Base
 
     def submit_title; "Добавить этот #{class_name_rus} в корзину"; end 
 
-    def destroy_render; { :template => "shared/destroy.rjs" }; end
+#    def destroy_render; { :template => "shared/destroy.rjs" }; end
       
 #for "shared/index
-    def partial; "carts/cart"; end
-    def content; "cart"; end
+    def index_partial; "carts/cart"; end
+    def index_tag; "cart"; end
     
   end
 

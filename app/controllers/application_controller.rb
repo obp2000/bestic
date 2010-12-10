@@ -20,7 +20,8 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   
   def index
-    @objects, @object = controller_name.classify.constantize.all_and_new( params )
+    @objects = controller_name.classify.constantize.all_objects( params )
+    @object = controller_name.classify.constantize.new_object( params, session )    
     page_title
     render_block_call     
   end
@@ -46,21 +47,13 @@ class ApplicationController < ActionController::Base
     @object = controller_name.classify.constantize.new_object( params, session )
     session[ :captcha_validated ] = captcha_validated
     flash_notice    
-    if @object.save_object( session )
-      render_block_call    
-    else
-      render_block_call "new"
-    end
+    render_block_call( ( "new" unless @object.save_object( session ) ) )        
   end
 
   def update
     @object, success = controller_name.classify.constantize.update_object( params, session )
     flash_notice
-    if success
-      render_block_call
-    else
-      render_block_call "edit"      
-    end
+    render_block_call( ( "edit" unless success ) )     
   end
 
   def destroy
@@ -72,24 +65,24 @@ class ApplicationController < ActionController::Base
   private
 
     def page_title
-      @page_title = controller_name.classify.constantize.send( action_with_suffix( "page_title" ) ) rescue nil
+      @page_title = controller_name.classify.constantize.send( "#{action_name}_page_title" ) rescue nil
     end
 
     def flash_notice
-      flash.now[:notice] = @object.send( action_with_suffix( "notice" ) ) rescue nil        
+      flash.now[:notice] = @object.send( "#{action_name}_notice" ) rescue nil        
     end  
   
-    def render_block_call( action1 = nil )
-      controller_name.classify.constantize.send( "#{'not_xhr_' unless request.xhr?}#{action1 || action_name}_render_block" ).bind( self )[]      
+    def render_block_call( action = nil )
+      controller_name.classify.constantize.send( "#{'not_xhr_' unless request.xhr? or action_name != "index" }#{action || action_name}_render_block" ).bind( self )[]      
     end
   
-    def action_with_suffix( suffix )
-      [ controller_name.classify.constantize, @object ].each do |obj|  
-        if obj.respond_to?( result = "#{action_name}_#{suffix}" )
-          return result
-        end
-      end
-      nil
-    end
+#    def action_with_suffix( suffix )
+#      [ controller_name.classify.constantize, @object ].each do |obj|  
+#        if obj.respond_to?( result = "#{action_name}_#{suffix}" )
+#          return result
+#        end
+#      end
+#      nil
+#    end
 
 end

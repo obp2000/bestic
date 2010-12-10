@@ -34,10 +34,11 @@ class ProcessedOrder < Order
       object      
     end
     
-    def new_render; { :template => "shared/new_or_edit.rjs" }; end
-    def create_render; { :template => "shared/create_or_update.rjs" }; end
-    def close_render; { :template => "shared/close.rjs" }; end           
-
+#    def index_render; { :template => "shared/new_or_edit.rjs" }; end
+#    def create_render; { :template => "shared/create_or_update.rjs" }; end
+#    def close_render; { :template => "shared/close.rjs" }; end           
+    def close_render_block; lambda { render :template => "shared/close.rjs" }; end 
+      
     def new_page_title; "Оформление #{class_name_rus}а"; end  
   
     def new_image; "tick_16.png"; end

@@ -13,15 +13,20 @@ class ItemAttribute < ActiveRecord::Base
     lambda do |page|
       page.action :remove, tag      
       page.delay( DURATION ) do
-        page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/attr", :object => self
+        page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/#{insert_attr}", :object => self
       end
     end
   end  
   
+  def insert_attr
+    "attr"    
+  end
+  
   def after_create_or_update_block
     lambda do |page, session|
       page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
+      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self
+      page.call( "attach_mColorPicker" )      
     end
   end  
     

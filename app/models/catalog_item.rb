@@ -16,8 +16,8 @@ class CatalogItem < Item
     
 #    def controller; "catalog_items"; end
 
-    def all_and_new( params )
-      [ catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" ), nil ]
+    def all_objects( params )
+      catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" )
     end
 
     def catalog_items( params ); all; end
@@ -44,7 +44,8 @@ class CatalogItem < Item
     
     def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
 
-    def search_render; { :template => "shared/index.rjs" }; end
+#    def search_render; { :template => "shared/index.rjs" }; end
+    def search_render_block; lambda { render :template => "shared/index.rjs" }; end 
 
     def not_xhr_index_render_block
       lambda { render :partial => "index", :layout => "application" }
@@ -66,13 +67,13 @@ class CatalogItem < Item
     end
      
 # for "shared/index.rjs"
-    def partial; "catalog_items/index"; end
-    def content; "content"; end
-    include IndexBlock
+    def index_partial; "catalog_items/index"; end
+    def index_tag; "content"; end
+#    include IndexBlock
       
 # for "shared/show.rjs"
-    def fade_content; "catalog_items";  end
-    def appear_content; "details"; end       
+    def fade_tag; "catalog_items";  end
+    def appear_tag; "details"; end       
       
   end
 

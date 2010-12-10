@@ -191,11 +191,3 @@ module ApplicationHelper
   end
 
 end
-
-class Object
-  
-  def to_array
-    is_a?( Array ) ? self : to_a 
-  end
-  
-end

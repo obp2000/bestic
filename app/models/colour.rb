@@ -25,7 +25,7 @@ class Colour < ItemAttribute
 
     def class_name_rus_cap; "Цвет"; end    
 
-    def all_and_new( params ); [ paginate( :order => "name", :page => params[:page], :per_page => 10 ), new ]; end
+    def all_objects( params ); paginate( :order => "name", :page => params[:page], :per_page => 10 ); end
 
     def add_html_code_to_colour_image; "arrow-180.png"; end
   
@@ -37,8 +37,16 @@ class Colour < ItemAttribute
 
     def add_html_code_to_colour_js_string; "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"; end
       
-    def index_text; "Цвета"; end       
+    def index_text; "Цвета"; end
       
+    def after_index_block
+      lambda do |page|
+        page.delay( DURATION ) do
+          page.call( "attach_mColorPicker" )
+        end
+      end
+    end   
+     
   end
 
   def after_new_or_edit_block
@@ -46,13 +54,5 @@ class Colour < ItemAttribute
       page.call( "attach_mColorPicker" )
     end
   end
-
-  def after_create_or_update_block
-    lambda do |page, session|
-      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
-      page.call( "attach_mColorPicker" )
-    end
-  end       
     
 end

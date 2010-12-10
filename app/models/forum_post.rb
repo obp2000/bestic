@@ -22,7 +22,7 @@ class ForumPost < ActiveRecord::Base
 
     def class_name_rus_cap; "Форум"; end  
 
-    def all_and_new( params ); [ paginate( :page => params[:page], :order =>  'root_id desc, lft',  :per_page => 15 ), nil ]; end
+    def all_objects( params ); paginate( :page => params[:page], :order =>  'root_id desc, lft',  :per_page => 15 ); end
 
     def reply( params ); new :parent_id => params[:id]; end
     
@@ -31,8 +31,6 @@ class ForumPost < ActiveRecord::Base
       delete forum_posts = forum_post.full_set      
       forum_posts
     end
-
-    def destroy_notice; "Ветвь сообщений удалена"; end
 
     def index_text; "Форум"; end
 
@@ -46,10 +44,10 @@ class ForumPost < ActiveRecord::Base
     def new_text; "Новая тема"; end
 
     def reply_text; "Ответить"; end
+
+    def reply_render_block; lambda { render :template => "shared/reply.rjs" }; end      
       
-    def submit_image_with_options
-      [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]
-    end
+    def submit_image_with_options; [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]; end
   
     def submit_text; "Отправить"; end
 
@@ -70,13 +68,13 @@ class ForumPost < ActiveRecord::Base
 #    def create_render; { :template => "shared/create_or_update.rjs" }; end       
 
 # for "shared/index.rjs"  
-    def partial; "index"; end
-    def content; "content"; end
+    def index_partial; "index"; end
+    def index_tag; "content"; end
     include IndexBlock
       
 # for "shared/show.rjs"
-    def fade_content; "post_new";  end
-    def appear_content; "post"; end
+    def fade_tag; "post_new";  end
+    def appear_tag; "post"; end
       
 # for "shared/new.rjs"
     def new_or_edit_partial; "new"; end
@@ -103,11 +101,10 @@ class ForumPost < ActiveRecord::Base
     end
   end 
 
-
   def create_or_update_block
     lambda do |page, session|
-      place, content = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-      page.insert_html place, content, :partial => self.class.name.underscore, :object => self
+      place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+      page.insert_html place, tag, :partial => self.class.name.underscore, :object => self
       page.visual_effect :fade, :post, :duration => DURATION
       page.visual_effect :fade, :new_forum_post, :duration => DURATION        
     end
@@ -117,8 +114,10 @@ class ForumPost < ActiveRecord::Base
 
   def create_notice; root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"; end
 
-  def new_render; { :action => ( root? ? "new" : "reply" ) }; end
+#  def new_render; { :action => ( root? ? "new" : "reply" ) }; end
  
   def style; "margin-left: #{depth*20 + 30}px"; end
+
+  def destroy_notice; "Ветвь сообщений удалена"; end
 
 end

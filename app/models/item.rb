@@ -66,9 +66,7 @@ class Item < ActiveRecord::Base
       end
     end
 
-    def all_and_new( params )
-      [ item_objects( params[:sort_by] ).paginate( :page => params[:page], :per_page => 14 ), new ]
-    end
+    def all_objects( params ); item_objects( params[:sort_by] ).paginate( :page => params[:page], :per_page => 14 ); end
 
     def index_page_title; "Список #{class_name_rus}ов"; end
 
@@ -94,8 +92,6 @@ class Item < ActiveRecord::Base
 
     def new_title; "Добавить "; end
       
-    def deleted_notice; "#{class_name_rus_cap} удалён из каталога!"; end        
-      
 # for "shared/new_or_edit.rjs"
     def new_or_edit_partial; "form"; end
     def replace; :replace_html; end      
@@ -104,13 +100,13 @@ class Item < ActiveRecord::Base
     def create_or_update_partial; edit_partial; end
       
 # for "shared/index.rjs"
-    def partial; "index"; end
-    def content; "content"; end
+    def index_partial; "index"; end
+    def index_tag; "content"; end
     include IndexBlock          
       
 # for "shared/show.rjs"
-    def fade_content; "item_content";  end
-    def appear_content; "item_content"; end      
+    def fade_tag; "item_content";  end
+    def appear_tag; "item_content"; end      
   
   end
 
@@ -152,5 +148,7 @@ class Item < ActiveRecord::Base
 
 # for "shared/create_or_update.rjs"
   def create_or_update_tag; tag; end
+
+  def deleted_notice; "#{self.class.class_name_rus_cap} удалён из каталога!"; end      
    
 end

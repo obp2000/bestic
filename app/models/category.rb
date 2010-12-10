@@ -25,7 +25,7 @@ class Category < ItemAttribute
   
     def class_name_rus_cap; "Вид одежды"; end  
 
-    def all_and_new( params ); [ all( :order => 'name' ), new ]; end
+    def all_objects( params ); all( :order => 'name' ); end
 
     def change_image; "color_line.png"; end
 
