@@ -30,7 +30,7 @@ class CartItem < ActiveRecord::Base
      
 #for "shared/index
     def index_partial; "carts/cart"; end
-    def index_tag; "cart"; end      
+#    def index_tag; "cart_items"; end      
 
   end
 

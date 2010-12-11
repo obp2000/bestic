@@ -1,18 +1,19 @@
 %h2
   = link_to_back @object
   = @object.name
-- form_remote_tag :url => cart_item_path( @object ), :html => { :class => "ui-widget-content" }, :method => :put do 
-  %b Цена:
-  = roubles( @object.price ) + RUB
-  %b= Category.class_name_rus_cap.colon
-  = @object.category.name rescue nil
-  %b= SEASON.colon
-  = @object.type.constantize.season_name
-  = submit_to Cart  
-  %br
-  - [ "size", "colour" ].each do |attr|
-    %b= attr.capitalize.constantize.class_name_rus_cap.pluralize.colon
-    = render :partial => "catalog_items/attr_with_any", :locals => { :object => @object, :attr => attr }    
-  = @object.blurb
-  .photos= render :partial => "photo", :collection => @object.photos
-  .clear
+.ui-widget-content  
+  - remote_form_for @object, :url => cart_item_path( @object ) do 
+    %b Цена:
+    = roubles( @object.price ) + RUB
+    %b= Category.class_name_rus_cap.colon
+    = @object.category.name rescue nil
+    %b= SEASON.colon
+    = @object.type.constantize.season_name
+    = submit_to Cart  
+    %br
+    - [ "size", "colour" ].each do |attr|
+      %b= attr.capitalize.constantize.class_name_rus_cap.pluralize.colon
+      = render :partial => "catalog_items/attr_with_any", :locals => { :object => @object, :attr => attr }    
+    = @object.blurb
+    .photos= render :partial => "photo", :collection => @object.photos
+    .clear

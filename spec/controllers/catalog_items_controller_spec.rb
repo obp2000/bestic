@@ -16,7 +16,7 @@ describe CatalogItemsController do
     it "assigns found catalog items as @objects index template" do
       CatalogItem.should_receive( :search_results ).and_return( [ @object ] )
       CatalogItem.should_receive( :search_page_title ).and_return( "Результаты поиска по запросу" )
-      CatalogItem.should_receive( :search_render ).and_return( :template => "shared/index.rjs" )      
+#      CatalogItem.should_receive( :search_render ).and_return( :template => "shared/index.rjs" )      
       xhr :get, :search
       assigns[ :objects ].should == [ @object ]
       assigns[ :page_title ].should == "Результаты поиска по запросу"           

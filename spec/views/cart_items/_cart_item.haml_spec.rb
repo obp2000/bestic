@@ -8,13 +8,14 @@ describe "cart_items/_cart_item" do
   end
   
   it "renders cart item" do
+    template.should_receive( :link_to_show ).with( @cart_item.catalog_item )    
     template.should_receive( :render_attrs ).with( @cart_item.size )
     template.should_receive( :render_attrs ).with( @cart_item.colour )      
     template.should_receive( :link_to_delete ).with( @cart_item )    
     render :locals => { :cart_item => @cart_item }
-    response.should have_link_to_remote_get( catalog_item_path(@cart_item.item) ) do |a|
-      a.should contain( @cart_item.name )      
-    end
+#    response.should have_link_to_remote_get( catalog_item_path(@cart_item.item) ) do |a|
+#      a.should contain( @cart_item.name )      
+#    end
     response.should contain(@cart_item.price.to_s)
     response.should contain(@cart_item.amount.to_s)
   end

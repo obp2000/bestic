@@ -20,14 +20,14 @@ describe ForumPostsController do
       @object.class.should_receive( :new ).with( :parent_id => @object.to_param ).and_return( @object )      
       xhr :get, :reply, :id => @object.to_param
       assigns[ :object ].should equal( @object )
-      response.should render_template( "reply.rjs" )           
+      response.should render_template( "shared/reply.rjs" )           
     end
   end
 
   describe "DELETE destroy" do
     it "destroys the requested forum posts chain and renders destroy template" do
       @object.class.should_receive( :destroy_object ).and_return( [ @object, @reply_post ] )
-      @object.class.should_receive( :destroy_render ).and_return( :template => "shared/destroy.rjs" )            
+#      @object.class.should_receive( :destroy_render ).and_return( :template => "shared/destroy.rjs" )            
       xhr :delete, :destroy, :id => @object.to_param
       assigns[ :object ].should == [ @object, @reply_post ]
       response.should render_template( "shared/destroy.rjs" )

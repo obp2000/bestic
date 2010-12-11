@@ -195,11 +195,11 @@ shared_examples_for "object" do
 
   describe "GET index" do
     it "assigns all objects as @objects, new object as @object and renders index template" do
-      @object.class.should_receive( :all_and_new ).and_return( [ [ @object ], @object ] )
-      @object.class.should_receive( :index_render ).and_return( :template => "shared/index.rjs" )       
+      @object.class.should_receive( :all_objects ).and_return( [ @object ] )
+#      @object.class.should_receive( :new_object ).and_return( @object.class.new )      
       xhr :get, :index
       assigns[:objects].should == [ @object ]
-      assigns[:object].should == @object
+#      assigns[:object].should == @object.class.new
       response.should render_template( "shared/index.rjs" )
     end
   end
@@ -207,7 +207,6 @@ shared_examples_for "object" do
   describe "GET show" do
     it "assigns the requested object as @object and renders show template" do
       @object.class.should_receive( :find ).with( @object.to_param ).and_return( @object )
-      @object.class.should_receive( :show_render ).and_return( :template => "shared/show.rjs" )        
       xhr :get, :show, :id => @object.to_param
       assigns[ :object ].should equal( @object )
       response.should render_template( "shared/show.rjs" )        
@@ -217,7 +216,6 @@ shared_examples_for "object" do
   describe "GET new" do
     it "assigns a new object as @object and renders new template" do
       @object.class.should_receive( :new ).and_return( @object )
-      @object.class.should_receive( :new_render ).and_return( :template => "shared/new_or_edit.rjs" )             
       xhr :get, :new
       assigns[ :object ].should equal( @object )
       response.should render_template( "shared/new_or_edit.rjs" )           
@@ -227,7 +225,6 @@ shared_examples_for "object" do
   describe "GET edit" do
     it "assigns the requested object as @object and renders new template" do
       @object.class.should_receive( :find ).with( @object.to_param ).and_return( @object )
-      @object.class.should_receive( :edit_render ).and_return( :template => "shared/new_or_edit.rjs" )          
       get :edit, :id => @object.to_param
       assigns[ :object ].should equal( @object )
       response.should render_template( "shared/new_or_edit.rjs" )            
@@ -238,7 +235,6 @@ shared_examples_for "object" do
     it "creates a new object" do
       @object.class.should_receive( :new_object ).with( { @object.class.name.underscore => { "name"=>@object.name },
                         "action" => "create", "controller" => @object.class.name.tableize }, {} ).and_return( @object )
-      @object.class.should_receive( :new_render ).and_return( :template => "shared/new_or_edit.rjs" )                          
       @object.should_receive( :save_object )
       xhr :post, :create, @object.class.name.underscore => { :name => @object.name }
     end
@@ -246,7 +242,6 @@ shared_examples_for "object" do
     context "with valid params" do
       it "assigns a newly created object as @object and renders create/update template" do
         @object.class.should_receive( :new_object ).and_return( @object )
-        @object.class.should_receive( :create_render ).and_return( :template => "shared/create_or_update.rjs" )         
         @object.stub( :save_object ).and_return( true )        
         xhr :post, :create, @object.class.name.underscore => { "name" => @object.name }
 #        flash.should_receive("now[:notice]")
@@ -259,7 +254,6 @@ shared_examples_for "object" do
     context "with invalid params" do
       it "assigns a newly created but unsaved object as @object and re-renders new/edit template" do
         @object.class.should_receive( :new_object ).and_return( @object )
-        @object.class.should_receive( :new_render ).and_return( :template => "shared/new_or_edit.rjs" )         
         @object.stub( :save_object ).and_return(false)
         xhr :post, :create, @object.class.name.underscore => { "name" => @object.name }
         assigns[ :object ].should equal( @object )
@@ -273,16 +267,12 @@ shared_examples_for "object" do
     it "updates the requested object" do
       @object.class.should_receive( :update_object ).with( { @object.class.name.underscore => { "name" => "Test" }, "action" => "update",
                               "id" => @object.to_param, "controller" => @object.class.name.tableize }, {} )
-      @object.class.should_receive( :edit_render ).and_return( :template => "shared/new_or_edit.rjs" )                                
-#      Category.stub( :find ).with( @category.to_param ).and_return( @category )
-#      Category.should_receive( :update_attributes ).with( { "name" => "Test" } )
       xhr :put, :update, :id => @object.to_param, @object.class.name.underscore => { "name" => "Test" }
     end
 
     context "with valid params" do
       it "assigns the requested object as @object and renders create/update template" do
         @object.class.stub( :update_object ).and_return( [ @object, true ] )
-        @object.class.should_receive( :update_render ).and_return( :template => "shared/create_or_update.rjs" )         
         xhr :put, :update, :id => @object.to_param
         assigns[ :object ].should == @object
         response.should render_template( "shared/create_or_update.rjs" )
@@ -292,7 +282,6 @@ shared_examples_for "object" do
     context "with invalid params" do
       it "assigns the object as @object and re-renders new/edit template" do
         @object.class.stub( :update_object ).and_return( [ @object, false ] )
-        @object.class.should_receive( :edit_render ).and_return( :template => "shared/new_or_edit.rjs" )         
         xhr :put, :update, :id => @object.to_param
         assigns[ :object ].should equal( @object )
         response.should render_template( "shared/new_or_edit.rjs" )          
@@ -305,7 +294,6 @@ shared_examples_for "object" do
     it "destroys the requested object and renders destroy template" do
       @object.class.should_receive( :destroy_object ).with( { "action" => "destroy", "id"=>@object.to_param,
                           "controller" => @object.class.name.tableize }, {} ).and_return( @object )
-      @object.class.should_receive( :destroy_render ).and_return( :template => "shared/destroy.rjs" )        
       xhr :delete, :destroy, :id => @object.to_param
       assigns[ :object ].should equal( @object )
       response.should render_template( "shared/destroy.rjs" )

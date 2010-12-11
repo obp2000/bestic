@@ -8,7 +8,7 @@ describe "items/_photo" do
   
   it "renders photo in form for item" do
     template.should_receive( :link_to_show_photo ).with( @photo, false )
-    template.should_receive( :link_to_remove_photo_from_item )     
+    template.should_receive( :link_to_remove_from_item ).with( @photo.class )     
     render :locals => { :photo => @photo }
 #    response.should have_textarea( @photo, "comment" )
     response.should have_selector( "textarea", :content => @photo.comment )

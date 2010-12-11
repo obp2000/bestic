@@ -54,5 +54,9 @@ class Colour < ItemAttribute
       page.call( "attach_mColorPicker" )
     end
   end
+
+  def js_after_create_or_update
+    "attach_mColorPicker"
+  end
     
 end

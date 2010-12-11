@@ -26,7 +26,7 @@ class ItemAttribute < ActiveRecord::Base
     lambda do |page, session|
       page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
       page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self
-      page.call( "attach_mColorPicker" )      
+      page.call( js_after_create_or_update ) rescue nil      
     end
   end  
     

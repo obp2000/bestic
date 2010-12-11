@@ -151,4 +151,93 @@ describe ApplicationHelper do
     end
 
   end
+
+  describe "#link_to_delete( object )" do
+    
+    before do
+      @cart = carts_proxy.first
+    end
+    
+    it "renders link to delete object" do
+      helper.link_to_delete( @cart ).should have_text( regexp_for_remote_delete( cart_path ) ) 
+    end
+    
+  end
+
+  describe "#link_to_show( object )" do
+    
+    before do
+      @object = cart_items_proxy.first
+    end
+    
+    it "renders link to show object" do
+      helper.link_to_show( @object ).should have_link_to_remote_get( catalog_item_path(@object.item) ) do |a|
+        a.should contain( @object.name )      
+      end      
+    end
+    
+  end
+
+  describe "#link_to_index( class_const )" do
+    
+    before do
+      @class_const = forum_posts_proxy.first.class
+    end
+    
+    it "renders link to list of objects" do
+      helper.link_to_index( @class_const ).should have_link_to_remote_get( forum_posts_path )
+    end
+    
+  end
+
+  describe "#link_to_reply_to( object )" do
+    
+    before do
+      @object = forum_posts_proxy.first
+    end
+    
+    it "renders link to reply to forum post" do
+      helper.link_to_reply_to( @object ).should have_link_to_remote_get( reply_forum_post_path( @object ) ) 
+    end
+    
+  end
+
+  describe "#link_to_close( object )" do
+    
+    before do
+      @object = orders_proxy.first
+    end
+    
+    it "renders link to close order" do
+      helper.link_to_close( @object ).should have_text( regexp_for_remote_close( close_processed_order_path( @object ) ) ) 
+    end
+    
+  end
+
+  describe "#link_to_show_photo( object )" do
+    
+    before do
+      @object = photos_proxy.first
+    end
+    
+    it "renders link to show photo" do
+      helper.link_to_show_photo( @object ).should have_thumbnail( @object ) 
+    end
+    
+  end
+
+  describe "#link_to_remove_from_item( class_const )" do
+    
+    before do
+      @object = photos_proxy.first
+    end
+    
+    it "renders link to remove object from item" do
+      helper.link_to_remove_from_item( @object.class ).should #have_thumbnail( @object ) 
+    end
+    
+  end
+
+
+
 end

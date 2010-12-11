@@ -101,7 +101,7 @@ class Item < ActiveRecord::Base
       
 # for "shared/index.rjs"
     def index_partial; "index"; end
-    def index_tag; "content"; end
+#    def index_tag; "items"; end
     include IndexBlock          
       
 # for "shared/show.rjs"

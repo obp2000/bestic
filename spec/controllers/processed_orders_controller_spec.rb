@@ -16,7 +16,7 @@ describe ProcessedOrdersController do
       @object.should_receive( :close )
       xhr :get, :close, :id => @object.to_param
       assigns[ :object ].should equal( @object )
-      response.should render_template( "close.rjs" )
+      response.should render_template( "shared/close.rjs" )
     end
   end
  
