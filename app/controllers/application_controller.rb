@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
     end  
   
     def render_block_call( action = nil )
-      controller_name.classify.constantize.send( "#{'not_xhr_' unless request.xhr? or action_name != "index" }#{action || action_name}_render_block" ).bind( self )[]      
+      controller_name.classify.constantize.send( "#{action || action_name}_render_block" ).bind( self )[]      
     end
   
 #    def action_with_suffix( suffix )

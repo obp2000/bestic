@@ -14,36 +14,16 @@ class Item < ActiveRecord::Base
   has_many :carts, :through => :cart_items
 
   set_inheritance_column nil  
-#  belongs_to :season
- 
-#  validates_presence_of :name
-#  validates_presence_of :price
-#  validates_presence_of :category_id
-#  validates_presence_of :season_id
-    
-#  validates_associated :sizes
-#  validates_associated :colours
 
   def validate
-    if name.blank?
-      errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым"  
-    end
-
+    errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
     unless price_before_type_cast and price_before_type_cast[/^[1-9][\d]*$/]
       errors.add_to_base "#{self.class.price_rus} #{self.class.class_name_rus}а должна быть целым числом"  
     end
-
-    if category_id.blank?
-      errors.add_to_base "Необходимо выбрать #{Category.class_name_rus}"  
-    end
-        
-    if type.blank?
-      errors.add_to_base "Необходимо выбрать сезон одежды"  
-    end
-                
+    errors.add_to_base "Необходимо выбрать #{Category.class_name_rus}" if category_id.blank?  
+    errors.add_to_base "Необходимо выбрать сезон одежды" if type.blank?  
   end
 
-#  extend Shared 
   class << self
     def class_name_rus; "товар"; end
 
@@ -70,17 +50,17 @@ class Item < ActiveRecord::Base
 
     def index_page_title; "Список #{class_name_rus}ов"; end
 
-    def not_xhr_index_render_block
-      lambda { render :partial => "index", :layout => "items" }
-    end      
+#    def not_xhr_index_render_block
+#      lambda { render :partial => "index", :layout => "items" }
+#    end      
+
+    def index_render_block
+      lambda do
+        render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" }
+      end
+    end
 
     def name_rus; "Название"; end     
-   
-#    def sizes_rus; "Размеры"; end
-      
-#    def colours_rus; "Цвета"; end
-      
-#    def category_rus; "Вид одежды"; end
    
     def price_rus; "Цена"; end  
    
@@ -133,7 +113,6 @@ class Item < ActiveRecord::Base
 
   def save_photos
     photos.each do |photo|
-      # в оригинале было photo.save(false)
       photo.save
     end
   end

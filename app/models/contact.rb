@@ -49,6 +49,8 @@ class Contact < ActiveRecord::Base
 
     def email_subject; "Сообщение от пользователя интернет-магазина BEST&C"; end
       
+    def new( * ); end
+      
 # for "shared/show.rjs"
     def fade_tag; "content";  end
     def appear_tag; "content"; end        

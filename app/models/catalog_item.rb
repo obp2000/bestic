@@ -47,8 +47,18 @@ class CatalogItem < Item
 #    def search_render; { :template => "shared/index.rjs" }; end
     def search_render_block; lambda { render :template => "shared/index.rjs" }; end 
 
-    def not_xhr_index_render_block
-      lambda { render :partial => "index", :layout => "application" }
+#    def not_xhr_index_render_block
+#      lambda { render :partial => "index", :layout => "application" }
+#    end
+  
+    def index_render_block
+      lambda do
+        render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "application" }
+      end
+    end
+    
+    def link_to_index_local_block
+      lambda { |page| page.link_to index_text, page.send( *self.plural_path ), :method => :get }
     end
   
     def search_image; "search_32.png"; end

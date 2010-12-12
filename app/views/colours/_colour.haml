@@ -2,7 +2,7 @@
   = f.error_messages
   = f.text_field :name
   = f.text_field :html_code
-  = link_to_function image_tag( *Colour.add_html_code_to_colour_image_with_title ), Colour.add_html_code_to_colour_js_string
+  = link_to_add_html_code_to Colour
   = content_tag :input, "", :type => "color", :hex => true, :value => "#ffffff"
   = submit_to Colour
   - unless colour.new_record?

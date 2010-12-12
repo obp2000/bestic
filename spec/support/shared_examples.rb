@@ -69,13 +69,14 @@ end
 shared_examples_for "edit and new forms" do
 
   it "renders a form for edit object" do
-    template.should_receive( :link_to_delete ).with( @object )
+#    template.should_receive( :link_to_delete ).with( @object )
     template.should_receive( :link_to_add_to_item ).with( @object )    
     render :locals => { @object.class.name.underscore.to_sym => @object }
     response.should have_selector("form", :method => "post", :action => send( "#{@object.class.name.underscore}_path", @object ) ) do |form|
       form.should have_text_field( @object, "name" )
       form.should have_image_input         
     end
+    response.should have_text( regexp_for_remote_delete( send( "#{@object.class.name.underscore}_path", @object ) ) )        
   end
 
   it "renders a form for a new object" do

@@ -36,7 +36,12 @@ class Photo < ItemAttribute
 
     def attach_yoxview?; true; end
       
-    def delete_from_item_image_with_title; [ delete_image, { :title => delete_from_item_title } ]; end
+#    def delete_from_item_image_with_title; [ delete_image, { :title => delete_from_item_title } ]; end
+ 
+    def link_to_remove_from_item_block
+      lambda { |page| page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ),
+              delete_from_item_js_string  }
+    end
  
     def delete_from_item_js_string
       "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"

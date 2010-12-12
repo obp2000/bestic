@@ -12,13 +12,11 @@ module CatalogItemsHelper
   end
 
   def radio_button_tag_for( attr, checked, visibility )
-    opts = lambda { |checked1, visibility1| [ "#{self.class.name.underscore}_id", id, checked1,
-              { :style => "visibility: " + visibility1 } ] }
-    radio_button_tag *opts.bind( attr )[ checked, visibility ]
+    attr.radio_button_tag_block[ self, checked, visibility ]
   end
   
   def link_to_index_local( class_const )
-    link_to class_const.index_text, send( *class_const.plural_path ), :method => :get
+    class_const.link_to_index_local_block[ self ]
   end
 
 end

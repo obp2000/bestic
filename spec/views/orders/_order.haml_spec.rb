@@ -6,12 +6,16 @@ describe "orders/_order" do
 
   before do
     @order = orders_proxy.first
+    @order.stub( :link_to_delete_block ).and_return( lambda { |h| h.link_to_remote "Test",
+            :url => order_path( @order ), :method => :delete } )
+    @order.stub( :link_to_close_block ).and_return( lambda { |h| h.link_to_remote "Test",
+            :url => close_processed_order_path( @order ), :method => :get } )            
+#    @order.stub( :closed? ).and_return( false )
 #    template.stub( :link_to_delete )      
   end
   
   it "renders order" do
-    template.should_receive( :link_to_delete ).with( @order )
-    template.should_receive( :link_to_close ).with( @order )        
+#    template.should_receive( :link_to_delete ).with( @order )
     render :locals => { :order => @order }
     response.should have_selector( "tr", :onclick => "$.get('#{order_path(@order)}')" )
     response.should contain(@order.to_param)
@@ -20,14 +24,16 @@ describe "orders/_order" do
     response.should contain(@order.items.size.to_s)
     response.should contain(@order.created_at.strftime("%d.%m.%y"))
     response.should contain(@order.created_at.strftime("%H:%M:%S"))
+    response.should have_text( regexp_for_remote_delete( order_path( @order ) ) )       
   end
   
   context "if processed order" do
 
     it "renders link to close order" do
-      @order.stub( :closed? ).and_return( false )      
+      @order.stub( :closed? ).and_return( false )
+#      template.should_receive( :link_to_close ).with( @order )        
       render :locals => { :order => @order }      
-#      response.should have_text( regexp_for_remote_close( close_processed_order_path( @order ) ) )
+      response.should have_text( regexp_for_remote_close( close_processed_order_path( @order ) ) )
     end
     
   end
@@ -35,7 +41,8 @@ describe "orders/_order" do
   context "if closed order" do
 
     it "not renders link to close order" do
-      @order.stub( :closed? ).and_return( true )      
+      @order.stub( :closed? ).and_return( true )
+#      template.should_not_receive( :link_to_close ).with( @order )        
       render :locals => { :order => @order }      
       response.should_not have_text( regexp_for_remote_close( close_processed_order_path( @order ) ) )
     end

@@ -6,9 +6,25 @@ class ItemAttribute < ActiveRecord::Base
     errors.add_to_base "Такой #{self.class.class_name_rus} уже есть" if new_record? &&
                        ( self.class.find :all, :conditions => { :name => name } ).first     
   end  
- 
-#  extend Shared   
+
+   def self.link_to_change_block
+    lambda { |page| page.link_to_remote page.image_tag( change_image, :title => change_title ),
+          :url => page.send( *self.plural_path ), :method => :get  }
+  end
   
+  def self.link_to_close_window_block
+    lambda do |page|
+      page.link_to_function page.image_tag( close_window_image, :title => close_window_title ) do |page1|
+        close_window_block.bind( self )[ page1 ]
+      end      
+    end
+  end
+ 
+  def self.close_window_block
+    lambda { |page| page.action :remove, index_tag }
+  end
+ 
+ 
   def add_to_item_block
     lambda do |page|
       page.action :remove, tag      
@@ -29,5 +45,11 @@ class ItemAttribute < ActiveRecord::Base
       page.call( js_after_create_or_update ) rescue nil      
     end
   end  
+
+  def radio_button_tag_block
+    lambda { |page, checked, visibility| page.radio_button_tag "#{self.class.name.underscore}_id", id, checked,
+              :style => "visibility: " + visibility }
+  end
+    
     
 end

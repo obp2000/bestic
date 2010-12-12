@@ -33,7 +33,7 @@ class Colour < ItemAttribute
 
     def change_image; "kcoloredit.png"; end
       
-    def add_html_code_to_colour_image_with_title; [ add_html_code_to_colour_image, { :title => add_html_code_to_colour_title } ]; end
+#    def add_html_code_to_colour_image_with_title; [ add_html_code_to_colour_image, { :title => add_html_code_to_colour_title } ]; end
 
     def add_html_code_to_colour_js_string; "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"; end
       
@@ -46,6 +46,12 @@ class Colour < ItemAttribute
         end
       end
     end   
+     
+    def link_to_add_html_code_block
+      lambda { |page| page.link_to_function page.image_tag( add_html_code_to_colour_image,
+              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string  }
+    end
+     
      
   end
 
