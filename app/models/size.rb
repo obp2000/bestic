@@ -23,7 +23,9 @@ class Size < ItemAttribute
 
     def change_image; "pencil-ruler.png"; end
       
-    def index_text; "Размеры"; end      
+    def index_text; "Размеры"; end
+      
+    def sort_attr; "name"; end      
   
   end
 

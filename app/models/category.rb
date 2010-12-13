@@ -37,7 +37,9 @@ class Category < ItemAttribute
       end
     end
     
-    def index_text; "Вид одежды"; end     
+    def index_text; "Вид одежды"; end
+      
+    def sort_attr; "name"; end
       
   end
    

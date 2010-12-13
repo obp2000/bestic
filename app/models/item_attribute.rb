@@ -7,23 +7,36 @@ class ItemAttribute < ActiveRecord::Base
                        ( self.class.find :all, :conditions => { :name => name } ).first     
   end  
 
-   def self.link_to_change_block
-    lambda { |page| page.link_to_remote page.image_tag( change_image, :title => change_title ),
-          :url => page.send( *self.plural_path ), :method => :get  }
-  end
-  
-  def self.link_to_close_window_block
-    lambda do |page|
-      page.link_to_function page.image_tag( close_window_image, :title => close_window_title ) do |page1|
-        close_window_block.bind( self )[ page1 ]
-      end      
+  class << self
+   
+    def link_to_change_block
+     lambda { |page| page.link_to_remote page.image_tag( change_image, :title => change_title ),
+            :url => page.send( *self.plural_path ), :method => :get  }
     end
-  end
+  
+    def link_to_close_window_block
+      lambda do |page|
+        page.link_to_function page.image_tag( close_window_image, :title => close_window_title ),
+                &close_window_block.bind( self )
+      end
+    end
  
-  def self.close_window_block
-    lambda { |page| page.action :remove, index_tag }
-  end
+    def close_window_block
+      lambda { |page| page.action :remove, index_tag }
+    end
  
+    def link_to_remove_from_item_block
+      lambda { |page| page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ),
+                delete_from_item_js_string  }
+    end
+
+    def delete_from_item_title; "Удалить из товара"; end
+ 
+    def delete_from_item_js_string
+      "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"
+    end
+    
+  end
  
   def add_to_item_block
     lambda do |page|

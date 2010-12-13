@@ -18,32 +18,36 @@
     def new_object( params, session ); new params[ name.underscore ]; end
 
     def index_render_block
-      lambda { render :template => "shared/index.rjs" }
+      shared_template_render_block( "index" )      
     end
 
     def show_render_block
-      lambda { render :template => "shared/show.rjs" }
+      shared_template_render_block( "show" )           
     end
 
     def new_render_block
-      lambda { render :template => "shared/new_or_edit.rjs" }
+      shared_template_render_block( "new_or_edit" )           
     end
     
     def edit_render_block
-      lambda { render :template => "shared/new_or_edit.rjs" }
+      shared_template_render_block( "new_or_edit" )           
     end    
 
     def update_render_block
-      lambda { render :template => "shared/create_or_update.rjs" }
+      shared_template_render_block( "create_or_update" )           
     end
 
     def create_render_block
-      lambda { render :template => "shared/create_or_update.rjs" }
+      shared_template_render_block( "create_or_update" )           
     end
     
     def destroy_render_block
-      lambda { render :template => "shared/destroy.rjs" }
+      shared_template_render_block( "destroy" )     
     end    
+    
+    def shared_template_render_block( template )
+      lambda { render :template => "shared/" + template + ".rjs" }      
+    end
     
     def back_image; "back1.png"; end
 
@@ -133,7 +137,8 @@
     def link_to_index_block
       lambda do |helper, params|
         image = helper.image_tag( *self.index_image_with_title ) rescue ""
-        text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] + "_rus" ) ) rescue class_name_rus_cap.pluralize rescue ""
+        text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] +
+                "_rus" ) ) rescue class_name_rus_cap.pluralize rescue ""
         helper.link_to_remote image + text, :url => helper.send( *self.plural_path( params ) ), :method => :get  
       end
     end
@@ -141,7 +146,7 @@
     def link_to_season_block
       lambda do |page|
         page.link_to_remote page.image_tag( season_icon ) + season_name + " (#{count})",
-                :url => page.send( *self.plural_path ), :method => :get, :complete => "attach_js()"
+                :url => page.send( *self.plural_path ), :method => :get
       end      
     end
 
@@ -184,7 +189,7 @@
     lambda do |page, session|
       page.action :remove, create_or_update_tag, :duration => DURATION      
       page.delay( DURATION ) do      
-        page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self 
+        page.insert_html :bottom, self.class.name.tableize, :partial => self.class.create_or_update_partial, :object => self 
       end
     end
   end
@@ -205,7 +210,7 @@
   def link_to_category_block
     lambda do |page, seasons|
       page.link_to_remote name + " (#{send( seasons ).size})", :url => page.send( "category_#{seasons}_path", self ),
-              :method => :get, :complete => "attach_js()", :html => { :class => "category" }    
+              :method => :get, :html => { :class => "category" }    
     end      
   end
 
@@ -301,17 +306,17 @@
 # for "shared/create_or_update.rjs"
   def create_or_update_tag; new_or_edit_tag; end
     
-  def new_or_edit_args; [ new_or_edit_tag, { :partial => self.class.new_or_edit_partial, :object => self } ]; end
+#  def new_or_edit_args; [ new_or_edit_tag, { :partial => self.class.new_or_edit_partial, :object => self } ]; end
   
-  def add_to_item_args; [ "form_#{self.class.index_tag}", { :partial => "items/attr", :object => self } ]; end
+#  def add_to_item_args; [ "form_#{self.class.index_tag}", { :partial => "items/attr", :object => self } ]; end
 
-  def create_or_update_insert_html_args; [  :bottom, self.class.index_tag, { :object => self } ]; end
+#  def create_or_update_insert_html_args; [  :bottom, self.class.index_tag, { :object => self } ]; end
 
-  def create_or_update_replace_args; [ self.class.new_tag, { :object => self.class.new } ]; end
+#  def create_or_update_replace_args; [ self.class.new_tag, { :object => self.class.new } ]; end
 
-  def create_or_update_replace_form_args
-    [ "form_" + self.class.index_tag, { :partial => "items_" + self.class.new_or_edit_partial, :object => self } ]
-  end
+#  def create_or_update_replace_form_args
+#    [ "form_" + self.class.index_tag, { :partial => "items_" + self.class.new_or_edit_partial, :object => self } ]
+#  end
 
 end
 
@@ -322,10 +327,10 @@ class Object
   def colon; self + ":"; end
 
   def cart
-    if self[:cart_id]
-      Cart.find self[:cart_id]
+    if self[ :cart_id ]
+      Cart.find self[ :cart_id ]
     else
-      self[:cart_id] = ( cart1 = Cart.create ).id
+      self[ :cart_id ] = ( cart1 = Cart.create ).id
       cart1
     end
   end

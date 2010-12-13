@@ -51,7 +51,8 @@ class Colour < ItemAttribute
       lambda { |page| page.link_to_function page.image_tag( add_html_code_to_colour_image,
               :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string  }
     end
-     
+
+    def sort_attr; "name"; end     
      
   end
 

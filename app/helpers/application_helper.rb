@@ -68,12 +68,8 @@ module ApplicationHelper
     visual_effect :fade, opts.first, :duration => DURATION
     delay( DURATION ) do    
       send action1, *opts
-      visual_effect :appear, opts.first, { :duration => DURATION } unless action1 == :remove
+      visual_effect :appear, opts.first, :duration => DURATION unless action1 == :remove
     end
-  end
-
-  def insert_html_smooth( *opts )
- 
   end
     
   def show_notice( opts = {} )

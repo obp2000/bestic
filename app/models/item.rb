@@ -29,24 +29,11 @@ class Item < ActiveRecord::Base
 
     def class_name_rus_cap; "Товар"; end   
 
-    def item_objects( sort_by )
-      if sort_by
-        all.sort_by do |item|
-          sort_attr = item.send sort_by
-          if sort_attr.is_a?( String ) || sort_attr.is_a?( Float )
-            sort_attr rescue ""
-          elsif sort_attr.is_a?( Array )
-            sort_attr.first.name rescue ""
-          else
-            sort_attr.name rescue ""            
-          end
-        end
-      else
-        all
-      end
+    def item_objects( params )
+        all.sort_by { |item| item.send( params[:sort_by] ).sort_attr } rescue all
     end
 
-    def all_objects( params ); item_objects( params[:sort_by] ).paginate( :page => params[:page], :per_page => 14 ); end
+    def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
     def index_page_title; "Список #{class_name_rus}ов"; end
 
@@ -81,7 +68,7 @@ class Item < ActiveRecord::Base
       
 # for "shared/index.rjs"
     def index_partial; "index"; end
-#    def index_tag; "items"; end
+    def index_tag; "content"; end
     include IndexBlock          
       
 # for "shared/show.rjs"
@@ -131,3 +118,21 @@ class Item < ActiveRecord::Base
   def deleted_notice; "#{self.class.class_name_rus_cap} удалён из каталога!"; end      
    
 end
+
+class Object
+  
+  def sort_attr
+
+    case self.class.name
+      when "String", "Float"
+        self
+      when "Array"
+        first.send( first.class.sort_attr )        
+      else
+        send( self.class.sort_attr )
+    end rescue ""
+  
+  end
+  
+end
+

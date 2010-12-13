@@ -22,8 +22,6 @@ class Photo < ItemAttribute
               :page => params[:page], :per_page => 5)
     end
 
-    def delete_from_item_title; "Удалить фотографию из товара"; end
-
     def change_image; "insert-image.png"; end
 
     def change_title; "Изменить #{class_name_rus.pluralize}"; end
@@ -38,15 +36,6 @@ class Photo < ItemAttribute
       
 #    def delete_from_item_image_with_title; [ delete_image, { :title => delete_from_item_title } ]; end
  
-    def link_to_remove_from_item_block
-      lambda { |page| page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ),
-              delete_from_item_js_string  }
-    end
- 
-    def delete_from_item_js_string
-      "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"
-    end
-
     def new_partial; "upload_photo"; end
 
     def create_render_block
