@@ -62,10 +62,14 @@ class Photo < ItemAttribute
     end
   end   
 
-  def link_to_show_photo_block
-    lambda do |page, show_comment|
-      page.link_to page.image_tag( public_filename( :small ) ) + ( show_comment ? comment || "" : "" ), public_filename
+  def link_to_show_photo_block( comment = "" )
+    lambda do |page|
+      page.link_to page.image_tag( public_filename :small ) + comment, public_filename
     end
+  end
+
+  def link_to_show_photo_with_comment_block
+    link_to_show_photo_block( comment )    
   end
 
 end

@@ -89,7 +89,8 @@ class ProcessedOrder < Order
       page.action :replace_html, status_tag, ClosedOrder::STATUS_RUS
       page.action :replace_html, updated_tag, page.date_time_rus( updated_at )
       page.action :replace_html, "order_processed", ProcessedOrder.count
-      page.action :remove, close_tag, :duration => DURATION        
+      page.action :remove, close_tag, :duration => DURATION
+      page.show_notice
     end
   end 
   

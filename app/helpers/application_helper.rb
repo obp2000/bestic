@@ -3,16 +3,11 @@
 module ApplicationHelper
  
   def index( objects )
-    objects.first.class.index_block.bind( objects )[ self ]
-    objects.first.class.after_index_block.bind( objects )[ self ] rescue nil
-    show_notice
+    objects.first.class.index_block1.bind( objects )[ self ]
   end 
  
   def show1( object )
-    object.show_block[ self ]
-    delay( DURATION ) do
-      object.after_show_block[ self ] rescue nil      
-    end    
+    object.class.show_block1[ self ]
   end
 
   def fade_appear( fade, appear )
@@ -23,45 +18,23 @@ module ApplicationHelper
   end
 
   def new_or_edit( object )
-    object.new_or_edit_block[ self ]    
-    delay( DURATION ) do       
-      object.after_new_or_edit_block[ self ] rescue nil
-    end
+    object.new_or_edit_block1[ self ]    
   end
 
   def reply( object )
-    object.reply_block[ self ]     
-    delay( DURATION ) do       
-      object.after_reply_block[ self ] rescue nil
-    end
+    object.reply_block1[ self ]
   end  
   
   def create_or_update( object, session, action_name )
-    object.create_or_update_block[ self, session ]
-    delay( DURATION ) do        
-      object.after_create_or_update_block[ self, session ] rescue nil
-    end
-    show_notice( :delay => object.class.duration_fade )    
-    visual_effect :highlight, object.create_or_update_tag, :duration => HIGHLIGHT_DURATION
-    visual_effect :fade, :errorExplanation, :duation => DURATION 
+    object.create_or_update_block1[ self, session ]
   end
   
   def destroy1( objects, session )
-    objects = objects.to_array
-    objects.each do |object|
-      object.destroy_block[ self ]        
-    end   
-    delay( DURATION ) do
-      objects.each do |object|
-        object.after_destroy_block[ self, session ] rescue nil        
-      end
-    end
-    show_notice
+    objects.to_array.destroy1[ self, session ]
   end
 
   def close( object )
     object.close_block[ self ]  
-    show_notice
   end
 
   def action( action1, *opts )
@@ -85,9 +58,7 @@ module ApplicationHelper
   end
 
   def link_to_back( object )
-    link_to_function image_tag( *object.class.back_image_with_title ) do |page|
-      page.fade_appear( *object.class.appear_fade_args )      
-    end
+    object.class.link_to_back_block[ self ]
   end 
 
   def check_cart_links
@@ -101,14 +72,7 @@ module ApplicationHelper
   end
 
   def link_to_add_to_item( object )
-    link_to_function image_tag( *object.class.add_to_item_image_with_title ) do |page|
-      page.add_to_item( object )
-    end
-  end
-
-  def add_to_item( object )
-    object.add_to_item_block[ self ]
-    object.after_add_to_item_block[ self ] rescue nil     
+    object.link_to_add_to_item_block[ self ]
   end
 
   def red_star
@@ -127,9 +91,13 @@ module ApplicationHelper
     controller_name == 'processed_orders' or cart.cart_items.empty?
   end
   
-  def link_to_show_photo( photo, show_comment = true )
-    photo.link_to_show_photo_block[ self, show_comment ]
+  def link_to_show_photo( photo )
+    photo.link_to_show_photo_block[ self ]
   end
+
+  def link_to_show_photo_with_comment( photo )
+    photo.link_to_show_photo_with_comment_block[ self ]
+  end  
   
   def page_title
     "<h2>#{@page_title}</h2>"
@@ -172,18 +140,32 @@ module ApplicationHelper
   end
 
   def link_to_category( category, season_class )
-    category.link_to_category_block[ self, season_class.name.tableize ]    
+    category.link_to_category_block[ self, season_class.name.tableize ]
   end
   
   def render_attrs( attrs )
-    attrs = attrs.to_array
-    return "Любой" if attrs.first.id.blank?
-    attrs.first.render_attrs_block.bind( attrs )[ self ]
+    attrs.to_array.render_attrs[ self ]
   end
 
   def render_options( objects )
-    objects = objects.to_array    
-    objects.first.render_options_block.bind( objects )[ self ]
+    objects.to_array.render_options[ self ]    
   end
 
 end
+
+class Array
+  
+  def render_attrs
+    first.render_attrs_block.bind( self )    
+  end
+  
+  def render_options
+    first.render_options_block.bind( self )    
+  end  
+
+  def destroy1
+    first.destroy_block1.bind( self )    
+  end    
+  
+end
+

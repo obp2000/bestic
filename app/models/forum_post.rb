@@ -89,6 +89,15 @@ class ForumPost < ActiveRecord::Base
     end
   end  
 
+  def reply_block1
+    lambda do |page|
+      reply_block[ page ]
+      page.delay( DURATION ) do
+        after_reply_block[ page ] rescue nil      
+      end
+    end
+  end
+
   def reply_block
     lambda do |page|
       page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self

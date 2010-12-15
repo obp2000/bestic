@@ -2,5 +2,7 @@
   = link_to_close_window objects.first.class
   = will_paginate objects rescue nil
   = render :partial => objects.first.class.new_partial, :object => objects.first.class.new rescue nil
+  - p objects.count.to_s + "wwwwwwwwwwwwwwwwwwwwwww"
+  - p objects.first.class.edit_partial
   = render :partial => objects.first.class.edit_partial, :collection => objects
   = draggable_element objects.first.class.index_tag

@@ -49,6 +49,17 @@
       lambda { render :template => "shared/" + template + ".rjs" }      
     end
     
+    def link_to_back_block
+      lambda do |page|
+        page.link_to_function page.image_tag( back_image, :title => back_title ),
+                &back_block.bind( self )
+      end
+    end
+    
+    def back_block
+      lambda { |page| page.fade_appear( appear_tag, fade_tag )  }
+    end    
+    
     def back_image; "back1.png"; end
 
     def back_title; "Назад"; end
@@ -101,12 +112,20 @@
     def index_tag; name.tableize; end
       
     def new_tag; "new_#{name.underscore}"; end
+
+    def index_block1
+      lambda do |page|
+        self.first.class.index_block.bind( self )[ page ]
+        self.first.class.after_index_block.bind( self )[ page ] rescue nil
+        page.show_notice        
+      end
+    end
       
     def index_block
       lambda do |page|
-        page.action :remove, first.class.index_tag
+        page.action :remove, self.first.class.index_tag
         page.delay( DURATION ) do
-          page.insert_html :after, "tabs",  :partial => first.class.index_partial, :locals => { :objects => self }
+          page.insert_html :after, "tabs",  :partial => self.first.class.index_partial, :locals => { :objects => self }
         end
       end
     end
@@ -118,12 +137,34 @@
         end
       end
     end      
-     
+
+    def show_block1
+      lambda do |page|
+        show_block[ page ]
+        page.delay( DURATION ) do
+          after_show_block[ page ] rescue nil      
+        end
+      end
+    end
+
+    def show_block
+      lambda do |page|
+        page.action :replace_html, appear_tag, :partial => "show"
+        page.fade_appear fade_tag, appear_tag      
+      end
+    end
+
+    def after_show_block
+      lambda do |page|
+        page.call( "attach_yoxview" )     
+      end
+    end     
+         
     def duration_fade; DURATION; end
       
-    def fade_appear_args; [ fade_tag, appear_tag ]; end
+#    def fade_appear_args; [ fade_tag, appear_tag ]; end map
 
-    def appear_fade_args; [ appear_tag, fade_tag ]; end
+#    def appear_fade_args; [ appear_tag, fade_tag ]; end
 
     def link_to_new_block
       lambda do |helper|
@@ -166,24 +207,38 @@
   
   end
 
-  def show_block
+  def new_or_edit_block1
     lambda do |page|
-      page.action :replace_html, self.class.appear_tag, :partial => "show"
-      page.fade_appear *self.class.fade_appear_args      
+      new_or_edit_block[ page ]    
+      page.delay( DURATION ) do       
+        after_new_or_edit_block[ page ] rescue nil
+      end
     end
-  end
-
-  def after_show_block
-    lambda do |page|
-      page.call( "attach_yoxview" )     
-    end
-  end
+  end  
 
   def new_or_edit_block
     lambda do |page|
       page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self 
     end
   end  
+
+  def after_new_or_edit_block
+    lambda do |page|
+      page.call( "attach_yoxview" )
+    end
+  end
+
+  def create_or_update_block1
+    lambda do |page, session|
+      create_or_update_block[ page, session ]
+      page.delay( DURATION ) do        
+        after_create_or_update_block[ page, session ] rescue nil
+      end
+      page.show_notice( :delay => self.class.duration_fade )    
+      page.visual_effect :highlight, create_or_update_tag, :duration => HIGHLIGHT_DURATION
+      page.visual_effect :fade, :errorExplanation, :duation => DURATION
+    end
+  end
 
   def create_or_update_block
     lambda do |page, session|
@@ -194,11 +249,19 @@
     end
   end
 
-#  def after_create_or_update_block
-#    lambda do |page, session|
-#      page.insert_html :bottom, self.class.index_tag, :partial => self.class.create_or_update_partial, :object => self
-#    end
-#  end
+  def destroy_block1
+    lambda do |page, session|
+      each do |object|
+        object.destroy_block[ page ]        
+      end   
+      page.delay( DURATION ) do
+        each do |object|
+          object.after_destroy_block[ page, session ] rescue nil        
+        end
+      end
+      page.show_notice
+    end
+  end
 
   def destroy_block
     lambda do |page|
@@ -216,6 +279,7 @@
 
   def render_attrs_block
     lambda do |page|
+      return "Любой" if first.id.blank?      
       page.render :partial => "shared/#{first.class.name.underscore}", :collection => self,
               :spacer_template => "shared/comma"
     end
@@ -230,10 +294,10 @@
   end
 
   def link_to_show_block
-    lambda do |helper|
-      image = helper.image_tag( *self.class.show_image_with_title ) rescue ""
-      text = ( self.class.show_text rescue helper.html_escape( subject ) ) rescue name rescue ""
-      helper.link_to_remote image + text, :url => helper.send( *self.single_path ), :method => :get rescue self.class.deleted_notice
+    lambda do |page|
+      image = page.image_tag( *self.class.show_image_with_title ) rescue ""
+      text = ( self.class.show_text rescue page.html_escape( subject ) ) rescue name rescue ""
+      page.link_to_remote image + text, :url => page.send( *self.single_path ), :method => :get rescue self.class.deleted_notice
     end
   end
 
@@ -322,7 +386,7 @@ end
 
 class Object
  
-  def send_if_respond( action ); send(action) if respond_to?(action); end
+#  def send_if_respond( action ); send(action) if respond_to?(action); end
   
   def colon; self + ":"; end
 

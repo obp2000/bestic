@@ -33,9 +33,25 @@ class ItemAttribute < ActiveRecord::Base
     def delete_from_item_title; "Удалить из товара"; end
  
     def delete_from_item_js_string
-      "$(this).siblings(':checkbox').attr('checked', '');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"
+#      "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"      
+      "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();"
+#      "$(this).siblings(':checkbox').attr('checked', 'uncheked')"      
     end
     
+  end
+
+  def link_to_add_to_item_block
+    lambda do |page|
+      page.link_to_function page.image_tag( *self.class.add_to_item_image_with_title ),
+              &add_to_item_block1.bind( self )
+    end
+  end 
+ 
+  def add_to_item_block1
+    lambda do |page|
+      add_to_item_block[ page ]
+      after_add_to_item_block[ page ] rescue nil          
+    end
   end
  
   def add_to_item_block

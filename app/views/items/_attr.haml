@@ -1,5 +1,5 @@
 %span[ attr ]
   = render_attrs attr
   = link_to_remove_from_item attr.class
-  = check_box_tag "item[#{attr.class.name.underscore}_ids][]", attr.id, true, :style => "visibility: hidden;" 
-
+  =# hidden_field_tag "item[#{attr.class.name.underscore}_ids][]", attr.id  
+  = check_box_tag "item[#{attr.class.name.underscore}_ids][]", attr.id, true, :style => "visibility: visible" 

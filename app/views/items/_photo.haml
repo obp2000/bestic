@@ -1,5 +1,5 @@
 %span[ photo ]
-  %span.yoxview= link_to_show_photo photo, false
+  %span.yoxview= link_to_show_photo photo
   = link_to_remove_from_item Photo
   %br
   - fields_for "item[existing_photo_attributes][]", photo do |photo_form|

@@ -79,7 +79,7 @@ class Item < ActiveRecord::Base
 
   after_update :save_photos
   
-  def colours_string; colours.map( &:name ).join(', '); end
+#  def colours_string; colours.map( &:name ).join(', '); end
    
   def new_photo_attributes=(photo_attributes)
     photo_attributes.each do |attributes|
