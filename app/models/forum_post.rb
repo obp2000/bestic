@@ -58,14 +58,6 @@ class ForumPost < ActiveRecord::Base
     def name_rus; "Автор"; end  
   
     def body_rus; class_name_rus_cap; end
-   
-#    def index_render; { :template => "shared/index.rjs" }; end
-#    def show_render; { :template => "shared/show.rjs" }; end         
-#    def destroy_render; { :template => "shared/show.rjs" }; end        
-#    def destroy_render; { :template => "shared/destroy.rjs" }; end
-#    def new_render; { :template => "shared/new_or_edit.rjs" }; end
-#    def reply_render; { :template => "shared/reply.rjs" }; end
-#    def create_render; { :template => "shared/create_or_update.rjs" }; end       
 
 # for "shared/index.rjs"  
     def index_partial; "index"; end
@@ -82,41 +74,31 @@ class ForumPost < ActiveRecord::Base
 
   end
 
-  def after_new_or_edit_block
-    lambda do |page|
-      page.visual_effect :fade, :post, :duration => DURATION
-      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-    end
+  def after_new_or_edit( page )
+    page.visual_effect :fade, :post, :duration => DURATION
+    page.visual_effect :fade, :link_to_reply, :duration => DURATION
   end  
 
-  def reply_block1
-    lambda do |page|
-      reply_block[ page ]
-      page.delay( DURATION ) do
-        after_reply_block[ page ] rescue nil      
-      end
+  def reply1( page )
+    reply( page )
+    page.delay( DURATION ) do
+      after_reply( page ) rescue nil      
     end
   end
 
-  def reply_block
-    lambda do |page|
-      page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
-    end
+  def reply( page )
+    page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
   end 
 
-  def after_reply_block
-    lambda do |page|
-      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-    end
+  def after_reply( page )
+    page.visual_effect :fade, :link_to_reply, :duration => DURATION
   end 
 
-  def create_or_update_block
-    lambda do |page, session|
-      place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-      page.insert_html place, tag, :partial => self.class.name.underscore, :object => self
-      page.visual_effect :fade, :post, :duration => DURATION
-      page.visual_effect :fade, :new_forum_post, :duration => DURATION        
-    end
+  def create_or_update2( page, session )
+    place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+    page.insert_html place, tag, :partial => self.class.name.underscore, :object => self
+    page.visual_effect :fade, :post, :duration => DURATION
+    page.visual_effect :fade, :new_forum_post, :duration => DURATION        
   end
 
   def new_or_edit_tag; "post_new";  end

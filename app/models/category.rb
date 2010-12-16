@@ -42,21 +42,10 @@ class Category < ItemAttribute
     def sort_attr; "name"; end
       
   end
-   
-#  def name_for_title; ": " + name; end
 
-  def add_to_item_block
-    lambda do |page|
-      page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
-              :object => self                      
-    end
+  def add_to_item( page )
+    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
+            :object => self                      
   end
-
-#  def after_create_or_update_block
-#    lambda do |page, session|
-#      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-#      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self          
-#    end
-#  end   
    
 end

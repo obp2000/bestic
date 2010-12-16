@@ -3,11 +3,11 @@
 module ApplicationHelper
  
   def index( objects )
-    objects.first.class.index_block1.bind( objects )[ self ]
+    objects.index1( self )
   end 
  
   def show1( object )
-    object.class.show_block1[ self ]
+    object.class.show1( self )
   end
 
   def fade_appear( fade, appear )
@@ -18,23 +18,23 @@ module ApplicationHelper
   end
 
   def new_or_edit( object )
-    object.new_or_edit_block1[ self ]    
+    object.new_or_edit1( self )    
   end
 
   def reply( object )
-    object.reply_block1[ self ]
+    object.reply1( self )
   end  
   
   def create_or_update( object, session, action_name )
-    object.create_or_update_block1[ self, session ]
+    object.create_or_update1( self, session )
   end
   
   def destroy1( objects, session )
-    objects.to_array.destroy1[ self, session ]
+    objects.to_array.destroy1( self, session )
   end
 
   def close( object )
-    object.close_block[ self ]  
+    object.close1( self )  
   end
 
   def action( action1, *opts )
@@ -58,7 +58,7 @@ module ApplicationHelper
   end
 
   def link_to_back( object )
-    object.class.link_to_back_block[ self ]
+    object.class.link_to_back( self )
   end 
 
   def check_cart_links
@@ -72,7 +72,7 @@ module ApplicationHelper
   end
 
   def link_to_add_to_item( object )
-    object.link_to_add_to_item_block[ self ]
+    object.link_to_add_to_item( self )
   end
 
   def red_star
@@ -92,11 +92,11 @@ module ApplicationHelper
   end
   
   def link_to_show_photo( photo )
-    photo.link_to_show_photo_block[ self ]
+    photo.link_to_show_photo( self )
   end
 
   def link_to_show_photo_with_comment( photo )
-    photo.link_to_show_photo_with_comment_block[ self ]
+    photo.link_to_show_photo_with_comment( self )
   end  
   
   def page_title
@@ -104,27 +104,27 @@ module ApplicationHelper
   end
   
   def link_to_index( class_const, params = nil )
-    class_const.link_to_index_block[ self, params ]     
+    class_const.link_to_index( self, params )     
   end    
 
   def link_to_show( object )
-    object.link_to_show_block[ self ]              
+    object.link_to_show( self )              
   end  
   
   def link_to_new( class_const )
-    class_const.link_to_new_block[ self ]  
+    class_const.link_to_new( self )  
   end  
   
   def link_to_reply_to( object )
-    object.link_to_reply_block[ self ]                 
+    object.link_to_reply( self )                 
   end  
   
   def link_to_delete( object )
-    object.link_to_delete_block[ self ]    
+    object.link_to_delete( self )    
   end
   
   def link_to_close( object )
-    object.link_to_close_block[ self ]    
+    object.link_to_close( self )    
   end  
   
   def link_to_logout( class_const )
@@ -136,36 +136,53 @@ module ApplicationHelper
   end
 
   def link_to_season( season_class )
-    season_class.link_to_season_block[ self ]
+    season_class.link_to_season( self )
   end
 
   def link_to_category( category, season_class )
-    category.link_to_category_block[ self, season_class.name.tableize ]
+    category.link_to_category( self, season_class.name.tableize )
   end
   
   def render_attrs( attrs )
-    attrs.to_array.render_attrs[ self ]
+    attrs.to_array.render_attrs( self ) 
   end
 
   def render_options( objects )
-    objects.to_array.render_options[ self ]    
+    objects.to_array.render_options( self )    
   end
 
 end
 
 class Array
   
-  def render_attrs
-    first.render_attrs_block.bind( self )    
-  end
-  
-  def render_options
-    first.render_options_block.bind( self )    
+  def render_attrs( page )
+    return "Любой" if first.id.blank?      
+    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self,
+            :spacer_template => "shared/comma"
   end  
-
-  def destroy1
-    first.destroy_block1.bind( self )    
-  end    
   
+  def render_options( page )
+    page.render :partial => "catalog_items/attr", :collection => self,
+        :locals => { :checked => ( first.new_record? || !second ),
+        :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
+  end  
+  
+  def destroy1( page, session )
+    each do |object|
+      object.destroy2( page )        
+    end   
+    page.delay( DURATION ) do
+      each do |object|
+        object.after_destroy( page, session ) rescue nil        
+      end
+    end
+    page.show_notice
+  end  
+ 
+  def index1( page )
+    first.class.index2( page )
+    first.class.after_index( page ) rescue nil
+    page.show_notice        
+  end 
+ 
 end
-

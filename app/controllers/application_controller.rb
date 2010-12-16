@@ -73,16 +73,7 @@ class ApplicationController < ActionController::Base
     end  
   
     def render_block_call( action = nil )
-      controller_name.classify.constantize.send( "#{action || action_name}_render_block" ).bind( self )[]      
+      controller_name.classify.constantize.send( "#{action || action_name}_render_block" ).bind( self )[]
     end
-  
-#    def action_with_suffix( suffix )
-#      [ controller_name.classify.constantize, @object ].each do |obj|  
-#        if obj.respond_to?( result = "#{action_name}_#{suffix}" )
-#          return result
-#        end
-#      end
-#      nil
-#    end
 
 end

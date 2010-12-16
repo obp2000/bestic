@@ -33,8 +33,6 @@ class Photo < ItemAttribute
     def upload_title; "Загрузить фотографию"; end
 
     def attach_yoxview?; true; end
-      
-#    def delete_from_item_image_with_title; [ delete_image, { :title => delete_from_item_title } ]; end
  
     def new_partial; "upload_photo"; end
 
@@ -48,28 +46,22 @@ class Photo < ItemAttribute
     "photo"    
   end
 
-  def after_add_to_item_block
-      lambda do |page|
-        page.delay( DURATION ) do
-          page.call( "attach_yoxview" )
-        end
-      end    
-  end 
-
-  def after_create_or_update_block
-    lambda do |page, session|
+  def after_add_to_item( page )
+    page.delay( DURATION ) do
       page.call( "attach_yoxview" )
     end
+  end 
+
+  def after_create_or_update( page, session )
+    page.call( "attach_yoxview" )
   end   
 
-  def link_to_show_photo_block( comment = "" )
-    lambda do |page|
-      page.link_to page.image_tag( public_filename :small ) + comment, public_filename
-    end
+  def link_to_show_photo( page, comment = "" )
+    page.link_to page.image_tag( public_filename :small ) + comment, public_filename
   end
 
-  def link_to_show_photo_with_comment_block
-    link_to_show_photo_block( comment )    
+  def link_to_show_photo_with_comment( page )
+    link_to_show_photo( page, comment )    
   end
 
 end

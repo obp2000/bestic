@@ -13,35 +13,25 @@ class CartItem < ActiveRecord::Base
     def class_name_rus_cap; "Товар"; end
 
     def update_object( params, session )
-      conditions_hash = lambda { |session1| { :item_id => self[:id].gsub(/catalog_item_/, ""), :size_id => self[:size_id],
-                      :colour_id => self[:colour_id], :cart_id => session1.cart.id } }
-      [ update_cart_item( conditions_hash.bind( params )[ session ] ), true ]
+      [ update_cart_item( params.conditions_hash( session ) ), true ]
     end
 
     def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end  
-
-#    def controller; "catalog_items"; end  
-      
-#    def update_render; { :template => "shared/create_or_update.rjs" }; end
-#    def destroy_render; { :template => "shared/create_or_update.rjs" }; end
       
 # for "shared/create_or_update.rjs"
     def create_or_update_partial; "cart_items/cart_item"; end
      
 #for "shared/index
     def index_partial; "carts/cart"; end
-#    def index_tag; "cart_items"; end      
 
   end
 
-  def after_create_or_update_block
-    lambda do |page, session|
-      page.action :remove, tag unless amount > 0 rescue nil
-      page.check_cart_links
-      page.check_cart_totals( session )
-    end
+  def after_create_or_update( page, session )
+    page.action :remove, tag unless amount > 0 rescue nil
+    page.check_cart_links
+    page.check_cart_totals( session )
   end
-  alias_method :after_destroy_block, :after_create_or_update_block
+  alias_method :after_destroy, :after_create_or_update
 
   def update_amount( i ); update_attribute :amount, amount + i; self; end   
   
@@ -72,4 +62,13 @@ class CartItem < ActiveRecord::Base
       first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge( :amount => 1 ) )      
     end
     
+end
+
+class Hash
+  
+  def conditions_hash( session )
+      { :item_id => self[:id].gsub(/catalog_item_/, ""), :size_id => self[:size_id], :colour_id => self[:colour_id],
+              :cart_id => session.cart.id }
+  end  
+  
 end

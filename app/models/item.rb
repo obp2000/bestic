@@ -37,14 +37,8 @@ class Item < ActiveRecord::Base
 
     def index_page_title; "Список #{class_name_rus}ов"; end
 
-#    def not_xhr_index_render_block
-#      lambda { render :partial => "index", :layout => "items" }
-#    end      
-
     def index_render_block
-      lambda do
-        render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" }
-      end
+      lambda { render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" } }
     end
 
     def name_rus; "Название"; end     

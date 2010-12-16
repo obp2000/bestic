@@ -19,13 +19,11 @@ class Contact < ActiveRecord::Base
       
     def show_text; class_name_rus_cap.pluralize; end       
 
-    def show_page_title; class_name_rus_cap; end
+#    def show_title; class_name_rus_cap; end
 
     def change_text; "Изменить контакты"; end  
 
     def save_image; "document-save.png"; end
-
-    def show_image; "contacts.png"; end
   
     def name_rus; "Имя"; end
 
@@ -56,6 +54,8 @@ class Contact < ActiveRecord::Base
     def appear_tag; "content"; end        
 
   end
+
+  def show_image; "contacts.png"; end
 
   def update_notice; "#{self.class.class_name_rus_cap} успешно обновлены."; end
 

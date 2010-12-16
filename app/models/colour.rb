@@ -32,34 +32,28 @@ class Colour < ItemAttribute
     def add_html_code_to_colour_title; "Добавить в #{class_name_rus}"; end
 
     def change_image; "kcoloredit.png"; end
-      
-#    def add_html_code_to_colour_image_with_title; [ add_html_code_to_colour_image, { :title => add_html_code_to_colour_title } ]; end
 
     def add_html_code_to_colour_js_string; "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"; end
       
     def index_text; "Цвета"; end
       
-    def after_index_block
-      lambda do |page|
-        page.delay( DURATION ) do
-          page.call( "attach_mColorPicker" )
-        end
+    def after_index( page )
+      page.delay( DURATION ) do
+        page.call( "attach_mColorPicker" )
       end
     end   
      
-    def link_to_add_html_code_block
-      lambda { |page| page.link_to_function page.image_tag( add_html_code_to_colour_image,
-              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string  }
+    def link_to_add_html_code( page )
+      page.link_to_function page.image_tag( add_html_code_to_colour_image,
+              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string
     end
 
     def sort_attr; "name"; end     
      
   end
 
-  def after_new_or_edit_block
-    lambda do |page|
-      page.call( "attach_mColorPicker" )
-    end
+  def after_new_or_edit( page )
+    page.call( "attach_mColorPicker" )
   end
 
   def js_after_create_or_update

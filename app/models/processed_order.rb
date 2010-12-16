@@ -33,10 +33,7 @@ class ProcessedOrder < Order
       ( object = find params[:id] ).close
       object      
     end
-    
-#    def index_render; { :template => "shared/new_or_edit.rjs" }; end
-#    def create_render; { :template => "shared/create_or_update.rjs" }; end
-#    def close_render; { :template => "shared/close.rjs" }; end           
+       
     def close_render_block; lambda { render :template => "shared/close.rjs" }; end 
       
     def new_page_title; "Оформление #{class_name_rus}а"; end  
@@ -50,8 +47,6 @@ class ProcessedOrder < Order
     def close_title; "Закрыть #{class_name_rus}"; end
     
     def close_confirm; "Закрыть #{class_name_rus}?"; end
-
-#    def close_image_with_title; [ close_image, { :title => close_title } ]; end
       
     def captcha_text; "Введите, пожалуйста, проверочный код:"; end
     
@@ -72,26 +67,20 @@ class ProcessedOrder < Order
       
   end
 
-  def after_new_or_edit_block
-    lambda do |page|
-        page.check_cart_links
-    end
+  def after_new_or_edit( page )
+    page.check_cart_links
   end
 
-  def create_or_update_block
-    lambda do |page, session|
-      page.delay( self.class.duration_fade ) { page.redirect_to "/" }
-    end
+  def create_or_update2( page, session )
+    page.delay( self.class.duration_fade ) { page.redirect_to "/" }
   end  
 
-  def close_block
-    lambda do |page|
-      page.action :replace_html, status_tag, ClosedOrder::STATUS_RUS
-      page.action :replace_html, updated_tag, page.date_time_rus( updated_at )
-      page.action :replace_html, "order_processed", ProcessedOrder.count
-      page.action :remove, close_tag, :duration => DURATION
-      page.show_notice
-    end
+  def close1( page )
+    page.action :replace_html, status_tag, ClosedOrder::STATUS_RUS
+    page.action :replace_html, updated_tag, page.date_time_rus( updated_at )
+    page.action :replace_html, "order_processed", ProcessedOrder.count
+    page.action :remove, close_tag, :duration => DURATION
+    page.show_notice
   end 
   
   def save_object( session )

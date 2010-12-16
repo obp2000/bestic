@@ -46,27 +46,18 @@ class CatalogItem < Item
 
 #    def search_render; { :template => "shared/index.rjs" }; end
     def search_render_block; lambda { render :template => "shared/index.rjs" }; end 
-
-#    def not_xhr_index_render_block
-#      lambda { render :partial => "index", :layout => "application" }
-#    end
   
     def index_render_block
-      lambda do
-        render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "application" }
-      end
+      lambda { render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "application" } }
     end
     
-    def link_to_index_local_block
-      lambda { |page| page.link_to index_text, page.send( *self.plural_path ), :method => :get }
+    def link_to_index_local( page )
+      page.link_to index_text, page.send( *plural_path ), :method => :get
     end
   
     def search_image; "search_32.png"; end
   
     def search_title; "Поиск #{class_name_rus}а"; end
-      
-#    def index_render; { :template => "shared/index.rjs" }; end
-#    def show_render; { :template => "shared/show.rjs" }; end
       
     def season_name; "Все сезоны"; end
 

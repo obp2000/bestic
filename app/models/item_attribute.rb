@@ -9,25 +9,13 @@ class ItemAttribute < ActiveRecord::Base
 
   class << self
    
-    def link_to_change_block
-     lambda { |page| page.link_to_remote page.image_tag( change_image, :title => change_title ),
-            :url => page.send( *self.plural_path ), :method => :get  }
-    end
-  
-    def link_to_close_window_block
-      lambda do |page|
-        page.link_to_function page.image_tag( close_window_image, :title => close_window_title ),
-                &close_window_block.bind( self )
-      end
+    def link_to_change( page )
+      page.link_to_remote page.image_tag( change_image, :title => change_title ),
+            :url => page.send( *plural_path ), :method => :get
     end
  
-    def close_window_block
-      lambda { |page| page.action :remove, index_tag }
-    end
- 
-    def link_to_remove_from_item_block
-      lambda { |page| page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ),
-                delete_from_item_js_string  }
+    def link_to_remove_from_item( page )
+      page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ), delete_from_item_js_string
     end
 
     def delete_from_item_title; "Удалить из товара"; end
@@ -40,26 +28,22 @@ class ItemAttribute < ActiveRecord::Base
     
   end
 
-  def link_to_add_to_item_block
-    lambda do |page|
-      page.link_to_function page.image_tag( *self.class.add_to_item_image_with_title ),
-              &add_to_item_block1.bind( self )
-    end
+  def link_to_add_to_item( page )
+    page.link_to_function page.image_tag( self.class.add_to_item_image, :title => self.class.add_to_item_title ),
+           &add_to_item_block1.bind( self )
   end 
  
   def add_to_item_block1
     lambda do |page|
-      add_to_item_block[ page ]
-      after_add_to_item_block[ page ] rescue nil          
+      add_to_item( page )
+      after_add_to_item( page ) rescue nil          
     end
   end
  
-  def add_to_item_block
-    lambda do |page|
-      page.action :remove, tag      
-      page.delay( DURATION ) do
-        page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/#{insert_attr}", :object => self
-      end
+  def add_to_item( page )
+    page.action :remove, tag      
+    page.delay( DURATION ) do
+      page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/#{insert_attr}", :object => self
     end
   end  
   
@@ -67,17 +51,14 @@ class ItemAttribute < ActiveRecord::Base
     "attr"    
   end
   
-  def after_create_or_update_block
-    lambda do |page, session|
-      page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-      page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self
-      page.call( js_after_create_or_update ) rescue nil      
-    end
+  def after_create_or_update( page, session )
+    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
+    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self
+    page.call( js_after_create_or_update ) rescue nil      
   end  
 
-  def radio_button_tag_block
-    lambda { |page, checked, visibility| page.radio_button_tag "#{self.class.name.underscore}_id", id, checked,
-              :style => "visibility: " + visibility }
+  def radio_button_tag1( page, checked, visibility )
+    page.radio_button_tag "#{self.class.name.underscore}_id", id, checked, :style => "visibility: " + visibility
   end
     
     

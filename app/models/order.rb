@@ -63,10 +63,8 @@ class Order < ActiveRecord::Base
   
   end
 
-  def after_destroy_block
-    lambda do |page, session|
-      page.action :replace_html, "order_processed", ProcessedOrder.count
-    end
+  def after_destroy( page, session )
+    page.action :replace_html, "order_processed", ProcessedOrder.count
   end 
 
   def total; order_items.total; end
