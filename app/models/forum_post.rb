@@ -7,13 +7,9 @@ class ForumPost < ActiveRecord::Base
 #  validates_length_of :body, :within => 5..5000
   
   def validate
-    
     errors.add_to_base "Имя слишком короткое (минимум 2 буквы)" if name.size < 2  
-   
     errors.add_to_base "#{self.class.subject_rus} слишком короткая (минимум 5 букв)" if subject.size < 5  
-
     errors.add_to_base "#{self.class.class_name_rus_cap} слишком короткое (минимум 5 букв)" if body.size < 5  
-
   end
   
   class << self
@@ -74,31 +70,26 @@ class ForumPost < ActiveRecord::Base
 
   end
 
-  def after_new_or_edit( page )
-    page.visual_effect :fade, :post, :duration => DURATION
-    page.visual_effect :fade, :link_to_reply, :duration => DURATION
+#  include Action1
+  include Action3  
+
+  def new_or_edit1( page )
+    super page
+    page.delay( DURATION ) do       
+      page.visual_effect :fade, :post, :duration => DURATION
+      page.visual_effect :fade, :link_to_reply, :duration => DURATION
+    end    
   end  
 
   def reply1( page )
-    reply( page )
+    super page
     page.delay( DURATION ) do
-      after_reply( page ) rescue nil      
-    end
-  end
-
-  def reply( page )
-    page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
+      page.visual_effect :fade, :link_to_reply, :duration => DURATION
+    end    
   end 
-
-  def after_reply( page )
-    page.visual_effect :fade, :link_to_reply, :duration => DURATION
-  end 
-
-  def create_or_update2( page, session )
-    place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-    page.insert_html place, tag, :partial => self.class.name.underscore, :object => self
-    page.visual_effect :fade, :post, :duration => DURATION
-    page.visual_effect :fade, :new_forum_post, :duration => DURATION        
+  
+  def create_or_update1( page, session )
+    super page, session
   end
 
   def new_or_edit_tag; "post_new";  end

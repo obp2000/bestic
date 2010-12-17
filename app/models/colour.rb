@@ -12,15 +12,12 @@ class Colour < ItemAttribute
   def validate
     super
     errors.add_to_base "Код #{self.class.class_name_rus}а не может быть пустым" if html_code.blank?  
-#    errors.add_to_base "Название #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
-#    errors.add_to_base "Такое название #{self.class.class_name_rus}а уже есть" if new_record? &&
-#                  ( self.class.find :all, :conditions => { :name => name } ).first     
     errors.add_to_base "#{self.class.class_name_rus_cap} с такими кодами уже есть" if new_record? &&
                   ( self.class.find :all, :conditions => { :html_code => html_code } ).first        
   end
 
-#  extend Shared 
   class << self
+
     def class_name_rus; "цвет"; end   
 
     def class_name_rus_cap; "Цвет"; end    
@@ -37,10 +34,9 @@ class Colour < ItemAttribute
       
     def index_text; "Цвета"; end
       
-    def after_index( page )
-      page.delay( DURATION ) do
-        page.call( "attach_mColorPicker" )
-      end
+    def index1( page, objects )
+      super page, objects
+      page.attach_js( "attach_mColorPicker" )          
     end   
      
     def link_to_add_html_code( page )
@@ -52,12 +48,16 @@ class Colour < ItemAttribute
      
   end
 
-  def after_new_or_edit( page )
-    page.call( "attach_mColorPicker" )
+#  include Action1 attach_js
+
+  def new_or_edit1( page )
+    super page
+    page.attach_js( "attach_mColorPicker" )
   end
 
-  def js_after_create_or_update
-    "attach_mColorPicker"
+  def create_or_update1( page, session )
+    super page, session
+    page.attach_js( "attach_mColorPicker" )
   end
     
 end

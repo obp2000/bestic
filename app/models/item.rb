@@ -72,8 +72,6 @@ class Item < ActiveRecord::Base
   end
 
   after_update :save_photos
-  
-#  def colours_string; colours.map( &:name ).join(', '); end
    
   def new_photo_attributes=(photo_attributes)
     photo_attributes.each do |attributes|
@@ -92,15 +90,49 @@ class Item < ActiveRecord::Base
     end
   end
 
+  def existing_size_attributes=(size_attributes)
+    sizes.reject(&:new_record?).each do |size|
+      attributes = size_attributes[size.id.to_s]
+      if attributes
+        size.attributes = attributes
+      else
+        sizes.delete(size)
+      end
+    end
+  end
+
+  def existing_colour_attributes=(colour_attributes)
+    colours.reject(&:new_record?).each do |colour|
+      attributes = colour_attributes[colour.id.to_s]
+      if attributes
+        colour.attributes = attributes
+      else
+        colours.delete(colour)
+      end
+    end
+  end
+
+
   def save_photos
     photos.each do |photo|
       photo.save
     end
+    sizes.each do |size|
+      size.save
+    end
+    colours.each do |colour|
+      colour.save
+    end    
   end
 
   def update_object( params, session )
-    modify_item = lambda { self[ :existing_photo_attributes ] ||= {}; self }
-    update_attributes( modify_item.bind( params[ :item ] )[] )
+#    modify_item = lambda do
+#      self[ :existing_photo_attributes ] ||= {}; self
+#    end
+    params[ :item ][ :existing_photo_attributes ] ||= {}
+    params[ :item ][ :existing_size_attributes ] ||= {}
+    params[ :item ][ :existing_colour_attributes ] ||= {}        
+    update_attributes( params[ :item ] )
   end
     
 # for "shared/new_or_edit.rjs"

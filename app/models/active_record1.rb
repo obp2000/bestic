@@ -1,8 +1,10 @@
 # encoding: utf-8
  class ActiveRecord::Base
 
+  extend Action2
+  
   class << self
-#    def all_and_new( params ); [ all, new ]; end
+
     def all_objects( params ); all; end
 
     def update_object( params, session )
@@ -99,34 +101,15 @@
     def index_tag; name.tableize; end
       
     def new_tag; "new_#{name.underscore}"; end
-      
-    def index2( page )
-      page.action :remove, first.class.index_tag
-      page.delay( DURATION ) do
-        page.insert_html :after, "tabs",  :partial => first.class.index_partial, :locals => { :objects => self }
-      end
-    end
     
-    def after_index( page )
-      page.delay( DURATION ) do
-        page.call( "attach_js" )
-      end
+    def index1( page, objects )
+      super page, objects
+      page.attach_js( "attach_js" )  
     end      
 
     def show1( page )
-      show( page )
-      page.delay( DURATION ) do
-        after_show( page ) rescue nil      
-      end
-    end
-
-    def show( page )
-      page.action :replace_html, appear_tag, :partial => "show"
-      page.fade_appear fade_tag, appear_tag      
-    end
-
-    def after_show( page )
-      page.call( "attach_yoxview" )     
+      super page
+      page.attach_js( "attach_yoxview" )      
     end     
          
     def duration_fade; DURATION; end
@@ -165,41 +148,11 @@
   
   end
 
+  include Action1
+
   def new_or_edit1( page )
-    new_or_edit( page )    
-    page.delay( DURATION ) do       
-      after_new_or_edit( page ) rescue nil
-    end
-  end  
-
-  def new_or_edit( page )
-    page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self 
-  end  
-
-  def after_new_or_edit( page )
-    page.call( "attach_yoxview" )
-  end
-
-  def create_or_update1( page, session )
-    create_or_update2( page, session )
-    page.delay( DURATION ) do        
-      after_create_or_update( page, session ) rescue nil
-    end
-    page.show_notice( :delay => self.class.duration_fade )    
-    page.visual_effect :highlight, create_or_update_tag, :duration => HIGHLIGHT_DURATION
-    page.visual_effect :fade, :errorExplanation, :duation => DURATION
-  end
-
-  def create_or_update2( page, session )
-    page.action :remove, create_or_update_tag, :duration => DURATION      
-    page.delay( DURATION ) do      
-      page.insert_html :bottom, self.class.name.tableize, :partial => self.class.create_or_update_partial, :object => self 
-    end
-  end
-
-  def destroy2( page )
-    page.action :remove, edit_tag rescue nil      
-    page.action :remove, tag rescue nil
+    super page
+    page.attach_js( "attach_yoxview" )      
   end
 
   def link_to_category( page, seasons )
@@ -274,8 +227,6 @@
 end
 
 class Object
- 
-#  def send_if_respond( action ); send(action) if respond_to?(action); end
   
   def colon; self + ":"; end
 

@@ -1,7 +1,7 @@
 module IndexBlock
   
-  def index2( page )
-    page.action :replace_html, first.class.index_tag,  :partial => first.class.index_partial, :locals => { :objects => self }
+  def index1( page, objects )
+    page.action :replace_html, index_tag,  :partial => index_partial, :locals => { :objects => objects }
   end  
   
 end

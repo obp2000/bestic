@@ -30,36 +30,25 @@ class ItemAttribute < ActiveRecord::Base
 
   def link_to_add_to_item( page )
     page.link_to_function page.image_tag( self.class.add_to_item_image, :title => self.class.add_to_item_title ),
-           &add_to_item_block1.bind( self )
+      &add_to_item_block1.bind( self )
   end 
  
   def add_to_item_block1
-    lambda do |page|
-      add_to_item( page )
-      after_add_to_item( page ) rescue nil          
-    end
-  end
- 
-  def add_to_item( page )
-    page.action :remove, tag      
-    page.delay( DURATION ) do
-      page.insert_html :bottom, "form_#{self.class.index_tag}", :partial => "items/#{insert_attr}", :object => self
-    end
-  end  
-  
-  def insert_attr
-    "attr"    
+    lambda { |page| add_to_item1( page ) }
   end
   
-  def after_create_or_update( page, session )
-    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial                       
-    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self
-    page.call( js_after_create_or_update ) rescue nil      
+  def insert_attr; "attr"; end
+  
+  def create_or_update1( page, session )
+    super page, session
+#    page.delay( DURATION ) do
+    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial rescue nil                      
+    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self rescue nil 
+#    end
   end  
 
   def radio_button_tag1( page, checked, visibility )
     page.radio_button_tag "#{self.class.name.underscore}_id", id, checked, :style => "visibility: " + visibility
   end
-    
     
 end

@@ -63,8 +63,11 @@ class Order < ActiveRecord::Base
   
   end
 
-  def after_destroy( page, session )
-    page.action :replace_html, "order_processed", ProcessedOrder.count
+  def destroy1( page, session )
+    super page, session
+    page.delay( DURATION ) do
+      page.action :replace_html, "order_processed", ProcessedOrder.count
+    end
   end 
 
   def total; order_items.total; end

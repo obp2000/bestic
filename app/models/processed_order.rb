@@ -67,21 +67,16 @@ class ProcessedOrder < Order
       
   end
 
-  def after_new_or_edit( page )
-    page.check_cart_links
+#  include Action1
+
+  def new_or_edit1( page )
+    super page
+    page.delay( DURATION ) { page.check_cart_links }    
   end
 
   def create_or_update2( page, session )
     page.delay( self.class.duration_fade ) { page.redirect_to "/" }
   end  
-
-  def close1( page )
-    page.action :replace_html, status_tag, ClosedOrder::STATUS_RUS
-    page.action :replace_html, updated_tag, page.date_time_rus( updated_at )
-    page.action :replace_html, "order_processed", ProcessedOrder.count
-    page.action :remove, close_tag, :duration => DURATION
-    page.show_notice
-  end 
   
   def save_object( session )
     self.captcha_validated = session[:captcha_validated]

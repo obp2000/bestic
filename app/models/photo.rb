@@ -19,7 +19,7 @@ class Photo < ItemAttribute
  
     def all_objects( params )
       paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc",
-              :page => params[:page], :per_page => 5)
+              :page => params[ :page ], :per_page => 5)
     end
 
     def change_image; "insert-image.png"; end
@@ -32,7 +32,7 @@ class Photo < ItemAttribute
 
     def upload_title; "Загрузить фотографию"; end
 
-    def attach_yoxview?; true; end
+#    def attach_yoxview?; true; end
  
     def new_partial; "upload_photo"; end
 
@@ -42,18 +42,20 @@ class Photo < ItemAttribute
   
   end 
 
+#  include Action1
+
   def insert_attr
     "photo"    
   end
 
-  def after_add_to_item( page )
-    page.delay( DURATION ) do
-      page.call( "attach_yoxview" )
-    end
+  def add_to_item1( page )
+    super page
+    page.attach_js( "attach_yoxview" )    
   end 
 
-  def after_create_or_update( page, session )
-    page.call( "attach_yoxview" )
+  def create_or_update1( page, session )
+    super page, session
+    page.attach_js( "attach_yoxview" )    
   end   
 
   def link_to_show_photo( page, comment = "" )

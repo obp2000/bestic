@@ -37,6 +37,10 @@ module ApplicationHelper
     object.close1( self )  
   end
 
+  def attach_js( js )
+    delay( DURATION ) { call( js ) }    
+  end
+
   def action( action1, *opts )
     visual_effect :fade, opts.first, :duration => DURATION
     delay( DURATION ) do    
@@ -169,20 +173,14 @@ class Array
   
   def destroy1( page, session )
     each do |object|
-      object.destroy2( page )        
+      object.destroy1( page, session )        
     end   
-    page.delay( DURATION ) do
-      each do |object|
-        object.after_destroy( page, session ) rescue nil        
-      end
-    end
     page.show_notice
   end  
  
   def index1( page )
-    first.class.index2( page )
-    first.class.after_index( page ) rescue nil
-    page.show_notice        
+    first.class.index1( page, self )
+    page.show_notice      
   end 
  
 end
