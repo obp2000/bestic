@@ -148,11 +148,11 @@ module ApplicationHelper
   end
   
   def render_attrs( attrs )
-    attrs.to_array.render_attrs( self ) 
+    attrs.to_array.render_attrs( self ) rescue nil  
   end
 
   def render_options( objects )
-    objects.to_array.render_options( self )    
+    objects.to_array.render_options( self ) rescue nil     
   end
 
 end
@@ -160,16 +160,15 @@ end
 class Array
   
   def render_attrs( page )
-    return "Любой" if first.id.blank?      
-    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self,
-            :spacer_template => "shared/comma"
+    return "Любой" if first.id.blank?     
+    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self, :spacer_template => "shared/comma"
   end  
   
   def render_options( page )
     page.render :partial => "catalog_items/attr", :collection => self,
         :locals => { :checked => ( first.new_record? || !second ),
         :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
-  end  
+  end
   
   def destroy1( page, session )
     each do |object|

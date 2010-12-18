@@ -150,6 +150,10 @@
 
   include Action1
 
+#  def index1( page )
+#    super page
+#  end
+
   def new_or_edit1( page )
     super page
     page.attach_js( "attach_yoxview" )      

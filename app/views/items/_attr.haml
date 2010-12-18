@@ -1,8 +1,5 @@
 %span[ attr ]
   = render_attrs attr
   = link_to_remove_from_item attr.class
-  =# hidden_field_tag "item[#{attr.class.name.underscore}_ids][]", attr.id
-  - fields_for "item[existing_#{attr.class.name.underscore}_attributes][]", attr do |attr_form|
-    = attr_form.text_area :name, :rows => 1
-  = check_box_tag "item[#{attr.class.name.underscore}_ids][]", attr.id, true, :style => "visibility: visible"
-  =# check_box "item", "", { :index => "#{attr.class.name.underscore}_ids" }, attr.id
+  = hidden_field_tag "item[#{attr.class.name.underscore}_ids][]", attr.id
+  = hidden_field_tag "item[#{attr.class.name.underscore}_ids][]", "0"

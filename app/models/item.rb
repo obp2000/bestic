@@ -73,56 +73,42 @@ class Item < ActiveRecord::Base
 
   after_update :save_photos
    
-  def new_photo_attributes=(photo_attributes)
-    photo_attributes.each do |attributes|
-      photos.build(attributes)
-    end
-  end
+#  def new_photo_attributes=(photo_attributes)
+#    photo_attributes.each do |attributes|
+#      photos.build(attributes)
+#    end
+#  end
   
   def existing_photo_attributes=(photo_attributes)
-    photos.reject(&:new_record?).each do |photo|
-      attributes = photo_attributes[photo.id.to_s]
+    photos.reject( &:new_record? ).each do |photo|
+      attributes = photo_attributes[ photo.id.to_s ]
       if attributes
         photo.attributes = attributes
       else
-        photos.delete(photo)
+        photos.delete( photo )
       end
     end
   end
 
-  def existing_size_attributes=(size_attributes)
-    sizes.reject(&:new_record?).each do |size|
-      attributes = size_attributes[size.id.to_s]
-      if attributes
-        size.attributes = attributes
-      else
-        sizes.delete(size)
-      end
-    end
+  def size_ids=(ids_array)
+    update_attr( Size, ids_array )
   end
 
-  def existing_colour_attributes=(colour_attributes)
-    colours.reject(&:new_record?).each do |colour|
-      attributes = colour_attributes[colour.id.to_s]
-      if attributes
-        colour.attributes = attributes
-      else
-        colours.delete(colour)
-      end
-    end
+  def update_attr( class_const, ids_array )
+    self.send( class_const.name.tableize ).clear
+    ids_array.each do |id1|
+      self.send( class_const.name.tableize ) << class_const.find( id1 ) rescue nil
+    end    
   end
 
+  def colour_ids=(ids_array)
+    update_attr( Colour, ids_array )
+  end
 
   def save_photos
     photos.each do |photo|
       photo.save
     end
-    sizes.each do |size|
-      size.save
-    end
-    colours.each do |colour|
-      colour.save
-    end    
   end
 
   def update_object( params, session )
@@ -130,8 +116,6 @@ class Item < ActiveRecord::Base
 #      self[ :existing_photo_attributes ] ||= {}; self
 #    end
     params[ :item ][ :existing_photo_attributes ] ||= {}
-    params[ :item ][ :existing_size_attributes ] ||= {}
-    params[ :item ][ :existing_colour_attributes ] ||= {}        
     update_attributes( params[ :item ] )
   end
     

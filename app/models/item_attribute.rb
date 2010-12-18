@@ -21,9 +21,7 @@ class ItemAttribute < ActiveRecord::Base
     def delete_from_item_title; "Удалить из товара"; end
  
     def delete_from_item_js_string
-#      "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove()"      
-      "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();"
-#      "$(this).siblings(':checkbox').attr('checked', 'uncheked')"      
+      "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
     end
     
   end

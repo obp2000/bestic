@@ -12,9 +12,7 @@ class CartItem < ActiveRecord::Base
 
     def class_name_rus_cap; "Товар"; end
 
-    def update_object( params, session )
-      [ update_cart_item( params.conditions_hash( session ) ), true ]
-    end
+    def update_object( params, session ); [ update_cart_item( params.conditions_hash( session ) ), true ]; end
 
     def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end  
       
@@ -42,12 +40,6 @@ class CartItem < ActiveRecord::Base
 
   def price; item.price; end
 
-  def delete_cart_item
-    update_amount( -1 )    
-    destroy unless amount > 0
-    self
-  end
-
   def update_notice; "Добавлен товар<br /> <em>#{name}</em>"; end
 
   def destroy_notice; "Удален товар <em>#{name}</em>"; end
@@ -64,6 +56,12 @@ class CartItem < ActiveRecord::Base
     def self.update_cart_item( conditions )
       first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge( :amount => 1 ) )      
     end
+
+    def delete_cart_item
+      update_amount( -1 )    
+      destroy unless amount > 0
+      self
+    end    
     
 end
 

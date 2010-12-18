@@ -39,6 +39,10 @@ class Photo < ItemAttribute
     def create_render_block
       lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }
     end
+
+    def delete_from_item_js_string
+      "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove();"  
+    end
   
   end 
 
