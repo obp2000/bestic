@@ -18,14 +18,6 @@ ActionController::Routing::Routes.draw do |map|
     category.resources :summer_catalog_items, :controller => :category_summer_catalog_items
     category.resources :winter_catalog_items, :controller => :category_winter_catalog_items    
   end
-#  map.resources :categories, :has_many => [ :summer_catalog_items ]
-#  map.resources :categories, :has_many => [ :winter_catalog_items ]
-  
-#  map.resources :categories do |category|
-#    category.resources :seasons do |season|
-#      season.resources :catalog_items, :controller => :category_season_catalog_items
-#    end
-#  end
   
   map.resources :catalog_items, :collection => { :search => :get }
   map.resources :summer_catalog_items, :collection => { :search => :get }

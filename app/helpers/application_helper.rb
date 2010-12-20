@@ -57,7 +57,9 @@ module ApplicationHelper
     visual_effect :appear, :notice, :duration => appear_duration
     delay( appear_duration ) do
       visual_effect :fade, :notice, :duration => fade_duration
-      delay( fade_duration ) { remove :notice }
+      delay( fade_duration ) do
+        remove :notice
+      end
     end
   end
 
@@ -94,13 +96,9 @@ module ApplicationHelper
   def do_not_show( cart )
     controller_name == 'processed_orders' or cart.cart_items.empty?
   end
-  
-  def link_to_show_photo( photo )
-    photo.link_to_show_photo( self )
-  end
 
-  def link_to_show_photo_with_comment( photo )
-    photo.link_to_show_photo_with_comment( self )
+  def link_to_show_with_comment( object )
+    object.link_to_show_with_comment( self )
   end  
   
   def page_title
@@ -136,7 +134,7 @@ module ApplicationHelper
   end
 
   def submit_to( class_const )
-    send( *class_const.submit_image_with_options )    
+    class_const.submit_to( self )
   end
 
   def link_to_season( season_class )
@@ -154,6 +152,18 @@ module ApplicationHelper
   def render_options( objects )
     objects.to_array.render_options( self ) rescue nil     
   end
+
+############################
+  def link_to_function1( image, title = "", block = nil )
+    link_to_function image_tag( image, :title => title ), &block    
+  end  
+ 
+  def link_to_season1( season_icon, season_name, count, path )
+    link_to_remote image_tag( season_icon ) + season_name + " (#{count})",
+              :url => send( *path ), :method => :get      
+  end 
+
+
 
 end
 
@@ -180,6 +190,6 @@ class Array
   def index1( page )
     first.class.index1( page, self )
     page.show_notice      
-  end 
+  end
  
 end

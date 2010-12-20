@@ -4,8 +4,8 @@ describe "items/_item" do
 
   before do
     @item = items_proxy.first
-    @item.stub( :link_to_delete_block ).and_return( lambda { |h| h.link_to_remote "Test",
-            :url => item_path( @item ), :method => :delete } )       
+    template.stub( :link_to_delete ).with( @item ).and_return( link_to_remote "Test",
+            :url => item_path( @item ), :method => :delete )       
   end
   
   it "renders item" do

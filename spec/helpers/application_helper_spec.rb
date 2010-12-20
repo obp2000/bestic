@@ -167,11 +167,11 @@ describe ApplicationHelper do
   describe "#link_to_show( object )" do
     
     before do
-      @object = cart_items_proxy.first
+      @object = catalog_items_proxy.first
     end
     
     it "renders link to show object" do
-      helper.link_to_show( @object ).should have_link_to_remote_get( catalog_item_path(@object.item) ) do |a|
+      helper.link_to_show( @object ).should have_link_to_remote_get( catalog_item_path( @object ) ) do |a|
         a.should contain( @object.name )      
       end      
     end
@@ -233,7 +233,7 @@ describe ApplicationHelper do
     end
     
     it "renders link to remove object from item" do
-      helper.link_to_remove_from_item( @object.class ).should #have_thumbnail( @object ) 
+#      helper.link_to_remove_from_item( @object.class ).should #have_thumbnail( @object ) 
     end
     
   end

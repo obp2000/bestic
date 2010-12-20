@@ -46,16 +46,20 @@
     end
     
     def link_to_back( page )
-      page.link_to_function page.image_tag( back_image, :title => back_title ), &back_block.bind( self )
+      page.link_to_function1 back_image, back_title, back_block.bind( self )
     end
     
     def back_block
       lambda { |page| page.fade_appear( appear_tag, fade_tag )  }
     end    
-
-#    def back( page )
-#      page.fade_appear( appear_tag, fade_tag )
-#    end    
+    
+    def link_to_close_window( page )
+      page.link_to_function1 close_window_image, close_window_title, close_window_block.bind( self )      
+    end
+    
+    def close_window_block
+      lambda { |page| page.action :remove, index_tag }
+    end       
     
     def back_image; "back1.png"; end
 
@@ -129,30 +133,20 @@
     end
 
     def link_to_season( page )
-      page.link_to_remote page.image_tag( season_icon ) + season_name + " (#{count})",
-                :url => page.send( *plural_path ), :method => :get      
+      page.link_to_season1 season_icon, season_name, count, plural_path
     end
-
-    def link_to_close_window( page )
-      page.link_to_function page.image_tag( close_window_image, :title => close_window_title ),
-                &close_window_block.bind( self )
-    end
-    
-    def close_window_block
-      lambda { |page| page.action :remove, index_tag }
-    end    
   
     def plural_path( params = nil ); [ "#{name.tableize}_path", params ]; end   
 
-    def new_path; [ "new_#{name.underscore}_path" ]; end   
+    def new_path; [ "new_#{name.underscore}_path" ]; end
+      
+    def submit_to( page )
+      page.send( *submit_image_with_options )
+    end
   
   end
 
   include Action1
-
-#  def index1( page )
-#    super page
-#  end
 
   def new_or_edit1( page )
     super page

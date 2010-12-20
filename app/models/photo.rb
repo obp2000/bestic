@@ -62,12 +62,12 @@ class Photo < ItemAttribute
     page.attach_js( "attach_yoxview" )    
   end   
 
-  def link_to_show_photo( page, comment = "" )
+  def link_to_show( page, comment = "" )
     page.link_to page.image_tag( public_filename :small ) + comment, public_filename
   end
 
-  def link_to_show_photo_with_comment( page )
-    link_to_show_photo( page, comment )    
+  def link_to_show_with_comment( page )
+    link_to_show( page, comment )    
   end
 
 end

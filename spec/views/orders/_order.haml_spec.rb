@@ -6,16 +6,15 @@ describe "orders/_order" do
 
   before do
     @order = orders_proxy.first
-    @order.stub( :link_to_delete_block ).and_return( lambda { |h| h.link_to_remote "Test",
-            :url => order_path( @order ), :method => :delete } )
-    @order.stub( :link_to_close_block ).and_return( lambda { |h| h.link_to_remote "Test",
-            :url => close_processed_order_path( @order ), :method => :get } )            
+    template.stub( :link_to_delete ).with( @order ).and_return( link_to_remote "Test",
+            :url => order_path( @order ), :method => :delete )
+    template.stub( :link_to_close ).with( @order ).and_return( link_to_remote "Test",
+            :url => close_processed_order_path( @order ), :method => :get )            
 #    @order.stub( :closed? ).and_return( false )
 #    template.stub( :link_to_delete )      
   end
   
   it "renders order" do
-#    template.should_receive( :link_to_delete ).with( @order )
     render :locals => { :order => @order }
     response.should have_selector( "tr", :onclick => "$.get('#{order_path(@order)}')" )
     response.should contain(@order.to_param)
@@ -31,7 +30,6 @@ describe "orders/_order" do
 
     it "renders link to close order" do
       @order.stub( :closed? ).and_return( false )
-#      template.should_receive( :link_to_close ).with( @order )        
       render :locals => { :order => @order }      
       response.should have_text( regexp_for_remote_close( close_processed_order_path( @order ) ) )
     end

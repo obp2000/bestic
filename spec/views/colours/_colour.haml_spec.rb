@@ -4,15 +4,14 @@ describe "colours/_colour" do
   
   before do
     @object = colours_proxy.first
-    @object.stub( :link_to_delete_block ).and_return( lambda { |h| h.link_to_remote "Test",
-            :url => colour_path( @object ), :method => :delete } )         
+    template.stub( :link_to_delete ).with( @object ).and_return( link_to_remote "Test",
+            :url => colour_path( @object ), :method => :delete )         
   end
   
   it_should_behave_like "edit and new forms"    
   
   it "renders a form for edit colour" do
     template.should_receive( :render_attrs ).with( @object )
-#    template.should_receive( :link_to_delete ).with( @object )
     template.should_receive( :link_to_add_to_item ).with( @object )      
     render :locals => { :colour => @object }
     response.should have_selector("form", :method => "post", :action => colour_path(@object)) do |form|

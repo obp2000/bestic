@@ -207,10 +207,10 @@ def valid_cart_item_attributes
 end
 
 def valid_cart_item_attributes2
-            { :name => items_proxy.first.name,
+            { :name => catalog_items_proxy.first.name,
             :price => 500,
             :amount => 1,
-            :item => items_proxy.first,
+            :catalog_item => catalog_items_proxy.first,
             :size => sizes_proxy.first,
             :colour => colours_proxy.first }
 end
