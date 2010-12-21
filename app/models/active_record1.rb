@@ -119,21 +119,24 @@
     def duration_fade; DURATION; end
 
     def link_to_new( page )
-        image = page.image_tag( new_image, :title => ( new_title rescue "" ) ) rescue ""
-        text = new_text rescue ""
-        page.link_to_remote image + text, :url => page.send( *new_path ), :method => :get,
-                :html => { :id => "link_to_new" }
+#        image = page.image_tag( new_image, :title => ( new_title rescue "" ) ) rescue ""
+      image = [ new_image, { :title => ( new_title rescue nil ) } ] rescue []
+      text = new_text rescue ""
+#        page.link_to_remote image + text, :url => page.send( *new_path ), :method => :get, :html => { :id => "link_to_new" }
+      page.link_to_remote1 image, text, new_path, :method => :get, :html => { :id => "link_to_new" }
     end
 
     def link_to_index( page, params )
-      image = page.image_tag( index_image, :title => ( index_title rescue "" ) ) rescue ""
+#      image = page.image_tag( index_image, :title => ( index_title rescue "" ) ) rescue ""
+      image = [ index_image, { :title => ( index_title rescue nil ) } ] rescue []      
       text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] +
               "_rus" ) ) rescue class_name_rus_cap.pluralize rescue ""
-      page.link_to_remote image + text, :url => page.send( *plural_path( params ) ), :method => :get  
+#      page.link_to_remote image + text, :url => page.send( *plural_path( params ) ), :method => :get
+      page.link_to_remote1 image, text, plural_path( params ), :method => :get    
     end
 
     def link_to_season( page )
-      page.link_to_season1 season_icon, season_name, count, plural_path
+      page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get 
     end
   
     def plural_path( params = nil ); [ "#{name.tableize}_path", params ]; end   
@@ -154,33 +157,42 @@
   end
 
   def link_to_category( page, seasons )
-    page.link_to_remote name + " (#{send( seasons ).size})", :url => page.send( "category_#{seasons}_path", self ),
-              :method => :get, :html => { :class => "category" }        
+    page.link_to_remote1 nil, name + " (#{send( seasons ).size})", [ "category_#{seasons}_path", self ],
+            :html => { :class => "category" }, :method => :get    
   end
 
   def link_to_show( page )
-    image = page.image_tag( show_image, :title => ( show_title rescue "" ) ) rescue ""
+#    image = page.image_tag( show_image, :title => ( show_title rescue "" ) ) rescue ""
+    image = [ show_image, { :title => ( show_title rescue "" ) } ] rescue ""
     text = ( self.class.show_text rescue page.html_escape( subject ) ) rescue name rescue ""
-    page.link_to_remote image + text, :url => page.send( *single_path ), :method => :get rescue self.class.deleted_notice
+#    page.link_to_remote image + text, :url => page.send( *single_path ), :method => :get rescue self.class.deleted_notice
+    ( page.link_to_remote1 image, text, single_path, :method => :get ) rescue self.class.deleted_notice
   end
 
   def link_to_delete( page ) 
-    image = page.image_tag( self.class.delete_image, :title => ( delete_title rescue "" ) ) rescue ""
+#    image = page.image_tag( self.class.delete_image, :title => ( delete_title rescue "" ) ) rescue ""
+    image = [ self.class.delete_image, { :title => ( delete_title rescue "" ) } ]    
     text = self.class.delete_text rescue ""
-    page.link_to_remote image + text, :url => page.send( *single_path ), :method => :delete, :confirm => delete_title 
+#    page.link_to_remote image + text, :url => page.send( *single_path ), :method => :delete, :confirm => delete_title
+    page.link_to_remote1 image, text, single_path, :method => :delete, :confirm => delete_title     
+    
   end
 
   def link_to_close( page )
-    image = page.image_tag( self.class.close_image, :title => self.class.close_title ) rescue ""
-    text = self.class.close_text rescue ""
-    page.link_to_remote image + text, :url => page.send( *close_path ), :method => :get,
-        :html => { :id => close_tag }, :confirm => self.class.close_confirm
+#    image = page.image_tag( self.class.close_image, :title => self.class.close_title ) rescue ""
+    image = [ self.class.close_image, { :title => ( self.class.close_title rescue nil ) } ]    
+#    page.link_to_remote image, :url => page.send( *close_path ), :method => :get,
+#        :html => { :id => close_tag }, :confirm => self.class.close_confirm
+    page.link_to_remote1 image, "", close_path, :method => :get, :html => { :id => close_tag },
+            :confirm => self.class.close_confirm
   end    
 
   def link_to_reply( page )
-    image = page.image_tag(  reply_image, :title => ( reply_title rescue "" ) ) rescue ""
+#    image = page.image_tag(  reply_image, :title => ( reply_title rescue "" ) ) rescue ""
+    image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
     text = self.class.reply_text rescue ""    
-    page.link_to_remote image + text, :url => page.send( *reply_path ), :method => :get, :html => { :id => "link_to_reply" } 
+#    page.link_to_remote image + text, :url => page.send( *reply_path ), :method => :get, :html => { :id => "link_to_reply" }
+    page.link_to_remote1 image, text, reply_path, :method => :get, :html => { :id => "link_to_reply" }  
   end
   
   def single_path; [ "#{self.class.name.underscore}_path", self ]; end

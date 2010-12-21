@@ -40,8 +40,9 @@ class Colour < ItemAttribute
     end   
      
     def link_to_add_html_code( page )
-      page.link_to_function page.image_tag( add_html_code_to_colour_image,
-              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string
+#      page.link_to_function page.image_tag( add_html_code_to_colour_image,
+#              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string
+      page.link_to_function2 add_html_code_to_colour_image, add_html_code_to_colour_title, add_html_code_to_colour_js_string
     end
 
     def sort_attr; "name"; end     

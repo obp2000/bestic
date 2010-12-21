@@ -11,10 +11,8 @@ module ApplicationHelper
   end
 
   def fade_appear( fade, appear )
-    with_options :duration => DURATION do | with_duration |
-      with_duration.visual_effect :fade, fade
-      with_duration.visual_effect :appear, appear
-    end
+    fade_with_duration fade
+    appear_with_duration appear    
   end
 
   def new_or_edit( object )
@@ -42,10 +40,11 @@ module ApplicationHelper
   end
 
   def action( action1, *opts )
-    visual_effect :fade, opts.first, :duration => DURATION
+    fade_with_duration opts.first
     delay( DURATION ) do    
       send action1, *opts
-      visual_effect :appear, opts.first, :duration => DURATION unless action1 == :remove
+      appear_with_duration opts.first unless action1 == :remove       
+#      visual_effect :appear, opts.first, :duration => DURATION unless action1 == :remove
     end
   end
     
@@ -54,9 +53,10 @@ module ApplicationHelper
     fade_duration = opts[:delay] || appear_duration
     insert_html :top, :content, :partial => "shared/notice"
     hide :notice
-    visual_effect :appear, :notice, :duration => appear_duration
+    appear_with_duration :notice, appear_duration    
+#    visual_effect :appear, :notice, :duration => appear_duration
     delay( appear_duration ) do
-      visual_effect :fade, :notice, :duration => fade_duration
+      fade_with_duration :notice, fade_duration
       delay( fade_duration ) do
         remove :notice
       end
@@ -157,13 +157,128 @@ module ApplicationHelper
   def link_to_function1( image, title = "", block = nil )
     link_to_function image_tag( image, :title => title ), &block    
   end  
+
+  def link_to_function2( image, title = "", js_string = "" )
+    link_to_function image_tag( image, :title => title ), js_string    
+  end   
  
-  def link_to_season1( season_icon, season_name, count, path )
-    link_to_remote image_tag( season_icon ) + season_name + " (#{count})",
-              :url => send( *path ), :method => :get      
+  def link_to_remote1( image, text, url = [], opts = {} )
+    link_to_remote( ( image_tag( *image ) rescue "" ) + text, { :url => send( *url ) }.merge( opts ) )      
   end 
 
+  def link_to1( image, text, url = [], opts = {} )
+    link_to( ( image_tag( *image ) rescue "" ) + text, ( send( *url ) rescue url ), opts )
+  end
 
+  def update_processed_orders_amount
+    action :replace_html, "processed_orders_amount", ProcessedOrder.count    
+  end
+
+  def update_processed_orders_amount1
+    delay( DURATION ) do
+      update_processed_orders_amount
+    end
+  end
+
+  def change_to_closed( status_tag )
+    action :replace_html, status_tag, ClosedOrder::STATUS_RUS    
+  end
+
+  def change_close_tag_to( updated_tag, updated_at )
+    action :replace_html, updated_tag, date_time_rus( updated_at )
+  end
+  
+  def close1( status_tag, updated_tag, updated_at )
+    change_to_closed status_tag
+    change_close_tag_to updated_tag, updated_at
+    update_processed_orders_amount    
+    show_notice
+  end
+
+  def show2( appear_tag, fade_tag )
+    action :replace_html, appear_tag, :partial => "show"
+    fade_appear fade_tag, appear_tag          
+  end
+
+  def insert_index_partial( index_tag, index_partial, objects )
+    action :remove, index_tag
+    delay( DURATION ) do
+      insert_html :after, "tabs",  :partial => index_partial, :locals => { :objects => objects }
+    end    
+  end
+
+  def replace_index_partial( index_tag, index_partial, objects )
+    page.action :replace_html, index_tag,  :partial => index_partial, :locals => { :objects => objects }    
+  end
+
+  def add_to_item1( tag, index_tag, insert_attr, object )
+    action :remove, tag      
+    delay( DURATION ) do
+      insert_html :bottom, "form_#{index_tag}", :partial => "items/#{insert_attr}", :object => object
+    end    
+  end
+  
+  def destroy2( edit_tag, tag )
+    action :remove, edit_tag rescue nil      
+    action :remove, tag rescue nil    
+  end
+
+  def new_forum_post
+    delay( DURATION ) do
+      fade_with_duration :post      
+      fade_with_duration :link_to_reply
+    end  
+  end
+  
+  def fade_with_duration( tag, duration = DURATION )
+    visual_effect :fade, tag, :duration => duration    
+  end
+
+  def appear_with_duration( tag, duration = DURATION )
+    visual_effect :appear, tag, :duration => duration    
+  end  
+  
+  def reply1
+    delay( DURATION ) { fade_with_duration :link_to_reply }
+  end
+
+  def new_processed_order
+    delay( DURATION ) { check_cart_links }      
+  end
+
+  def create_or_update1( create_or_update_tag, index_tag, create_or_update_partial, duration_fade, object )
+    action :remove, create_or_update_tag, :duration => DURATION      
+    delay( DURATION ) do      
+      insert_html :bottom, index_tag, :partial => create_or_update_partial, :object => object 
+    end
+    show_notice( :delay => duration_fade )    
+    visual_effect :highlight, create_or_update_tag, :duration => HIGHLIGHT_DURATION
+    fade_with_duration :errorExplanation        
+  end
+
+  def create_or_update_forum_post( parent_id, parent_tag, partial, object )
+    place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
+    insert_html place, tag, :partial => partial, :object => object
+    fade_with_duration :post
+    fade_with_duration :new_forum_post      
+  end
+
+  def after_create_or_update_item_attribute( new_tag, new_or_edit_partial, create_or_update_partial, object )
+    replace new_tag, :partial => create_or_update_partial, :object => object.class.new rescue nil                      
+    replace tag, :partial => "items/" + new_or_edit_partial, :object => object rescue nil     
+  end
+
+  def after_create_or_update_cart_item( tag, amount, session )
+    delay( DURATION ) do
+      action :remove, tag unless amount > 0 rescue nil
+      check_cart_links
+      check_cart_totals( session )
+    end    
+  end
+
+  def create_processed_order( duration_fade )
+    delay( duration_fade ) { redirect_to "/" }    
+  end
 
 end
 

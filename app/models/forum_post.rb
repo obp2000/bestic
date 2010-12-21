@@ -75,17 +75,19 @@ class ForumPost < ActiveRecord::Base
 
   def new_or_edit1( page )
     super page
-    page.delay( DURATION ) do       
-      page.visual_effect :fade, :post, :duration => DURATION
-      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-    end    
+    page.new_forum_post
+#    page.delay( DURATION ) do       
+#      page.visual_effect :fade, :post, :duration => DURATION
+#      page.visual_effect :fade, :link_to_reply, :duration => DURATION
+#    end    
   end  
 
   def reply1( page )
     super page
-    page.delay( DURATION ) do
-      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-    end    
+    page.reply1
+#    page.delay( DURATION ) do
+#      page.visual_effect :fade, :link_to_reply, :duration => DURATION
+#    end    
   end 
   
   def create_or_update1( page, session )

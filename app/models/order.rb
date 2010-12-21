@@ -11,7 +11,6 @@ class Order < ActiveRecord::Base
   STATUS_RUS_NAV = ""
   STATUS_RUS = ""
 
-#  extend Shared 
   class << self
   
     def class_name_rus; "заказ"; end  
@@ -65,9 +64,10 @@ class Order < ActiveRecord::Base
 
   def destroy1( page, session )
     super page, session
-    page.delay( DURATION ) do
-      page.action :replace_html, "order_processed", ProcessedOrder.count
-    end
+    page.update_processed_orders_amount1
+#    page.delay( DURATION ) do
+#      page.update_processed_orders_amount
+#    end
   end 
 
   def total; order_items.total; end

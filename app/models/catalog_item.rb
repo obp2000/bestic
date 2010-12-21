@@ -54,7 +54,8 @@ class CatalogItem < Item
     end
     
     def link_to_index_local( page )
-      page.link_to index_text, page.send( *plural_path ), :method => :get
+#      page.link_to index_text, page.send( *plural_path ), :method => :get
+      page.link_to1 nil, index_text, plural_path, :method => :get
     end
   
     def search_image; "search_32.png"; end

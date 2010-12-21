@@ -71,11 +71,13 @@ class ProcessedOrder < Order
 
   def new_or_edit1( page )
     super page
-    page.delay( DURATION ) { page.check_cart_links }    
+    page.new_processed_order
+#    page.delay( DURATION ) { page.check_cart_links }    
   end
 
-  def create_or_update2( page, session )
-    page.delay( self.class.duration_fade ) { page.redirect_to "/" }
+  def create_or_update1( page, session )
+    page.create_processed_order self.class.duration_fade
+#    page.delay( self.class.duration_fade ) { page.redirect_to "/" }
   end  
   
   def save_object( session )

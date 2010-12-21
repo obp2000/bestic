@@ -44,8 +44,7 @@ class Category < ItemAttribute
   end
 
   def add_to_item1( page )
-    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
-            :object => self                      
+    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}", :object => self                      
   end
    
 end

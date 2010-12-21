@@ -10,12 +10,14 @@ class ItemAttribute < ActiveRecord::Base
   class << self
    
     def link_to_change( page )
-      page.link_to_remote page.image_tag( change_image, :title => change_title ),
-            :url => page.send( *plural_path ), :method => :get
+#      page.link_to_remote page.image_tag( change_image, :title => change_title ),
+#            :url => page.send( *plural_path ), :method => :get
+      page.link_to_remote1 [ change_image,  { :title => change_title } ], "", plural_path, :method => :get
     end
  
     def link_to_remove_from_item( page )
-      page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ), delete_from_item_js_string
+#      page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ), delete_from_item_js_string
+      page.link_to_function2 delete_image, delete_from_item_title, delete_from_item_js_string
     end
 
     def delete_from_item_title; "Удалить из товара"; end
@@ -27,8 +29,9 @@ class ItemAttribute < ActiveRecord::Base
   end
 
   def link_to_add_to_item( page )
-    page.link_to_function page.image_tag( self.class.add_to_item_image, :title => self.class.add_to_item_title ),
-      &add_to_item_block1.bind( self )
+#    page.link_to_function page.image_tag( self.class.add_to_item_image, :title => self.class.add_to_item_title ),
+#      &add_to_item_block1.bind( self )
+    page.link_to_function1 self.class.add_to_item_image, self.class.add_to_item_title, add_to_item_block1.bind( self )
   end 
  
   def add_to_item_block1
@@ -39,10 +42,10 @@ class ItemAttribute < ActiveRecord::Base
   
   def create_or_update1( page, session )
     super page, session
-#    page.delay( DURATION ) do
-    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial rescue nil                      
-    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self rescue nil 
-#    end
+    page.after_create_or_update_item_attribute self.class.new_tag,  self.class.new_or_edit_partial,
+            self.class.create_or_update_partial, self
+#    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial rescue nil                      
+#    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self rescue nil 
   end  
 
   def radio_button_tag1( page, checked, visibility )
