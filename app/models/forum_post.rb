@@ -58,7 +58,7 @@ class ForumPost < ActiveRecord::Base
 # for "shared/index.rjs"  
     def index_partial; "index"; end
     def index_tag; "content"; end
-    include IndexBlock
+    include Index1
       
 # for "shared/show.rjs"
     def fade_tag; "post_new";  end
@@ -71,27 +71,20 @@ class ForumPost < ActiveRecord::Base
   end
 
 #  include Action1
-  include Action3  
+#  include Action3  
 
   def new_or_edit1( page )
     super page
-    page.new_forum_post
-#    page.delay( DURATION ) do       
-#      page.visual_effect :fade, :post, :duration => DURATION
-#      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-#    end    
+    page.fade :post
   end  
 
   def reply1( page )
-    super page
-    page.reply1
-#    page.delay( DURATION ) do
-#      page.visual_effect :fade, :link_to_reply, :duration => DURATION
-#    end    
+    super page    
+    page.fade :link_to_reply    
   end 
   
   def create_or_update1( page, session )
-    super page, session
+    page.create_forum_post parent_id, parent_tag, self.class.name.underscore, self    
   end
 
   def new_or_edit_tag; "post_new";  end

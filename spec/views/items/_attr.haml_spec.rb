@@ -13,10 +13,10 @@ describe "items/_attr" do
       @attr = items_proxy.first.sizes.first
     end
     
-    it "renders sizes with check buttons" do
+    it "renders sizes with checkboxes" do
       template.should_receive( :render_attrs ).with( @attr )      
       render :locals => { :attr => @attr }
-      response.should have_item_checkbox( @attr )
+      response.should have_item_hidden_field( @attr )
     end
 
   end

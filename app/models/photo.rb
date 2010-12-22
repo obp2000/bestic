@@ -63,7 +63,6 @@ class Photo < ItemAttribute
   end   
 
   def link_to_show( page, comment = "" )
-#    page.link_to page.image_tag( public_filename :small ) + comment, public_filename
     page.link_to1 [ public_filename :small ], comment, public_filename
   end
 

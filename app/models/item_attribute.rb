@@ -42,10 +42,8 @@ class ItemAttribute < ActiveRecord::Base
   
   def create_or_update1( page, session )
     super page, session
-    page.after_create_or_update_item_attribute self.class.new_tag,  self.class.new_or_edit_partial,
-            self.class.create_or_update_partial, self
-#    page.replace self.class.new_tag, :object => self.class.new, :partial => self.class.create_or_update_partial rescue nil                      
-#    page.replace tag, :partial => "items/" + self.class.new_or_edit_partial, :object => self rescue nil 
+    page.after_create_or_update_item_attribute self.class.new_tag, self.class.create_or_update_partial,
+            tag, self.class.new_or_edit_partial, self
   end  
 
   def radio_button_tag1( page, checked, visibility )

@@ -20,10 +20,6 @@ class Order < ActiveRecord::Base
     def all_objects( params ); paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ); end
     
     def index_page_title; "Список #{class_name_rus}ов" + self::STATUS_RUS_NAV; end
-    
-#    def destroy_render; { :template => "shared/destroy.rjs" }; end
-#    def index_render; { :template => "shared/index.rjs" }; end
-#    def show_render; { :template => "shared/show.rjs" }; end        
 
     def id_rus; "№"; end
     
@@ -54,7 +50,7 @@ class Order < ActiveRecord::Base
 # for "shared/index.rjs"
     def index_partial; "orders/index"; end
     def index_tag; "content"; end
-    include IndexBlock      
+    include Index1      
       
 # for "shared/show.rjs"
     def fade_tag; "item_content";  end
@@ -73,12 +69,6 @@ class Order < ActiveRecord::Base
   def total; order_items.total; end
 
   def closed?; status == STATUS_OF_CLOSED_ORDER; end
-  
-  def create_notice
-    "<h3>Спасибо за заказ!</h3><br />В ближайшее время наши менеджеры свяжутся с Вами.<br />
-            На адрес Вашей электронной почты отправлено информационное сообщение.<br />
-            В случае необходимости используйте <b>номер #{self.class.class_name_rus}а #{id}.</b>"
-  end
 
   def destroy_notice; "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
 

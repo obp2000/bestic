@@ -43,6 +43,14 @@ Spec::Matchers.define :have_item_checkbox do |obj|
   end
 end
 
+Spec::Matchers.define :have_item_hidden_field do |obj|
+  match do |response|
+    extend Webrat::Matchers
+    response.should have_selector( "input#item_#{obj.class.name.underscore}_ids_", :type => "hidden",
+          :name => "item[#{obj.class.name.underscore}_ids][]", :value => obj.to_param )       
+  end
+end
+
 Spec::Matchers.define :have_thumbnail do |obj|
   match do |response|
     extend Webrat::Matchers

@@ -9,10 +9,12 @@ describe "shared/_index" do
 
   it "renders index template" do
     template.should_receive( :will_paginate ).with( @objects )
-    template.should_receive( :render ).with( :partial => @objects.first.class.new_partial, :object => @object )
-    template.should_receive( :render ).with( :partial => @objects.first.class.edit_partial, :collection => @objects )
+#    template.should_receive( :render ).with( :partial => @objects.first.class.name.underscore, :object => @objects.first.class.new )
+#    template.should_receive( :render ).with( :partial => @objects.first.class.name.underscore, :collection => @objects )
     template.should_receive( :draggable_element ).with( @objects.first.class.index_tag )
     render :locals => { :objects => @objects }
+
+    response.should have_selector( "form#new_#{@objects.first.class.name.underscore}" )
     response.should have_text( /\(&quot;##{@objects.first.class.name.tableize}&quot;\).remove/ )
   end
 

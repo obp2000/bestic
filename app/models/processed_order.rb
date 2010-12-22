@@ -14,15 +14,10 @@ class ProcessedOrder < Order
 
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
-     
     errors.add_to_base "Номер телефона слишком короткий (минимум 7 цифр)" if phone_number.size < 7  
-    
     errors.add_to_base "Неверный формат адреса электронной почты" unless email =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i  
-   
     errors.add_to_base "Проверочный код неверен" unless captcha_validated
-   
     errors.add_to_base "#{Cart.class_name_rus_cap} пустая" unless cart.cart_items.size > 0
-
   end  
   
   class << self
@@ -52,7 +47,7 @@ class ProcessedOrder < Order
     
     def submit_text; "Разместить #{class_name_rus}"; end
       
-    def duration_fade; 20; end
+    def fade_duration; 20; end
       
     def submit_image_with_options
       [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]
@@ -63,25 +58,21 @@ class ProcessedOrder < Order
     def replace; :replace_html; end
       
 # for "shared/create_or_update.rjs"
-    def create_or_update_partial; new_or_edit_partial; end
+#    def create_or_update_partial; new_or_edit_partial; end
       
   end
-
-#  include Action1
 
   def new_or_edit1( page )
     super page
     page.new_processed_order
-#    page.delay( DURATION ) { page.check_cart_links }    
   end
 
   def create_or_update1( page, session )
-    page.create_processed_order self.class.duration_fade
-#    page.delay( self.class.duration_fade ) { page.redirect_to "/" }
+    page.create_processed_order self.class.fade_duration
   end  
   
   def save_object( session )
-    self.captcha_validated = session[:captcha_validated]
+    self.captcha_validated = session[ :captcha_validated ]
     self.cart = session.cart
     save && populate_order( self.cart ) && self.cart.clear_cart && OrderNotice.deliver_order_notice( self )
   end     
@@ -99,6 +90,12 @@ class ProcessedOrder < Order
   def closed?; false; end
 
   def close_notice; "#{self.class.class_name_rus_cap} № #{id} успешно закрыт."; end
+
+  def create_notice
+    "<h3>Спасибо за заказ!</h3><br />В ближайшее время наши менеджеры свяжутся с Вами.<br />
+            На адрес Вашей электронной почты отправлено информационное сообщение.<br />
+            В случае необходимости используйте <b>номер #{self.class.class_name_rus}а #{id}.</b>"
+  end
 
 # for "shared/new_or_edit.rjs"
   def new_or_edit_tag; "content"; end    

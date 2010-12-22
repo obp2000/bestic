@@ -6,7 +6,7 @@ describe "photos/_photo" do
     @object = photos_proxy.first
     template.stub( :link_to_delete ).with( @object ).and_return( link_to_remote "Test",
             :url => photo_path( @object ), :method => :delete )
-    template.stub( :link_to_show_photo ).with( @object ).and_return( link_to image_tag( @object.public_filename( :small ) ),
+    template.stub( :link_to_show ).with( @object ).and_return( link_to image_tag( @object.public_filename( :small ) ),
             @object.public_filename )
     render :locals => { :photo => @object }
     response.should have_thumbnail( @object )     

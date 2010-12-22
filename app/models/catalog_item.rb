@@ -10,8 +10,6 @@ class CatalogItem < Item
 
   set_inheritance_column nil     
 
-#  extend IndexBlock
-
   class << self
     
     def index_text; "Назад в магазин"; end       
@@ -78,10 +76,10 @@ class CatalogItem < Item
     def fade_tag; "catalog_items";  end
     def appear_tag; "details"; end       
 
-  def index1( page, objects )
-    super page, objects
-    page.attach_js( "attach_js" )         
-  end      
+    def index1( page, objects )
+      super page, objects
+      page.attach_js( "attach_js" )         
+    end      
       
   end
 

@@ -10,8 +10,7 @@ module Action1
   end  
 
   def create_or_update1( page, session )
-    page.create_or_update1 create_or_update_tag, self.class.name.tableize, self.class.create_or_update_partial,
-            self.class.duration_fade, self
+    page.create_or_update1 create_or_update_tag, self.class.name.tableize, self.class.create_or_update_partial, self
 #    page.action :remove, create_or_update_tag, :duration => DURATION      
 #    page.delay( DURATION ) do      
 #      page.insert_html :bottom, self.class.name.tableize, :partial => self.class.create_or_update_partial, :object => self 

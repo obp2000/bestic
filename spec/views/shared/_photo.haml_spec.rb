@@ -4,7 +4,7 @@ describe "shared/_photo" do
 
   before do
     @photo = photos_proxy.first
-    template.stub( :link_to_show_photo_with_comment ).with( @photo ).and_return( link_to image_tag( 
+    template.stub( :link_to_show_with_comment ).with( @photo ).and_return( link_to image_tag( 
               @photo.public_filename( :small ) ) + @photo.comment, @photo.public_filename  )
   end
   

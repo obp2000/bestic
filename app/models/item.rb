@@ -63,7 +63,7 @@ class Item < ActiveRecord::Base
 # for "shared/index.rjs"
     def index_partial; "index"; end
     def index_tag; "content"; end
-    include IndexBlock          
+    include Index1          
       
 # for "shared/show.rjs"
     def fade_tag; "item_content";  end
@@ -128,21 +128,3 @@ class Item < ActiveRecord::Base
   def deleted_notice; "#{self.class.class_name_rus_cap} удалён из каталога!"; end      
    
 end
-
-class Object
-  
-  def sort_attr
-
-    case self.class.name
-      when "String", "Float"
-        self
-      when "Array"
-        first.send( first.class.sort_attr )        
-      else
-        send( self.class.sort_attr )
-    end rescue ""
-  
-  end
-  
-end
-

@@ -4,7 +4,7 @@ describe "items/_photo" do
 
   before(:each) do
     @photo = photos_proxy.first
-    template.stub( :link_to_show_photo ).with( @photo ).and_return( link_to image_tag( @photo.public_filename( :small ) ),
+    template.stub( :link_to_show ).with( @photo ).and_return( link_to image_tag( @photo.public_filename( :small ) ),
           @photo.public_filename )
   end
   

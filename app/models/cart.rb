@@ -1,6 +1,6 @@
 # coding: utf-8
 class Cart < ActiveRecord::Base
-  has_many :cart_items
+  has_many :cart_items, :dependent => :delete_all
   has_many :items, :through => :cart_items
 
   class << self  
@@ -28,8 +28,6 @@ class Cart < ActiveRecord::Base
     def submit_over_image; "basket_add_over.png"; end
 
     def submit_title; "Добавить этот #{class_name_rus} в корзину"; end 
-
-#    def destroy_render; { :template => "shared/destroy.rjs" }; end
       
 #for "shared/index
     def index_partial; "carts/cart"; end

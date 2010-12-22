@@ -23,15 +23,16 @@ class CartItem < ActiveRecord::Base
     def index_partial; "carts/cart"; end
 
   end
+
+  def delete_cart_item
+    update_amount( -1 )    
+    destroy unless amount > 0
+    self
+  end   
   
   def create_or_update1( page, session )
     super page, session
     page.after_create_or_update_cart_item tag, amount, session
-#    page.delay( DURATION ) do
-#      page.action :remove, tag unless amount > 0 rescue nil
-#      page.check_cart_links
-#      page.check_cart_totals( session )
-#    end
   end  
   alias_method :destroy1, :create_or_update1
 
@@ -57,12 +58,6 @@ class CartItem < ActiveRecord::Base
     def self.update_cart_item( conditions )
       first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge( :amount => 1 ) )      
     end
-
-    def delete_cart_item
-      update_amount( -1 )    
-      destroy unless amount > 0
-      self
-    end    
     
 end
 
