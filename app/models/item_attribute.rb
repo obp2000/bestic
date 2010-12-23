@@ -10,13 +10,10 @@ class ItemAttribute < ActiveRecord::Base
   class << self
    
     def link_to_change( page )
-#      page.link_to_remote page.image_tag( change_image, :title => change_title ),
-#            :url => page.send( *plural_path ), :method => :get
       page.link_to_remote1 [ change_image,  { :title => change_title } ], "", plural_path, :method => :get
     end
  
     def link_to_remove_from_item( page )
-#      page.link_to_function page.image_tag( delete_image, { :title => delete_from_item_title } ), delete_from_item_js_string
       page.link_to_function2 delete_image, delete_from_item_title, delete_from_item_js_string
     end
 
@@ -29,8 +26,6 @@ class ItemAttribute < ActiveRecord::Base
   end
 
   def link_to_add_to_item( page )
-#    page.link_to_function page.image_tag( self.class.add_to_item_image, :title => self.class.add_to_item_title ),
-#      &add_to_item_block1.bind( self )
     page.link_to_function1 self.class.add_to_item_image, self.class.add_to_item_title, add_to_item_block1.bind( self )
   end 
  

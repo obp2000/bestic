@@ -38,44 +38,36 @@ describe ApplicationHelper do
     end    
     
   end
- 
-  describe "#link_to_add_to_item( object )" do
 
-    it "renders link to function for adding object to item" do
-      @object = sizes_proxy.first
-      helper.should_receive( :link_to_function )
-      helper.link_to_add_to_item( @object )      
-    end    
-    
-  end 
-
-  describe "#link_to_show_photo( photo )" do
+  describe "#link_to_show( photo )" do
     
     before do
-      @photo = photos_proxy.first      
+      @photo = photos_proxy.first
+      @photo.stub( :link_to_show ).with( helper ).and_return( link_to image_tag( @photo.public_filename( :small ) ),
+          @photo.public_filename )      
     end
 
     it "renders link to show fullsize photo" do
-      helper.link_to_show_photo( @photo ).should have_thumbnail( @photo )
+      helper.link_to_show( @photo ).should have_thumbnail( @photo )
+      helper.link_to_show( @photo ).should_not contain( @photo.comment )       
     end
-      
-    context "with comment" do
-      
-      it "renders show comment" do
-        helper.link_to_show_photo( @photo, true ).should contain( @photo.comment )  
-      end
-      
-    end
-
-    context "without comment" do
-      
-      it "does not render show comment" do
-        helper.link_to_show_photo( @photo, false ).should_not contain( @photo.comment )  
-      end
-      
-    end    
 
   end   
+
+  describe "#link_to_show_with_comment( photo )" do
+    
+    before do
+      @photo = photos_proxy.first
+      @photo.stub( :link_to_show_with_comment ).with( helper ).and_return( link_to image_tag( @photo.public_filename(
+                :small ) ) + @photo.comment, @photo.public_filename )      
+    end
+
+    it "renders link to show fullsize photo and photo comment" do
+      helper.link_to_show_with_comment( @photo ).should have_thumbnail( @photo )
+      helper.link_to_show_with_comment( @photo ).should contain( @photo.comment )       
+    end
+
+  end  
   
   describe "#render_options( objects )" do
 
@@ -155,11 +147,13 @@ describe ApplicationHelper do
   describe "#link_to_delete( object )" do
     
     before do
-      @cart = carts_proxy.first
+      @object = sizes_proxy.first
+      @object.stub( :link_to_delete ).with( helper ).and_return( link_to_remote @object.name,
+            :url => size_path( @object ), :method => :delete )
     end
     
     it "renders link to delete object" do
-      helper.link_to_delete( @cart ).should have_text( regexp_for_remote_delete( cart_path ) ) 
+      helper.link_to_delete( @object ).should have_text( regexp_for_remote_delete( size_path( @object ) ) ) 
     end
     
   end
@@ -168,11 +162,58 @@ describe ApplicationHelper do
     
     before do
       @object = catalog_items_proxy.first
+      @object.stub( :link_to_show ).with( helper ).and_return( link_to_remote @object.name,
+            :url => catalog_item_path( @object ), :method => :get )      
     end
     
     it "renders link to show object" do
       helper.link_to_show( @object ).should have_link_to_remote_get( catalog_item_path( @object ) ) do |a|
         a.should contain( @object.name )      
+      end
+    end
+    
+  end
+
+  describe "#link_to_reply_to( object )" do
+    
+    before do
+      @object = forum_posts_proxy.first
+      @object.stub( :link_to_reply ).with( helper ).and_return( link_to_remote @object.name,
+            :url => reply_forum_post_path( @object ), :method => :get )        
+    end
+    
+    it "renders link to reply to forum post" do
+      helper.link_to_reply_to( @object ).should have_link_to_remote_get( reply_forum_post_path( @object ) ) 
+    end
+    
+  end
+
+  describe "#link_to_close( object )" do
+    
+    before do
+      @object = processed_orders_proxy.first
+      @object.stub( :link_to_close ).with( helper ).and_return( link_to_remote "Test",
+            :url => close_processed_order_path( @object ), :method => :get )          
+    end
+    
+    it "renders link to close order" do
+      helper.link_to_close( @object ).should have_text( regexp_for_remote_close( close_processed_order_path( @object ) ) ) 
+    end
+    
+  end
+
+  describe "#link_to_remote1( image, text, url, opts )" do
+    
+    before do
+      @image = ""
+      @text = "Test"
+      @url = [ "catalog_items_path" ]
+      @opts = { :method => :get }
+    end
+    
+    it "renders link to remote" do
+      helper.link_to_remote1( @image, @text, @url, @opts ).should have_link_to_remote_get( catalog_items_path ) do |a|
+        a.should contain( @text )      
       end      
     end
     
@@ -189,55 +230,5 @@ describe ApplicationHelper do
     end
     
   end
-
-  describe "#link_to_reply_to( object )" do
-    
-    before do
-      @object = forum_posts_proxy.first
-    end
-    
-    it "renders link to reply to forum post" do
-      helper.link_to_reply_to( @object ).should have_link_to_remote_get( reply_forum_post_path( @object ) ) 
-    end
-    
-  end
-
-  describe "#link_to_close( object )" do
-    
-    before do
-      @object = orders_proxy.first
-    end
-    
-    it "renders link to close order" do
-      helper.link_to_close( @object ).should have_text( regexp_for_remote_close( close_processed_order_path( @object ) ) ) 
-    end
-    
-  end
-
-  describe "#link_to_show_photo( object )" do
-    
-    before do
-      @object = photos_proxy.first
-    end
-    
-    it "renders link to show photo" do
-      helper.link_to_show_photo( @object ).should have_thumbnail( @object ) 
-    end
-    
-  end
-
-  describe "#link_to_remove_from_item( class_const )" do
-    
-    before do
-      @object = photos_proxy.first
-    end
-    
-    it "renders link to remove object from item" do
-#      helper.link_to_remove_from_item( @object.class ).should #have_thumbnail( @object ) 
-    end
-    
-  end
-
-
 
 end

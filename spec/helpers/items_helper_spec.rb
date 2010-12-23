@@ -2,12 +2,11 @@ require 'spec_helper'
 
 describe ItemsHelper do
  
-  describe "#link_to_remove_photo_from_item" do
+  describe "#link_to_change" do
 
-    it "renders link to function for removing photo from item" do
-      @object = photos_proxy.first
-      helper.should_receive( :link_to_function )
-      helper.link_to_remove_photo_from_item      
+    it "renders link to change item attribute" do
+      Size.stub( :link_to_change ).and_return( link_to_remote "Test", :url => sizes_path, :method => :get )
+      helper.link_to_change( Size ).should have_link_to_remote_get( sizes_path )       
     end    
     
   end 

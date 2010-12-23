@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class Category < ItemAttribute
   has_many :items, :include => [:sizes, :colours, :photos]
   has_many :catalog_items, :include => [:sizes, :colours, :photos]
@@ -19,7 +20,8 @@ class Category < ItemAttribute
 #            ( self.class.find :all, :conditions => { :name => name } ).size > 0     
 #  end
 
-#  extend Shared 
+#  extend Shared
+ 
   class << self
     def class_name_rus; "вид одежды"; end  
   

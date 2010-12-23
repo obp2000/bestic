@@ -28,7 +28,7 @@ module ApplicationHelper
   end
   
   def destroy1( objects, session )
-    objects.to_array.destroy1( self, session )
+    objects.to_enum.destroy1( self, session )
   end
 
   def close( object )
@@ -144,11 +144,11 @@ module ApplicationHelper
   end
   
   def render_attrs( attrs )
-    attrs.to_array.render_attrs( self ) rescue nil  
+    attrs.to_a.render_attrs( self ) rescue nil  
   end
 
   def render_options( objects )
-    objects.to_array.render_options( self ) rescue nil     
+    objects.to_a.render_options( self ) rescue nil     
   end
 
 ############################
@@ -216,29 +216,44 @@ end
 
 class Array
   
-  def render_attrs( page )
-    return "Любой" if first.id.blank?     
-    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self, :spacer_template => "shared/comma"
-  end  
-  
   def render_options( page )
     page.render :partial => "catalog_items/attr", :collection => self,
         :locals => { :checked => ( first.new_record? || !second ),
         :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
   end
+ 
+   def render_attrs( page )
+    return "Любой" if first.id.blank?     
+    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self, :spacer_template => "shared/comma"
+  end 
+  
+  def index1( page )
+    first.class.index1( page, self )
+    page.show_notice      
+  end
+ 
+end
+
+class Enumerable::Enumerator
   
   def destroy1( page, session )
     each do |object|
       object.destroy1( page, session )        
     end   
     page.show_notice
-  end  
- 
-  def index1( page )
-    first.class.index1( page, self )
-    page.show_notice      
-  end
- 
+  end 
+
+#  def render_options( page )
+#    page.render :partial => "catalog_items/attr", :collection => self,
+#        :locals => { :checked => ( first.new_record? || !second ),
+#        :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
+#  end
+
+#  def render_attrs( page )
+#    return "Любой" if first.id.blank?     
+#    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self, :spacer_template => "shared/comma"
+#  end  
+  
 end
 
 class Object
@@ -256,7 +271,7 @@ class Object
 
   def total; inject(0) {|sum, n| n.price * n.amount + sum}; end
 
-  def to_array; is_a?( Array ) ? self : self.to_a; end
+#  def to_array; is_a?( Array ) ? self : self.to_a; end
 
   def sort_attr
     case self.class.name

@@ -17,47 +17,29 @@
     
     def new_object( params, session ); new params[ name.underscore ]; end
 
-    def index_render_block
-      shared_template_render_block( "index" )      
-    end
+    def index_render_block; shared_template_render_block( "index" ); end
 
-    def show_render_block
-      shared_template_render_block( "show" )           
-    end
+    def show_render_block; shared_template_render_block( "show" ); end
 
-    def new_render_block
-      shared_template_render_block( "new_or_edit" )           
-    end
+    def new_render_block; shared_template_render_block( "new_or_edit" ); end
     alias_method :edit_render_block, :new_render_block
 
-    def create_render_block
-      shared_template_render_block( "create_or_update" )           
-    end
+    def create_render_block; shared_template_render_block( "create_or_update" ); end
     alias_method :update_render_block, :create_render_block    
     
-    def destroy_render_block
-      shared_template_render_block( "destroy" )     
-    end    
+    def destroy_render_block; shared_template_render_block( "destroy" ); end    
     
-    def shared_template_render_block( template )
-      lambda { render :template => "shared/" + template + ".rjs" }      
-    end
+    def shared_template_render_block( template ); lambda { render :template => "shared/" + template + ".rjs" }; end
     
-    def link_to_back( page )
-      page.link_to_function1 back_image, back_title, back_block.bind( self )
-    end
+    def link_to_back( page ); page.link_to_function1 back_image, back_title, back_block.bind( self ); end
     
-    def back_block
-      lambda { |page| page.fade_appear( appear_tag, fade_tag )  }
-    end    
+    def back_block; lambda { |page| page.fade_appear( appear_tag, fade_tag )  }; end    
     
     def link_to_close_window( page )
       page.link_to_function1 close_window_image, close_window_title, close_window_block.bind( self )      
     end
     
-    def close_window_block
-      lambda { |page| page.action :remove, index_tag }
-    end       
+    def close_window_block; lambda { |page| page.action :remove, index_tag }; end       
     
     def back_image; "back1.png"; end
 
@@ -135,9 +117,7 @@
 
     def new_path; [ "new_#{name.underscore}_path" ]; end
       
-    def submit_to( page )
-      page.send( *submit_image_with_options )
-    end
+    def submit_to( page ); page.send( *submit_image_with_options ); end
   
   end
 
@@ -147,6 +127,7 @@
   end
 
   def link_to_show( page )
+#    p page.class
     image = [ show_image, { :title => ( show_title rescue "" ) } ] rescue ""
     text = ( self.class.show_text rescue page.html_escape( subject ) ) rescue name rescue ""
     ( page.link_to_remote1 image, text, single_path, :method => :get ) rescue self.class.deleted_notice
@@ -216,20 +197,16 @@
   alias_method :reply1, :new_or_edit_or_reply1
   alias_method :new_or_edit1, :new_or_edit_or_reply1
 
-  def close1( page )
-    page.close1 status_tag, updated_tag, updated_at
-  end  
+  def close1( page ); page.close1 status_tag, updated_tag, updated_at; end  
 
   def create_or_update1( page, session )
     page.create_or_update1 create_or_update_tag, self.class.name.tableize, self.class.create_or_update_partial, self
   end  
   
-  def destroy1( page, session )
-    page.destroy2 edit_tag, tag
-  end  
+  def destroy1( page, session ); page.destroy2 edit_tag, tag; end  
 
-  def add_to_item1( page )
-    page.add_to_item1 tag, self.class.index_tag, insert_attr, self 
-  end 
+  def add_to_item1( page ); page.add_to_item1 tag, self.class.index_tag, insert_attr, self; end 
+
+  def each; yield self; end
 
 end

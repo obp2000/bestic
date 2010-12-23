@@ -6,6 +6,8 @@ describe CatalogItemsHelper do
     
     before do
       @size = catalog_items_proxy.first.sizes.first
+      @size.stub( :radio_button_tag1 ).with( helper, true, "visible" ).and_return( radio_button_tag "size_id",
+          @size.id, true, :style => "visibility: visible" )      
     end
     
     it "renders radio button tag for attr" do

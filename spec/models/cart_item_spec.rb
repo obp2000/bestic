@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe CartItem do
+  
   before do
     create_cart_item
   end
@@ -20,7 +21,7 @@ describe CartItem do
     context "when cart has such cart item already" do
       it "increments cart item amount" do
         CartItem.update_object( @params, @session )
-        @session.cart.cart_items.first.amount == 2
+        @session.cart.cart_items.first.amount.should == 2
       end
     end
  
@@ -43,5 +44,17 @@ describe CartItem do
       end
     end  
   end
+
+  describe "#link_to_show( page )" do
+  
+    it "creates link to show" do
+#      create_cart_item
+#      page = ApplicationHelper
+      @cart_item.link_to_show( ActionView::Base.new ).should == 11
+#      p "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+    end  
+  
+  end
+
 
 end
