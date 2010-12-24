@@ -1,26 +1,25 @@
 # coding: utf-8
-class CartItem < ActiveRecord::Base
+class CartItem < ActiveRecord1
   belongs_to :cart
   belongs_to :item
   belongs_to :catalog_item, :foreign_key => :item_id  
   belongs_to :size
   belongs_to :colour
   
-  class << self
+  delegate :name, :price, :to => :item
   
-    def class_name_rus; "товар"; end
-
-    def class_name_rus_cap; "Товар"; end
+  self.class_name_rus = "товар"
+  self.class_name_rus_cap = "Товар"
+#  self.create_or_update_partial = "cart_items/cart_item"
+  self.index_partial = "carts/cart"  
+  
+  class << self
 
     def update_object( params, session ); [ update_cart_item( params.conditions_hash( session ) ), true ]; end
 
-    def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end  
+    def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end
       
-# for "shared/create_or_update.rjs"
-    def create_or_update_partial; "cart_items/cart_item"; end
-     
-#for "shared/index
-    def index_partial; "carts/cart"; end
+    def create_or_update_partial; "cart_items/cart_item"; end      
 
   end
 
@@ -37,10 +36,6 @@ class CartItem < ActiveRecord::Base
   alias_method :destroy1, :create_or_update1
 
   def update_amount( i ); update_attribute :amount, amount + i; self; end   
-  
-  def name; item.name; end
-
-  def price; item.price; end
 
   def update_notice; "Добавлен товар<br /> <em>#{name}</em>"; end
 

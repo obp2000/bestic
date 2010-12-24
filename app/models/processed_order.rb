@@ -12,6 +12,22 @@ class ProcessedOrder < Order
   STATUS_RUS = "для исп."
   STATUS_RUS_NAV = " со статусом \"для исполнения\"" 
 
+  self.class_name_rus_cap = "Заказ для исполнения"
+#  self.new_or_edit_partial = "new"
+  self.replace = :replace_html
+  self.new_image = "tick_16.png"
+  self.new_text = "Оформить #{class_name_rus}"   
+  self.submit_text = "Разместить #{class_name_rus}"
+  
+  class_inheritable_accessor :new_page_title, :close_image, :close_title, :close_confirm, :captcha_text, :fade_duration 
+
+  self.new_page_title = "Оформление #{class_name_rus}а"
+  self.close_image = "page_table_close.png"
+  self.def close_title = "Закрыть #{class_name_rus}"
+  self.close_confirm = "Закрыть #{class_name_rus}?"
+  self.captcha_text = "Введите, пожалуйста, проверочный код:"
+  self.fade_duration = 20  
+
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
     errors.add_to_base "Номер телефона слишком короткий (минимум 7 цифр)" if phone_number.size < 7  
@@ -22,8 +38,6 @@ class ProcessedOrder < Order
   
   class << self
     
-    def class_name_rus_cap; "Заказ для исполнения"; end        
-    
     def close_object( params, session )
       ( object = find params[:id] ).close
       object      
@@ -31,34 +45,9 @@ class ProcessedOrder < Order
        
     def close_render_block; lambda { render :template => "shared/close.rjs" }; end 
       
-    def new_page_title; "Оформление #{class_name_rus}а"; end  
-  
-    def new_image; "tick_16.png"; end
- 
-    def new_text; "Оформить #{class_name_rus}"; end      
+    def submit_image_with_options; [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]; end      
 
-    def close_image; "page_table_close.png"; end
-
-    def close_title; "Закрыть #{class_name_rus}"; end
-    
-    def close_confirm; "Закрыть #{class_name_rus}?"; end
-      
-    def captcha_text; "Введите, пожалуйста, проверочный код:"; end
-    
-    def submit_text; "Разместить #{class_name_rus}"; end
-      
-    def fade_duration; 20; end
-      
-    def submit_image_with_options
-      [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]
-    end      
-
-# for "shared/new_or_edit.rjs"      
     def new_or_edit_partial; "new"; end
-    def replace; :replace_html; end
-      
-# for "shared/create_or_update.rjs"
-#    def create_or_update_partial; new_or_edit_partial; end
       
   end
 
@@ -102,6 +91,6 @@ class ProcessedOrder < Order
     
 # for "shared/create_or_update.rjs"
   def create_or_update_tag; new_or_edit_tag; end
-  def duration; 20; end
+#  def duration; 20; end
       
 end

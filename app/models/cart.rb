@@ -1,37 +1,33 @@
 # coding: utf-8
-class Cart < ActiveRecord::Base
+class Cart < ActiveRecord1
   has_many :cart_items, :dependent => :delete_all
   has_many :items, :through => :cart_items
 
-  class << self  
-    def class_name_rus; "корзина"; end
+  delegate :total, :to => :cart_items
 
-    def class_name_rus_cap; "Корзина"; end
+  self.class_name_rus = "корзина"
+  self.class_name_rus_cap = "Корзина"
+  self.delete_image = "basket_close.png"
+  self.submit_image = "basket_add.png"
+  self.submit_title = "Добавить этот #{CatalogItem.class_name_rus} в корзину"
+  self.index_partial = "carts/cart"
+  self.delete_text = "Очистить корзину"
+  self.nav_image = "basket.png"
+  self.nav_text = "Корзина"
+  self.submit_over_image = "basket_add_over.png"  
+
+  class << self
 
     def destroy_object( params, session ); session.cart.clear_cart; end
-    
-    def delete_image; "basket_close.png"; end
-  
-    def delete_text; "Очистить корзину"; end
-  
-    def nav_image; "basket.png"; end
-  
-    def nav_text; "Корзина"; end
-    
+   
     def submit_image_with_options
-      [ "image_submit_tag", submit_image, { :title => submit_title, :onmouseover => "$(this).attr('src', 'images/#{submit_over_image}')",
-          :onmouseout => "$(this).attr('src', 'images/#{submit_image}')", :onclick => "$(this).fadeOut().fadeIn()" } ]
+      [ "image_submit_tag", submit_image, { :title => submit_title,
+          :onmouseover => "$(this).attr('src', 'images/#{submit_over_image}')",
+          :onmouseout => "$(this).attr('src', 'images/#{submit_image}')",
+          :onclick => "$(this).fadeOut().fadeIn()" } ]
     end
-    
-    def submit_image; "basket_add.png"; end
 
-    def submit_over_image; "basket_add_over.png"; end
-
-    def submit_title; "Добавить этот #{class_name_rus} в корзину"; end 
-      
-#for "shared/index
-    def index_partial; "carts/cart"; end
-    def index_tag; "cart"; end
+    def index_tag; "cart"; end      
     
   end
 
@@ -41,9 +37,7 @@ class Cart < ActiveRecord::Base
     cart_items1
    end
 
-  def total_items; cart_items.sum(:amount); end
-
-  def total_sum; cart_items.total; end    
+  def total_items; cart_items.sum( :amount ); end
 
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 

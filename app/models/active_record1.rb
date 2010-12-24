@@ -1,6 +1,47 @@
 # encoding: utf-8
- class ActiveRecord::Base
-  
+ class ActiveRecord1 < ActiveRecord::Base
+  self.abstract_class = true   
+   
+  class_inheritable_accessor :class_name_rus, :class_name_rus_cap, :back_image, :back_title, :delete_image, :delete_title,
+    :add_to_item_image, :add_to_item_title, :close_window_image, :close_window_title,
+    :submit_image, :submit_title, :submit_text, :created_at_rus, :updated_at_rus, :change_image, :change_text,
+    :index_partial, :index_text, :index_image, :replace,
+    :fade_tag, :appear_tag, :delete_text, :nav_image, :nav_text, :submit_over_image,
+    :new_image, :new_text, :reply_image, :reply_text,
+    :name_rus
+
+  self.class_name_rus = ""
+  self.class_name_rus_cap = ""  
+  self.back_image = "back1.png"
+  self.back_title = "Назад"    
+  self.delete_image = "delete.png"
+  self.add_to_item_image = "arrow_large_right.png"
+  self.add_to_item_title = "Добавить к товару"
+  self.close_window_image = "close.png"
+  self.close_window_title = "Закрыть окно"
+  self.submit_image = "document-save-16.png"
+  self.submit_title = "Сохранить"
+  self.submit_text = ""    
+  self.created_at_rus = "Создан"  
+  self.updated_at_rus = "Изменён"
+  self.change_image = ""
+  self.change_text = ""
+  self.index_partial = "shared/index"
+  self.index_image = ""
+  self.index_text = ""
+  self.replace = :replace     
+  self.fade_tag = ""
+  self.appear_tag = ""
+  self.delete_text = ""
+  self.nav_image = ""
+  self.nav_text = ""
+  self.submit_over_image = ""
+  self.new_image = ""
+  self.new_text = ""
+  self.reply_image = ""
+  self.reply_text = ""
+  self.name_rus = ""
+    
   class << self
 
     def all_objects( params ); all; end
@@ -38,53 +79,24 @@
     def link_to_close_window( page )
       page.link_to_function1 close_window_image, close_window_title, close_window_block.bind( self )      
     end
-    
-    def close_window_block; lambda { |page| page.action :remove, index_tag }; end       
-    
-    def back_image; "back1.png"; end
-
-    def back_title; "Назад"; end
-
-    def delete_image; "delete.png"; end
-    
-    def add_to_item_image; "arrow_large_right.png"; end
-    
-    def add_to_item_title; "Добавить к товару"; end
-
-    def close_window_image; "close.png"; end
-
-    def close_window_title; "Закрыть окно"; end
       
     def submit_image_with_options; [ "image_submit_tag", submit_image, { :title => submit_title } ]; end    
- 
-    def submit_image; "document-save-16.png"; end
-
-    def submit_title; "Сохранить"; end
+      
+    def change_title; "Изменить #{class_name_rus.pluralize}"; end
   
-    def created_at_rus; "Создан"; end  
+    def close_window_block; lambda { |page| page.action :remove, index_tag }; end
+   
+    def index_tag; name.tableize; end    
 
-    def updated_at_rus; "Изменён"; end      
-
-    def change_title; "Изменить #{class_name_rus.pluralize}"; end  
-      
-    def edit_partial; name.underscore; end
-      
-    def new_partial; name.underscore; end      
-    
-# for "shared/new_or_edit.rjs"      
-    def new_or_edit_partial; name.underscore; end
-    def replace; :replace; end      
-  
-# for "shared/create_or_update.rjs"  
-    def create_or_update_partial; new_or_edit_partial; end
-      
-  # for "shared/index.rjs"
-    def index_partial; "shared/index"; end
-#    def content; index_tag; end      
-      
-    def index_tag; name.tableize; end
-      
     def new_tag; "new_#{name.underscore}"; end
+
+    def new_partial; name.underscore; end
+      
+    def edit_partial; name.underscore; end      
+
+    def new_or_edit_partial; name.underscore; end
+
+    def create_or_update_partial; new_or_edit_partial; end
     
     def index1( page, objects )
       page.insert_index_partial index_tag, index_partial, objects      
@@ -127,7 +139,6 @@
   end
 
   def link_to_show( page )
-#    p page.class
     image = [ show_image, { :title => ( show_title rescue "" ) } ] rescue ""
     text = ( self.class.show_text rescue page.html_escape( subject ) ) rescue name rescue ""
     ( page.link_to_remote1 image, text, single_path, :method => :get ) rescue self.class.deleted_notice

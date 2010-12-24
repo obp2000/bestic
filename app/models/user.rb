@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'digest/sha1'
-class User < ActiveRecord::Base
+class User < ActiveRecord1
   # Virtual attribute for the unencrypted password
   attr_accessor :password, :password_forgotten
   attr_accessible :login, :email, :password, :password_confirmation,
@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
 #  attr_accessible :login, :email, :password, :password_confirmation
+
+  self.class_name_rus = "пользователь"    
+  self.class_name_rus_cap = "Пользователь"
+  self.submit_text = "Создать учётную запись"  
 
   # Activates the user in the database.
   def activate
@@ -93,10 +97,6 @@ class User < ActiveRecord::Base
     update_attributes(:pw_reset_code => nil) 
   end 
 
-  def self.class_name_rus; "пользователь"; end    
-
-  def self.class_name_rus_cap; "Пользователь"; end  
-
   def self.forgot_password_notice
     "Письмо с инструкциями по<br />
      изменению пароля отправлены на<br />
@@ -133,8 +133,6 @@ class User < ActiveRecord::Base
   def self.password_rus; "Пароль"; end
   
   def self.password_confirmation_rus; "Подтверждение пароля"; end
-
-  def self.submit_text; "Создать учётную запись"; end
         
   protected
   

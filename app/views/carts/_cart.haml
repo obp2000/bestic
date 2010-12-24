@@ -7,7 +7,7 @@
       = session.cart.total_items
     = "#{SHT} / "
     %span#cart_total_sum
-      = roubles session.cart.total_sum
+      = roubles session.cart.total
     = "#{RUB}"
 #cart_items
   = render :partial => 'cart_items/cart_item', :collection => session.cart.cart_items

@@ -15,7 +15,7 @@ describe "carts/_cart" do
     template.should_receive( :render ).with( :partial => "carts/link_to_clear_cart" )        
     render :locals => { :session => @session }
     response.should contain( @session.cart.total_items.to_s )
-    response.should contain( @session.cart.total_sum.to_s )
+    response.should contain( @session.cart.total.to_s )
   end
 
 end

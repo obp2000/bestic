@@ -1,72 +1,57 @@
 # coding: utf-8
-class Order < ActiveRecord::Base
+class Order < ActiveRecord1
   attr_protected :id, :status, :updated_at, :created_at
   attr_accessor :captcha_validated, :cart
 
   has_many :order_items 
   has_many :items, :through => :order_items
 
+  delegate :total, :to => :order_items
+
   set_inheritance_column "status"
 
   STATUS_RUS_NAV = ""
   STATUS_RUS = ""
 
-  class << self
-  
-    def class_name_rus; "заказ"; end  
+  self.class_name_rus = "заказ"  
+  self.class_name_rus_cap = "Все заказ"
+  self.updated_at_rus = "Закрыт"
+#  self.index_tag = "content"    
+  self.index_partial = "orders/index"
+  self.fade_tag = "item_content"
+  self.appear_tag = "order_details"  
 
-    def class_name_rus_cap; "Все заказ"; end    
+  class_inheritable_accessor :id_rus, :status_header_rus, :total_rus, :count_rus, :email_rus, :phone_number_rus,
+    :ship_to_first_name_rus, :ship_to_city_rus, :ship_to_address_rus, :comments_rus, :details_title
+    
+  self.id_rus = "№"
+  self.status_header_rus = "Статус"
+  self.total_rus = "Сумма"    
+  self.count_rus = "Всего"    
+  self.email_rus = "Адрес электронной почты"
+  self.phone_number_rus = "Контактный телефон"    
+  self.ship_to_first_name_rus = "Имя"    
+  self.ship_to_city_rus = "Город"    
+  self.ship_to_address_rus = "Адрес"    
+  self.comments_rus = "Комментарии к #{class_name_rus}у"    
+  self.details_title = "Детали #{class_name_rus}а"    
+
+  class << self
   
     def all_objects( params ); paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ); end
     
     def index_page_title; "Список #{class_name_rus}ов" + self::STATUS_RUS_NAV; end
-
-    def id_rus; "№"; end
-    
-    def status_header_rus; "Статус"; end
-    
-    def total_rus; "Сумма"; end    
-
-    def count_rus; "Всего"; end    
-    
-    def updated_at_rus; "Закрыт"; end       
-
-    def email_rus; "Адрес электронной почты"; end
-
-    def phone_number_rus; "Контактный телефон"; end    
-    
-    def ship_to_first_name_rus; "Имя"; end    
-
-    def ship_to_city_rus; "Город"; end    
-
-    def ship_to_address_rus; "Адрес"; end    
-
-    def comments_rus; "Комментарии к #{class_name_rus}у"; end    
-
-    def details_title; "Детали #{class_name_rus}а"; end
       
     def show_close_column; ProcessedOrder.count > 0; end
-      
-# for "shared/index.rjs"
-    def index_partial; "orders/index"; end
-    def index_tag; "content"; end
+
     include Index1      
-      
-# for "shared/show.rjs"
-    def fade_tag; "item_content";  end
-    def appear_tag; "order_details"; end
   
   end
 
   def destroy1( page, session )
     super page, session
     page.update_processed_orders_amount1
-#    page.delay( DURATION ) do
-#      page.update_processed_orders_amount
-#    end
   end 
-
-  def total; order_items.total; end
 
   def closed?; status == STATUS_OF_CLOSED_ORDER; end
 

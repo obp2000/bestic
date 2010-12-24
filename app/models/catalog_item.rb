@@ -1,7 +1,14 @@
 # coding: utf-8
 class CatalogItem < Item
-#  cattr_accessor :not_xhr_index_render
-#  @@not_xhr_index_render = { :partial => "index", :layout => "application" }
+
+  class_inheritable_accessor :season_icon, :season_name
+  self.season_icon = "amor.png"
+  self.season_name = "Все сезоны"
+#  self.index_tag = "content"    
+  self.index_partial = "catalog_items/index"
+  self.index_text = "Назад в магазин"    
+  self.fade_tag = "catalog_items"
+  self.appear_tag = "details"    
 
   PER_PAGE = 8
   SEARCH_PER_PAGE = 8  
@@ -12,9 +19,7 @@ class CatalogItem < Item
 
   class << self
     
-    def index_text; "Назад в магазин"; end       
-    
-#    def controller; "catalog_items"; end
+     
 
     def all_objects( params )
       catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" )
@@ -52,29 +57,14 @@ class CatalogItem < Item
     end
     
     def link_to_index_local( page )
-#      page.link_to index_text, page.send( *plural_path ), :method => :get
       page.link_to1 nil, index_text, plural_path, :method => :get
     end
   
     def search_image; "search_32.png"; end
   
     def search_title; "Поиск #{class_name_rus}а"; end
-      
-    def season_name; "Все сезоны"; end
 
-    def season_icon; "amor.png"; end
-
-    def submit_image_with_options
-      [ "image_submit_tag", search_image, { :title => search_title } ]
-    end
-     
-# for "shared/index.rjs"
-    def index_partial; "catalog_items/index"; end
-    def index_tag; "content"; end
-      
-# for "shared/show.rjs"
-    def fade_tag; "catalog_items";  end
-    def appear_tag; "details"; end       
+    def submit_image_with_options; [ "image_submit_tag", search_image, { :title => search_title } ]; end
 
     def index1( page, objects )
       super page, objects

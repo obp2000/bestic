@@ -1,5 +1,12 @@
-class ItemAttribute < ActiveRecord::Base
+class ItemAttribute < ActiveRecord1
+  
   self.abstract_class = true
+  
+  class_inheritable_accessor :delete_from_item_title, :delete_from_item_js_string
+  
+  self.delete_from_item_title = "Удалить из товара"
+  self.delete_from_item_js_string =
+  "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
 
   def validate
     errors.add_to_base "#{self.class.class_name_rus_cap} не может быть пустым" if name.blank?  
@@ -16,12 +23,13 @@ class ItemAttribute < ActiveRecord::Base
     def link_to_remove_from_item( page )
       page.link_to_function2 delete_image, delete_from_item_title, delete_from_item_js_string
     end
-
-    def delete_from_item_title; "Удалить из товара"; end
- 
-    def delete_from_item_js_string
-      "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
-    end
+    
+    def update_attr( item, ids_array )
+      item.send( name.tableize ).clear
+      ids_array.each do |id1|
+        item.send( name.tableize ) << find( id1 ) rescue nil
+      end    
+    end    
     
   end
 
@@ -29,9 +37,7 @@ class ItemAttribute < ActiveRecord::Base
     page.link_to_function1 self.class.add_to_item_image, self.class.add_to_item_title, add_to_item_block1.bind( self )
   end 
  
-  def add_to_item_block1
-    lambda { |page| add_to_item1( page ) }
-  end
+  def add_to_item_block1; lambda { |page| add_to_item1( page ) }; end
   
   def insert_attr; "attr"; end
   

@@ -72,7 +72,7 @@ module ApplicationHelper
 
   def check_cart_totals( session )
     replace_html "cart_total_items", session.cart.total_items
-    replace_html "cart_total_sum", session.cart.total_sum
+    replace_html "cart_total_sum", session.cart.total
   end
 
   def link_to_add_to_item( object )

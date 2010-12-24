@@ -2,12 +2,20 @@
 class Colour < ItemAttribute
   has_many :items_colours, :dependent => :delete_all
   has_many :items, :through => :items_colours
-  
   has_many :cart_items
   has_many :order_items
-  
-#  validates_presence_of :name
-#  validates_uniqueness_of :name
+
+  self.class_name_rus = "цвет"   
+  self.class_name_rus_cap = "Цвет"
+  self.change_image = "kcoloredit.png"
+  self.index_text = "Цвета"  
+
+  class_inheritable_accessor :add_html_code_to_colour_image, :add_html_code_to_colour_title,
+    :add_html_code_to_colour_js_string
+    
+  self.add_html_code_to_colour_image = "arrow-180.png"
+  self.add_html_code_to_colour_title = "Добавить в #{class_name_rus}"
+  self.add_html_code_to_colour_js_string = "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"  
   
   def validate
     super
@@ -18,21 +26,9 @@ class Colour < ItemAttribute
 
   class << self
 
-    def class_name_rus; "цвет"; end   
-
-    def class_name_rus_cap; "Цвет"; end    
-
     def all_objects( params ); paginate( :order => "name", :page => params[:page], :per_page => 10 ); end
-
-    def add_html_code_to_colour_image; "arrow-180.png"; end
-  
-    def add_html_code_to_colour_title; "Добавить в #{class_name_rus}"; end
-
-    def change_image; "kcoloredit.png"; end
-
-    def add_html_code_to_colour_js_string; "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"; end
       
-    def index_text; "Цвета"; end
+
       
     def index1( page, objects )
       super page, objects
@@ -40,16 +36,12 @@ class Colour < ItemAttribute
     end   
      
     def link_to_add_html_code( page )
-#      page.link_to_function page.image_tag( add_html_code_to_colour_image,
-#              :title => add_html_code_to_colour_title ), add_html_code_to_colour_js_string
       page.link_to_function2 add_html_code_to_colour_image, add_html_code_to_colour_title, add_html_code_to_colour_js_string
     end
 
     def sort_attr; "name"; end     
      
   end
-
-#  include Action1 attach_js
 
   def new_or_edit1( page )
     super page

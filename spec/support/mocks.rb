@@ -195,7 +195,7 @@ end
 def valid_carts_attributes
             { :cart_items => cart_items_proxy,
             :total_items => 1,
-            :total_sum => 500 }
+            :total => 500 }
 end            
 
 def valid_cart_item_attributes

@@ -5,25 +5,14 @@ class Size < ItemAttribute
   
   has_many :cart_items
   has_many :order_items
-  
-#  validates_uniqueness_of :name
-  
-#  def validate
-#    errors.add_to_base "#{self.class.class_name_rus_cap} не может быть пустым" if name.blank?  
-#    errors.add_to_base "Такой #{self.class.class_name_rus} уже есть" if new_record? &&
-#                       ( self.class.find :all, :conditions => { :name => name } ).first     
-#  end
+
+  self.class_name_rus = "размер одежды"
+  self.class_name_rus_cap = "Размер одежды"
+  self.change_image = "pencil-ruler.png"
+  self.index_text = "Размеры"  
 
   class << self
-    
-    def class_name_rus; "размер одежды"; end
-
-    def class_name_rus_cap; "Размер одежды"; end
-
-    def change_image; "pencil-ruler.png"; end
-      
-    def index_text; "Размеры"; end
-      
+     
     def sort_attr; "name"; end      
   
   end

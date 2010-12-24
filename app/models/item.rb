@@ -1,5 +1,5 @@
 # coding: utf-8
-class Item < ActiveRecord::Base
+class Item < ActiveRecord1
   has_many :items_sizes, :dependent => :delete_all
   has_many :sizes, :through => :items_sizes
   
@@ -15,6 +15,21 @@ class Item < ActiveRecord::Base
 
   set_inheritance_column nil  
 
+  self.class_name_rus = "товар"
+  self.class_name_rus_cap = "Товар"
+  self.submit_image = "document-save.png"
+  self.submit_title = "Сохранить изменения"
+#  self.index_tag = "content"    
+  self.index_partial = "index"
+#  self.new_or_edit_partial = "form"
+#  self.create_or_update_partial = edit_partial
+  self.replace = :replace_html
+  self.fade_tag = "item_content"
+  self.appear_tag = "item_content"
+  self.new_image = "newdoc.png"
+  self.name_rus = "Название"    
+
+
   def validate
     errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
     unless price_before_type_cast and price_before_type_cast[/^[1-9][\d]*$/]
@@ -25,9 +40,6 @@ class Item < ActiveRecord::Base
   end
 
   class << self
-    def class_name_rus; "товар"; end
-
-    def class_name_rus_cap; "Товар"; end   
 
     def item_objects( params )
         all.sort_by { |item| item.send( params[:sort_by] ).sort_attr } rescue all
@@ -41,33 +53,25 @@ class Item < ActiveRecord::Base
       lambda { render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" } }
     end
 
-    def name_rus; "Название"; end     
+   
    
     def price_rus; "Цена"; end  
    
-    def submit_image; "document-save.png"; end
-   
-    def submit_title; "Сохранить изменения"; end
-   
-    def new_image; "newdoc.png"; end
+    def submit_image; "document-save.png"; end  
+      
+
 
     def new_title; "Добавить "; end
-      
-# for "shared/new_or_edit.rjs"
-    def new_or_edit_partial; "form"; end
-    def replace; :replace_html; end      
-  
-# for "shared/create_or_update.rjs"
-    def create_or_update_partial; edit_partial; end
-      
-# for "shared/index.rjs"
-    def index_partial; "index"; end
-    def index_tag; "content"; end
+
     include Index1          
       
 # for "shared/show.rjs"
-    def fade_tag; "item_content";  end
-    def appear_tag; "item_content"; end      
+
+
+      
+    def new_or_edit_partial; "form"; end      
+
+    def create_or_update_partial; edit_partial; end  
   
   end
 
@@ -91,19 +95,19 @@ class Item < ActiveRecord::Base
   end
 
   def size_ids=(ids_array)
-    update_attr( Size, ids_array )
-  end
-
-  def update_attr( class_const, ids_array )
-    self.send( class_const.name.tableize ).clear
-    ids_array.each do |id1|
-      self.send( class_const.name.tableize ) << class_const.find( id1 ) rescue nil
-    end    
+    Size.update_attr( self, ids_array )    
   end
 
   def colour_ids=(ids_array)
-    update_attr( Colour, ids_array )
+    Colour.update_attr( self, ids_array )    
   end
+
+#  def update_attr( class_const, ids_array )
+#    send( class_const.name.tableize ).clear
+#    ids_array.each do |id1|
+#      send( class_const.name.tableize ) << class_const.find( id1 ) rescue nil
+#    end    
+#  end
 
   def save_photos
     photos.each do |photo|
