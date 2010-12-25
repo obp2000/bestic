@@ -34,7 +34,7 @@ class Order < ActiveRecord1
   self.ship_to_city_rus = "Город"    
   self.ship_to_address_rus = "Адрес"    
   self.comments_rus = "Комментарии к #{class_name_rus}у"    
-  self.details_title = "Детали #{class_name_rus}а"    
+  self.details_title = "Детали #{class_name_rus}а"
 
   class << self
   
@@ -47,6 +47,14 @@ class Order < ActiveRecord1
     include Index1      
   
   end
+
+  def link_to_close( page )
+    image = [ self.class.close_image, { :title => ( self.class.close_title rescue nil ) } ]    
+    page.link_to_remote1 image, "", close_path, :method => :get, :html => { :id => close_tag },
+            :confirm => self.class.close_confirm
+  end
+
+  def close_path; [ "close_#{self.class.name.underscore}_path", self ]; end
 
   def destroy1( page, session )
     super page, session

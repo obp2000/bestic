@@ -152,24 +152,24 @@ module ApplicationHelper
   end
 
 ############################
-  def link_to_function1( image, title = "", block = nil )
-    link_to_function image_tag( image, :title => title ), &block    
+  def link_to_function1( image, title = "", js_string = nil, block = nil )
+    link_to_function image_tag( image, :title => title ), js_string, &block    
   end  
 
-  def link_to_function2( image, title = "", js_string = "" )
-    link_to_function image_tag( image, :title => title ), js_string    
-  end   
+#  def link_to_function2( image, title = "", js_string = "" )
+#    link_to_function image_tag( image, :title => title ), js_string    
+#  end   
  
-  def link_to_remote1( image, text, url = [], opts = {} )
+  def link_to_remote1( image = [], text = "", url = [], opts = {} )
     link_to_remote( image_with_text( image, text ), { :url => send( *url ) }.merge( opts ) )      
   end 
 
-  def link_to1( image, text, url = [], opts = {} )
+  def link_to1( image = [], text = "", url = [], opts = {} )
     link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts )
   end
 
   def image_with_text( image, text )
-    ( image_tag( *image ) rescue "" ) + text    
+    ( image_tag( *image ) rescue "" ) + text
   end
 
   def show2( appear_tag, fade_tag )
@@ -242,17 +242,6 @@ class Enumerable::Enumerator
     end   
     page.show_notice
   end 
-
-#  def render_options( page )
-#    page.render :partial => "catalog_items/attr", :collection => self,
-#        :locals => { :checked => ( first.new_record? || !second ),
-#        :visibility => ( second || first.new_record? ) ? "visible" : "hidden" }
-#  end
-
-#  def render_attrs( page )
-#    return "Любой" if first.id.blank?     
-#    page.render :partial => "shared/#{first.class.name.underscore}", :collection => self, :spacer_template => "shared/comma"
-#  end  
   
 end
 

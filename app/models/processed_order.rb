@@ -17,16 +17,18 @@ class ProcessedOrder < Order
   self.replace = :replace_html
   self.new_image = "tick_16.png"
   self.new_text = "Оформить #{class_name_rus}"   
-  self.submit_text = "Разместить #{class_name_rus}"
+  self.submit_with_options = [ "submit_tag", "Разместить #{class_name_rus}", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   
-  class_inheritable_accessor :new_page_title, :close_image, :close_title, :close_confirm, :captcha_text, :fade_duration 
+  class_inheritable_accessor :new_page_title, :close_image, :close_title, :close_confirm, :captcha_text,
+    :fade_duration, :new_or_edit_partial 
 
   self.new_page_title = "Оформление #{class_name_rus}а"
   self.close_image = "page_table_close.png"
-  self.def close_title = "Закрыть #{class_name_rus}"
+  self.close_title = "Закрыть #{class_name_rus}"
   self.close_confirm = "Закрыть #{class_name_rus}?"
   self.captcha_text = "Введите, пожалуйста, проверочный код:"
-  self.fade_duration = 20  
+  self.fade_duration = 20
+  self.new_or_edit_partial = "new"
 
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
@@ -44,10 +46,6 @@ class ProcessedOrder < Order
     end
        
     def close_render_block; lambda { render :template => "shared/close.rjs" }; end 
-      
-    def submit_image_with_options; [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]; end      
-
-    def new_or_edit_partial; "new"; end
       
   end
 

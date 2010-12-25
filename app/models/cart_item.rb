@@ -10,16 +10,16 @@ class CartItem < ActiveRecord1
   
   self.class_name_rus = "товар"
   self.class_name_rus_cap = "Товар"
-#  self.create_or_update_partial = "cart_items/cart_item"
   self.index_partial = "carts/cart"  
+  
+  class_inheritable_accessor :create_or_update_partial
+  self.create_or_update_partial = "cart_items/cart_item"   
   
   class << self
 
     def update_object( params, session ); [ update_cart_item( params.conditions_hash( session ) ), true ]; end
 
-    def destroy_object( params, session ); find( params[:id] ).delete_cart_item; end
-      
-    def create_or_update_partial; "cart_items/cart_item"; end      
+    def destroy_object( params, session ); find( params[ :id ] ).delete_cart_item; end
 
   end
 

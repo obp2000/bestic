@@ -6,7 +6,6 @@ class ForumPost < ActiveRecord1
   self.class_name_rus_cap = "Форум"
 #  self.index_tag = "content"   
   self.index_partial = "index"
-#  self.new_or_edit_partial = "new"
   self.replace = :replace_html
   self.fade_tag = "post_new"
   self.appear_tag = "post"  
@@ -14,10 +13,16 @@ class ForumPost < ActiveRecord1
   self.index_text = "Форум"
   self.new_image = "document-edit.png"
   self.new_text = "Новая тема"
+  self.submit_with_options = [ "submit_tag", "Отправить", { :onclick => "$(this).fadeOut().fadeIn()" } ]
+  self.name_rus = "Автор"
+
+  class_inheritable_accessor :new_or_edit_partial, :no_forum_posts_text, :subject_rus, :body_rus, :reply_image, :reply_text
+  self.new_or_edit_partial = "new"
+  self.no_forum_posts_text = "В форуме пока ещё нет сообщений. Будьте первым!"
+  self.subject_rus = "Тема"
+  self.body_rus = "Сообщение"
   self.reply_image = new_image
   self.reply_text = "Ответить"
-  self.submit_text = "Отправить"
-  self.name_rus = "Автор"    
 
 #  validates_length_of :name, :within => 2..50
 #  validates_length_of :subject, :within => 5..255
@@ -31,29 +36,26 @@ class ForumPost < ActiveRecord1
   
   class << self
 
-    def all_objects( params ); paginate( :page => params[:page], :order =>  'root_id desc, lft',  :per_page => 15 ); end
+    def all_objects( params ); paginate( :page => params[ :page ], :order =>  'root_id desc, lft',  :per_page => 15 ); end
 
-    def reply( params ); new :parent_id => params[:id]; end
+    def reply( params ); new :parent_id => params[ :id ]; end
     
     def destroy_object( params, session )
-      forum_post = find params[:id]
+      forum_post = find params[ :id ] 
       delete forum_posts = forum_post.full_set      
       forum_posts
     end
 
     def reply_render_block; lambda { render :template => "shared/reply.rjs" }; end      
-      
-    def submit_image_with_options; [ "submit_tag", submit_text, { :onclick => "$(this).fadeOut().fadeIn()" } ]; end
-  
-    def no_forum_posts_text; "В форуме пока ещё нет сообщений. Будьте первым!"; end
-    
-    def subject_rus; "Тема"; end
-    def body_rus; class_name_rus_cap; end
 
     include Index1
 
-    def new_or_edit_partial; "new"; end
+  end
 
+  def link_to_reply( page )
+    image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
+    text = self.class.reply_text rescue ""    
+    page.link_to_remote1 image, text, reply_path, :method => :get, :html => { :id => "link_to_reply" }  
   end
 
   def new_or_edit1( page )
@@ -69,6 +71,8 @@ class ForumPost < ActiveRecord1
   def create_or_update1( page, session )
     page.create_forum_post parent_id, parent_tag, self.class.name.underscore, self    
   end
+
+  def reply_path; [ "reply_#{self.class.name.underscore}_path", self ]; end   
 
   def new_or_edit_tag; "post_new";  end
 

@@ -8,26 +8,24 @@ class Cart < ActiveRecord1
   self.class_name_rus = "корзина"
   self.class_name_rus_cap = "Корзина"
   self.delete_image = "basket_close.png"
-  self.submit_image = "basket_add.png"
+  self.submit_with_options = [ "image_submit_tag", "basket_add.png",
+    { :title => "Добавить этот #{CatalogItem.class_name_rus} в корзину",
+     :onmouseover => "$(this).attr('src', 'images/basket_add_over.png')",
+     :onmouseout => "$(this).attr('src', 'images/basket_add.png')",
+     :onclick => "$(this).fadeOut().fadeIn()" } ]
   self.submit_title = "Добавить этот #{CatalogItem.class_name_rus} в корзину"
   self.index_partial = "carts/cart"
   self.delete_text = "Очистить корзину"
   self.nav_image = "basket.png"
   self.nav_text = "Корзина"
-  self.submit_over_image = "basket_add_over.png"  
+#  self.submit_over_image = "basket_add_over.png"  
+          
+  class_inheritable_accessor :cart, :index_tag
+  self.index_tag = "cart"  
 
   class << self
 
     def destroy_object( params, session ); session.cart.clear_cart; end
-   
-    def submit_image_with_options
-      [ "image_submit_tag", submit_image, { :title => submit_title,
-          :onmouseover => "$(this).attr('src', 'images/#{submit_over_image}')",
-          :onmouseout => "$(this).attr('src', 'images/#{submit_image}')",
-          :onclick => "$(this).fadeOut().fadeIn()" } ]
-    end
-
-    def index_tag; "cart"; end      
     
   end
 

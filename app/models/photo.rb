@@ -10,14 +10,15 @@ class Photo < ItemAttribute
   self.class_name_rus_cap = "Фотография"
   self.submit_title = "Сохранить"
   self.change_image = "insert-image.png"
-  self.def delete_from_item_js_string =
-        "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove();"  
+  self.delete_from_item_js_string =
+    "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove();"  
+  self.insert_attr = "photo"
 
-  class_inheritable_accessor :upload_image, :upload_title
+  class_inheritable_accessor :upload_image, :upload_title, :new_partial
 
   self.upload_image = "load.png"
   self.upload_title = "Загрузить фотографию"
-  
+  self.new_partial = "upload_photo"  
 
   def validate
     errors.add_to_base "Не выбрана #{self.class.class_name_rus} для загрузки" if filename.blank?  
@@ -30,21 +31,9 @@ class Photo < ItemAttribute
               :page => params[ :page ], :per_page => 5)
     end
 
-    def new_partial; "upload_photo"; end  
-
-#    def change_title; "Изменить #{class_name_rus.pluralize}"; end
-
-    def create_render_block
-      lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }
-    end
-
-
+    def create_render_block; lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }; end
   
   end 
-
-  def insert_attr
-    "photo"    
-  end
 
   def add_to_item1( page )
     super page
@@ -56,12 +45,8 @@ class Photo < ItemAttribute
     page.attach_js( "attach_yoxview" )    
   end   
 
-  def link_to_show( page, comment = "" )
-    page.link_to1 [ public_filename :small ], comment, public_filename
-  end
+  def link_to_show( page, comment = "" ); page.link_to1 [ public_filename :small ], comment, public_filename; end
 
-  def link_to_show_with_comment( page )
-    link_to_show( page, comment )    
-  end
+  def link_to_show_with_comment( page ); link_to_show( page, comment ); end
 
 end

@@ -11,10 +11,4 @@ class Size < ItemAttribute
   self.change_image = "pencil-ruler.png"
   self.index_text = "Размеры"  
 
-  class << self
-     
-    def sort_attr; "name"; end      
-  
-  end
-
 end

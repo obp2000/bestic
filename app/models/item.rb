@@ -17,18 +17,22 @@ class Item < ActiveRecord1
 
   self.class_name_rus = "товар"
   self.class_name_rus_cap = "Товар"
-  self.submit_image = "document-save.png"
-  self.submit_title = "Сохранить изменения"
+#  self.submit_image = [ "document-save.png", { :title => "Сохранить изменения" } ]
+#  self.submit_title = "Сохранить изменения"
+  self.submit_with_options = [ "image_submit_tag", "document-save.png", { :title => "Сохранить изменения" } ]     
 #  self.index_tag = "content"    
   self.index_partial = "index"
-#  self.new_or_edit_partial = "form"
-#  self.create_or_update_partial = edit_partial
   self.replace = :replace_html
   self.fade_tag = "item_content"
   self.appear_tag = "item_content"
   self.new_image = "newdoc.png"
-  self.name_rus = "Название"    
+  self.name_rus = "Название"
 
+  class_inheritable_accessor :price_rus, :new_title, :new_or_edit_partial, :index_page_title
+  self.price_rus = "Цена"   
+  self.new_title = "Добавить "
+  self.new_or_edit_partial = "form"
+  self.index_page_title = "Список #{class_name_rus}ов"
 
   def validate
     errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
@@ -41,35 +45,17 @@ class Item < ActiveRecord1
 
   class << self
 
-    def item_objects( params )
-        all.sort_by { |item| item.send( params[:sort_by] ).sort_attr } rescue all
-    end
+    def item_objects( params ); all.sort_by { |item| item.send( params[:sort_by] ).sort_attr } rescue all; end
 
     def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
-    def index_page_title; "Список #{class_name_rus}ов"; end
+#    def index_page_title; "Список #{class_name_rus}ов"; end
 
     def index_render_block
       lambda { render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" } }
     end
 
-   
-   
-    def price_rus; "Цена"; end  
-   
-    def submit_image; "document-save.png"; end  
-      
-
-
-    def new_title; "Добавить "; end
-
     include Index1          
-      
-# for "shared/show.rjs"
-
-
-      
-    def new_or_edit_partial; "form"; end      
 
     def create_or_update_partial; edit_partial; end  
   
@@ -94,25 +80,12 @@ class Item < ActiveRecord1
     end
   end
 
-  def size_ids=(ids_array)
-    Size.update_attr( self, ids_array )    
-  end
+  def size_ids=(ids_array); Size.update_attr( self, ids_array ); end
 
-  def colour_ids=(ids_array)
-    Colour.update_attr( self, ids_array )    
-  end
-
-#  def update_attr( class_const, ids_array )
-#    send( class_const.name.tableize ).clear
-#    ids_array.each do |id1|
-#      send( class_const.name.tableize ) << class_const.find( id1 ) rescue nil
-#    end    
-#  end
+  def colour_ids=(ids_array); Colour.update_attr( self, ids_array ); end
 
   def save_photos
-    photos.each do |photo|
-      photo.save
-    end
+    photos.each { |photo| photo.save }
   end
 
   def update_object( params, session )

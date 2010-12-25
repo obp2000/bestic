@@ -1,7 +1,7 @@
 # coding: utf-8
 class CatalogItem < Item
 
-  class_inheritable_accessor :season_icon, :season_name
+  class_inheritable_accessor :season_icon, :season_name, :search_image, :search_title
   self.season_icon = "amor.png"
   self.season_name = "Все сезоны"
 #  self.index_tag = "content"    
@@ -9,6 +9,7 @@ class CatalogItem < Item
   self.index_text = "Назад в магазин"    
   self.fade_tag = "catalog_items"
   self.appear_tag = "details"    
+  self.submit_with_options = [ "image_submit_tag", "search_32.png", { :title => "Поиск #{class_name_rus}а" } ]  
 
   PER_PAGE = 8
   SEARCH_PER_PAGE = 8  
@@ -18,8 +19,6 @@ class CatalogItem < Item
   set_inheritance_column nil     
 
   class << self
-    
-     
 
     def all_objects( params )
       catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" )
@@ -59,12 +58,6 @@ class CatalogItem < Item
     def link_to_index_local( page )
       page.link_to1 nil, index_text, plural_path, :method => :get
     end
-  
-    def search_image; "search_32.png"; end
-  
-    def search_title; "Поиск #{class_name_rus}а"; end
-
-    def submit_image_with_options; [ "image_submit_tag", search_image, { :title => search_title } ]; end
 
     def index1( page, objects )
       super page, objects

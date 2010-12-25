@@ -15,15 +15,7 @@ class Category < ItemAttribute
 
     def all_objects( params ); all( :order => 'name' ); end
       
-    def all_of( season_class )
-      all.reject do |category|
-        category.send( season_class.name.tableize ).empty?
-      end
-    end
-    
-
-      
-    def sort_attr; "name"; end
+    def all_of( season_class ); all.reject { |category| category.send( season_class.name.tableize ).empty? }; end
       
   end
 
