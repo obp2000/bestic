@@ -10,11 +10,8 @@ class Order < ActiveRecord1
 
   set_inheritance_column "status"
 
-  STATUS_RUS_NAV = ""
-  STATUS_RUS = ""
-
   self.class_name_rus = "заказ"  
-  self.class_name_rus_cap = "Все заказ"
+  self.class_name_rus_cap = "Заказ"
   self.updated_at_rus = "Закрыт"
 #  self.index_tag = "content"    
   self.index_partial = "orders/index"
@@ -22,7 +19,8 @@ class Order < ActiveRecord1
   self.appear_tag = "order_details"  
 
   class_inheritable_accessor :id_rus, :status_header_rus, :total_rus, :count_rus, :email_rus, :phone_number_rus,
-    :ship_to_first_name_rus, :ship_to_city_rus, :ship_to_address_rus, :comments_rus, :details_title
+    :ship_to_first_name_rus, :ship_to_city_rus, :ship_to_address_rus, :comments_rus, :details_title,
+    :status_eng, :status_rus_nav, :status_rus
     
   self.id_rus = "№"
   self.status_header_rus = "Статус"
@@ -35,12 +33,15 @@ class Order < ActiveRecord1
   self.ship_to_address_rus = "Адрес"    
   self.comments_rus = "Комментарии к #{class_name_rus}у"    
   self.details_title = "Детали #{class_name_rus}а"
+  self.status_eng = ""
+  self.status_rus_nav = ""
+  self.status_rus = ""
 
   class << self
   
     def all_objects( params ); paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ); end
     
-    def index_page_title; "Список #{class_name_rus}ов" + self::STATUS_RUS_NAV; end
+    def index_page_title( * ); "Список #{class_name_rus}ов" + status_rus_nav; end
       
     def show_close_column; ProcessedOrder.count > 0; end
 
@@ -49,9 +50,8 @@ class Order < ActiveRecord1
   end
 
   def link_to_close( page )
-    image = [ self.class.close_image, { :title => ( self.class.close_title rescue nil ) } ]    
-    page.link_to_remote1 image, "", close_path, :method => :get, :html => { :id => close_tag },
-            :confirm => self.class.close_confirm
+    page.link_to_remote1 [ self.class.close_image, { :title => self.class.close_title } ] , "", close_path, :method => :get,
+            :html => { :id => close_tag }, :confirm => self.class.close_confirm
   end
 
   def close_path; [ "close_#{self.class.name.underscore}_path", self ]; end
@@ -61,9 +61,9 @@ class Order < ActiveRecord1
     page.update_processed_orders_amount1
   end 
 
-  def closed?; status == STATUS_OF_CLOSED_ORDER; end
+#  def closed?; status == STATUS_OF_CLOSED_ORDER; end
 
-  def destroy_notice; "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
 
   def status_tag; "order_status_#{id}"; end
 

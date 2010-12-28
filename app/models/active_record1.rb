@@ -1,15 +1,24 @@
 # encoding: utf-8
  class ActiveRecord1 < ActiveRecord::Base
+   
   self.abstract_class = true   
+
+  Index_template_hash = { :template => "shared/index.rjs" }
+  Show_template_hash = { :template => "shared/show.rjs" }
+  New_or_edit_template_hash = { :template => "shared/new_or_edit.rjs" }
+  Create_or_update_template_hash = { :template => "shared/create_or_update.rjs" }
+  Destroy_template_hash = { :template => "shared/destroy.rjs" }      
    
   class_inheritable_accessor :class_name_rus, :class_name_rus_cap, :back_image, :back_title, :delete_image, :delete_title,
     :close_window_image, :close_window_title,
     :submit_image, :submit_title, :submit_text, :created_at_rus, :updated_at_rus,
-    :index_partial, :index_image, :index_text,  :replace,
+    :index_partial, :index_image, :index_title, :index_text,  :replace,
     :fade_tag, :appear_tag, :delete_text, :nav_image, :nav_text, 
-    :new_image, :new_text,
-    :name_rus, :submit_with_options, :change_text  
-#    :image_with_title
+    :new_image, :new_title, :new_text,
+    :show_image, :show_title,
+    :name_rus, :submit_with_options, :change_text,
+    :index_render_block, :show_render_block, :new_render_block, :edit_render_block, :create_render_block,
+    :update_render_block, :destroy_render_block
 
 #  class_inheritable_array :index_image
 
@@ -18,6 +27,7 @@
   self.back_image = "back1.png"
   self.back_title = "Назад"    
   self.delete_image = "delete.png"
+  self.delete_text = ""
   self.close_window_image = "close.png"
   self.close_window_title = "Закрыть окно"
   self.submit_with_options = [ "image_submit_tag", "document-save-16.png", { :title => "Сохранить" } ]    
@@ -25,46 +35,41 @@
   self.updated_at_rus = "Изменён"
   self.index_partial = "shared/index"
   self.index_image = []
+  self.index_title = ""
   self.index_text = ""
+  self.show_image = []
+  self.show_title = ""
   self.replace = :replace     
   self.fade_tag = ""
   self.appear_tag = ""
-  self.delete_text = ""
   self.nav_image = []
   self.nav_text = ""
   self.new_image = []
+  self.new_title = ""
   self.new_text = ""
   self.name_rus = ""
+  self.index_render_block = lambda { render Index_template_hash }
+  self.show_render_block = lambda { render Show_template_hash }
+  self.new_render_block = lambda { render New_or_edit_template_hash }
+  self.edit_render_block = lambda { render New_or_edit_template_hash }   
+  self.create_render_block = lambda { render Create_or_update_template_hash }
+  self.update_render_block = lambda { render Create_or_update_template_hash }
+  self.destroy_render_block = lambda { render Destroy_template_hash }     
     
   class << self
 
     def all_objects( params ); all; end
 
-    def update_object( params, session )
-      success = ( object = find params[:id] ).update_object( params, session )      
+    def update_object( params, session, flash )
+      success = ( object = find params[ :id ] ).update_object( params, session, flash )
       [ object, success ]
     end    
 
-    def destroy_object( params, session )
-      ( object = find params[:id] ).destroy
-      object
+    def destroy_object( params, session, flash )
+      find( params[ :id ] ).destroy.destroy_notice( flash )
     end     
     
     def new_object( params, session ); new params[ name.underscore ]; end
-
-    def index_render_block; shared_template_render_block( "index" ); end
-
-    def show_render_block; shared_template_render_block( "show" ); end
-
-    def new_render_block; shared_template_render_block( "new_or_edit" ); end
-    alias_method :edit_render_block, :new_render_block
-
-    def create_render_block; shared_template_render_block( "create_or_update" ); end
-    alias_method :update_render_block, :create_render_block    
-    
-    def destroy_render_block; shared_template_render_block( "destroy" ); end    
-    
-    def shared_template_render_block( template ); lambda { render :template => "shared/" + template + ".rjs" }; end
     
     def link_to_back( page ); page.link_to_function1 back_image, back_title, nil, back_block.bind( self ); end
     
@@ -99,16 +104,19 @@
     end     
 
     def link_to_new( page )
-#      image = [ new_image, { :title => ( new_title rescue nil ) } ]
-      text = new_text rescue ""
-      page.link_to_remote1 [ new_image, { :title => ( new_title rescue nil ) } ], text, new_path, :method => :get,
+      page.link_to_remote1 image_with_title( new_image, new_title ), new_text, new_path, :method => :get,
               :html => { :id => "link_to_new" }
     end
 
     def link_to_index( page, params )
-#      image = [ index_image, { :title => ( index_title rescue nil ) } ]      
-      text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] + "_rus" ) ) rescue class_name_rus_cap.pluralize rescue ""
-      page.link_to_remote1 [ index_image, { :title => ( index_title rescue nil ) } ], text, plural_path( params ), :method => :get    
+#      text = if params[ :sort_by ]
+#        params[ :sort_by ].index_text
+#      else
+#        class_name_rus_cap.pluralize
+#      end
+      text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] + 
+              "_rus" ) ) rescue class_name_rus_cap.pluralize
+      page.link_to_remote1 image_with_title( index_image, index_title ), text, plural_path( params ), :method => :get    
     end
 
     def link_to_season( page )
@@ -120,6 +128,8 @@
     def new_path; [ "new_#{name.underscore}_path" ]; end
       
     def submit_to( page ); page.send( *submit_with_options ); end
+
+    def image_with_title( image, title ); [ image, { :title => title } ]; end  
   
   end
 
@@ -129,33 +139,36 @@
   end
 
   def link_to_show( page )
-    ( page.link_to_remote1( ( image_with_title( ( show_image rescue [] ), ( show_title rescue nil ) ) ),
-            ( ( self.class.show_text rescue page.html_escape( subject ) ) rescue name rescue "" ),
-            single_path, :method => :get ) ) rescue self.class.deleted_notice
+    ( page.link_to_remote1( self.class.image_with_title( show_image, show_title ),
+            page.html_escape( show_text ), single_path, :method => :get ) ) rescue self.class.deleted_notice
   end
 
+  def show_text; name; end
+
   def link_to_delete( page ) 
-    page.link_to_remote1 image_with_title( self.class.delete_image, delete_title ), ( self.class.delete_text rescue "" ),
+    page.link_to_remote1 self.class.image_with_title( self.class.delete_image, delete_title ), self.class.delete_text,
             single_path, :method => :delete, :confirm => delete_title     
-  end
-  
-  def image_with_title( image, title )
-    [ image, { :title => title } ]
   end
   
   def single_path; [ "#{self.class.name.underscore}_path", self ]; end
     
-  def update_object( params, session ); update_attributes( params[self.class.name.underscore] ); end
+  def update_object( params, session, flash )
+    update_attributes( params[ self.class.name.underscore ] )
+    update_notice( flash )
+  end
   
-  def save_object( session ); save; end
+  def save_object( session, flash )
+#    success = save
+    create_notice( flash ) if save
+  end
   
   def delete_title; "Удалить #{self.class.class_name_rus} #{name_or_id}?"; end
 
-  def create_notice; "#{self.class.class_name_rus_cap} создан удачно."; end
+  def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно."; true; end
 
-  def update_notice; "#{self.class.class_name_rus_cap} удачно обновлён."; end
+  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён."; self; end
 
-  def destroy_notice; "#{self.class.class_name_rus_cap} удалён."; end  
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён."; self; end  
 
   def subject_or_name; respond_to?( :subject ) ? subject : name; end
     

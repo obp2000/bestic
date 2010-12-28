@@ -11,7 +11,7 @@ class Contact < ActiveRecord1
   self.change_text = "Изменить контакты"  
 
   class_inheritable_accessor :name_rus, :name_image, :email_rus, :email_image, :phone_rus, :phone_image,
-    :address_rus, :address_image, :icq_rus, :icq_image, :email_subject, :show_text, :show_image     
+    :address_rus, :address_image, :icq_rus, :icq_image, :email_subject     
 
   self.name_rus = "Имя"
   self.name_image = "loginmanager.png"
@@ -24,7 +24,7 @@ class Contact < ActiveRecord1
   self.icq_rus = "ICQ"
   self.icq_image = "icq_protocol.png"
   self.email_subject = "Сообщение от пользователя интернет-магазина BEST&C"
-  self.show_text = class_name_rus_cap.pluralize
+#  self.show_text = class_name_rus_cap.pluralize
   self.show_image = "contacts.png"  
   
   def validate
@@ -35,6 +35,10 @@ class Contact < ActiveRecord1
       
   def self.new( * ); end
 
-  def update_notice; "#{self.class.class_name_rus_cap} успешно обновлены."; end
+  def self.show_page_title; class_name_rus_cap.pluralize; end
+
+  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} успешно обновлены."; end
+
+  def show_text; class_name_rus_cap.pluralize; end
 
 end

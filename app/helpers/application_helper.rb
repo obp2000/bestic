@@ -99,10 +99,6 @@ module ApplicationHelper
     object.link_to_show_with_comment( self )
   end  
   
-  def page_title
-    "<h2>#{@page_title}</h2>"
-  end
-  
   def link_to_index( class_const, params = nil )
     class_const.link_to_index( self, params )     
   end    
@@ -212,6 +208,18 @@ module ApplicationHelper
     fade_with_duration :errorExplanation        
   end
 
+  def index_page_title_for( class_const )
+    class_const.index_page_title( params )
+  end
+
+  def show_page_title_for( class_const )
+    class_const.show_page_title
+  end
+
+  def new_page_title_for( class_const )
+    class_const.new_page_title
+  end
+
 end
 
 class Array
@@ -260,8 +268,6 @@ class Object
 
   def total; inject(0) {|sum, n| n.price * n.amount + sum}; end
 
-#  def to_array; is_a?( Array ) ? self : self.to_a; end
-
   def sort_attr
     case self.class.name
       when "String", "Float"
@@ -272,5 +278,9 @@ class Object
         send( self.class.sort_attr )
     end rescue ""
   end
+
+#  def index_text
+#    self.classify.constantize.index_text rescue send( self + "_rus" )    
+#  end
 
 end

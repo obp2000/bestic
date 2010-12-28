@@ -27,12 +27,13 @@ class Item < ActiveRecord1
   self.appear_tag = "item_content"
   self.new_image = "newdoc.png"
   self.name_rus = "Название"
+  self.index_render_block = lambda { render request.xhr? ? Index_template_hash : { :partial => "index", :layout => "items" } }
 
-  class_inheritable_accessor :price_rus, :new_title, :new_or_edit_partial, :index_page_title
+  class_inheritable_accessor :price_rus, :new_or_edit_partial
   self.price_rus = "Цена"   
   self.new_title = "Добавить "
   self.new_or_edit_partial = "form"
-  self.index_page_title = "Список #{class_name_rus}ов"
+#  self.index_page_title = "Список #{class_name_rus}ов"
 
   def validate
     errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
@@ -49,15 +50,11 @@ class Item < ActiveRecord1
 
     def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
-#    def index_page_title; "Список #{class_name_rus}ов"; end
-
-    def index_render_block
-      lambda { render request.xhr? ? { :template => "shared/index.rjs" } : { :partial => "index", :layout => "items" } }
-    end
-
-    include Index1          
+    def index_page_title( * ); "Список #{class_name_rus}ов"; end
 
     def create_or_update_partial; edit_partial; end  
+
+    include Index1          
   
   end
 
@@ -88,12 +85,10 @@ class Item < ActiveRecord1
     photos.each { |photo| photo.save }
   end
 
-  def update_object( params, session )
-#    modify_item = lambda do
-#      self[ :existing_photo_attributes ] ||= {}; self
-#    end
+  def update_object( params, session, flash )
     params[ :item ][ :existing_photo_attributes ] ||= {}
-    update_attributes( params[ :item ] )
+#    update_attributes( params[ :item ] )
+    super
   end
     
 # for "shared/new_or_edit.rjs"

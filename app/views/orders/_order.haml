@@ -1,6 +1,6 @@
 %tr[ order ]{ :onclick => "$.get('#{order_path(order)}')" }
   %td= order.id
-  %td{ :id => "order_status_#{order.id}" }= order.class::STATUS_RUS
+  %td{ :id => "order_status_#{order.id}" }= order.class.status_rus
   %td.align_right= roubles order.total
   %td.align_right= order.items.size
   %td.align_right= date_time_rus order.created_at

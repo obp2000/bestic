@@ -16,13 +16,15 @@ class ForumPost < ActiveRecord1
   self.submit_with_options = [ "submit_tag", "Отправить", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   self.name_rus = "Автор"
 
-  class_inheritable_accessor :new_or_edit_partial, :no_forum_posts_text, :subject_rus, :body_rus, :reply_image, :reply_text
+  class_inheritable_accessor :new_or_edit_partial, :no_forum_posts_text, :subject_rus, :body_rus, :reply_image,
+  :reply_text, :reply_render_block
   self.new_or_edit_partial = "new"
   self.no_forum_posts_text = "В форуме пока ещё нет сообщений. Будьте первым!"
   self.subject_rus = "Тема"
   self.body_rus = "Сообщение"
   self.reply_image = new_image
   self.reply_text = "Ответить"
+  self.reply_render_block = lambda { render :template => "shared/reply.rjs" }
 
 #  validates_length_of :name, :within => 2..50
 #  validates_length_of :subject, :within => 5..255
@@ -40,17 +42,20 @@ class ForumPost < ActiveRecord1
 
     def reply( params ); new :parent_id => params[ :id ]; end
     
-    def destroy_object( params, session )
+    def destroy_object( params, session, flash )
       forum_post = find params[ :id ] 
-      delete forum_posts = forum_post.full_set      
+      delete forum_posts = forum_post.full_set
+      forum_post.destroy_notice( flash )
       forum_posts
     end
 
-    def reply_render_block; lambda { render :template => "shared/reply.rjs" }; end      
+    def index_page_title( * ); class_name_rus_cap; end
 
     include Index1
 
   end
+
+  def show_text; subject; end
 
   def link_to_reply( page )
     image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
@@ -76,10 +81,13 @@ class ForumPost < ActiveRecord1
 
   def new_or_edit_tag; "post_new";  end
 
-  def create_notice; root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"; end
+  def create_notice( flash )
+    flash.now[ :notice ] = root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"
+    self
+  end
  
   def style; "margin-left: #{depth*20 + 30}px"; end
 
-  def destroy_notice; "Ветвь сообщений удалена"; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Ветвь сообщений удалена"; end
 
 end

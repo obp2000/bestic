@@ -1,12 +1,12 @@
 %div
-  = page_title
+  %h2= index_page_title_for Item
   %table{:summary => @page_title, :id => @object.class.name.tableize  }
     %caption= will_paginate @objects
     %tr
       %th{:scope => "col"}= link_to_index Item, :sort_by => "name"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "sizes"
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "sizes.first.name"
       %th{:scope => "col"}= link_to_index Item, :sort_by => "colours"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "category"
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "category.name"
       %th{:scope => "col"}= link_to_index Item, :sort_by => "price"        
       %th{:scope => "col"}= link_to_new Item        
     = render :partial => 'item', :collection => @objects

@@ -3,17 +3,18 @@ require 'spec_helper'
 describe Contact do
   before(:each) do
     @valid_attributes = valid_contact_attributes
-    @contact = Contact.create( valid_contact_attributes )
+    @contact = Contact.first
   end
 
   it "is valid with valid attributes" do
+    p @contact
     @contact.should be_valid
   end
 
   it "is not valid without a valid name" do
     @contact.name = "N"
-    @contact.save
-    @contact.should have( 1 ).error_on( :name )    
+    @contact.should_not be_valid
+#    @contact.should have( 1 ).error_on( :name )    
   end
 
   it "is not valid without a valid email" do

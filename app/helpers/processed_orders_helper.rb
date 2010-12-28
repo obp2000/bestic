@@ -20,7 +20,7 @@ module ProcessedOrdersHelper
   end
 
   def change_to_closed( status_tag )
-    action :replace_html, status_tag, ClosedOrder::STATUS_RUS    
+    action :replace_html, status_tag, ClosedOrder.status_rus    
   end
 
   def change_close_tag_to( updated_tag, updated_at )

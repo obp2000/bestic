@@ -13,6 +13,7 @@ class Photo < ItemAttribute
   self.delete_from_item_js_string =
     "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove();"  
   self.insert_attr = "photo"
+  self.create_render_block = lambda { responds_to_parent { render Create_or_update_template_hash } }  
 
   class_inheritable_accessor :upload_image, :upload_title, :new_partial
 
@@ -31,7 +32,7 @@ class Photo < ItemAttribute
               :page => params[ :page ], :per_page => 5)
     end
 
-    def create_render_block; lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }; end
+#    def create_render_block; lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }; end
   
   end 
 

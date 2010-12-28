@@ -7,8 +7,8 @@ class ProcessedOrdersController < OrdersController
   end
 
   def close
-    @object = controller_name.classify.constantize.close_object( params, session )
-    flash_notice
+    @object = controller_name.classify.constantize.close_object( params, session, flash )
+#    flash_notice
     render_block_call  
   end
   
