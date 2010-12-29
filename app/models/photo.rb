@@ -28,11 +28,9 @@ class Photo < ItemAttribute
   class << self
  
     def all_objects( params )
-      paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc",
-              :page => params[ :page ], :per_page => 5)
+      paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :page => params[ :page ],
+              :per_page => 5)
     end
-
-#    def create_render_block; lambda { responds_to_parent { render :template => "shared/create_or_update.rjs" } }; end
   
   end 
 

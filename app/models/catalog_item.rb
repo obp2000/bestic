@@ -1,7 +1,7 @@
 # coding: utf-8
 class CatalogItem < Item
 
-  class_inheritable_accessor :season_icon, :season_name, :search_image, :search_title, :search_render_block
+  class_inheritable_accessor :season_icon, :season_name
   self.season_icon = "amor.png"
   self.season_name = "Все сезоны"
   self.index_partial = "catalog_items/index"
@@ -10,7 +10,7 @@ class CatalogItem < Item
   self.appear_tag = "details"    
   self.submit_with_options = [ "image_submit_tag", "search_32.png", { :title => "Поиск #{class_name_rus}а" } ]
   self.index_render_block = lambda { render request.xhr? ? Index_template_hash : { :partial => "index", :layout => "application" } }
-  self.search_render_block = lambda { render Index_template_hash }
+#  self.search_render_block = lambda { render Index_template_hash }
 
   PER_PAGE = 8
   SEARCH_PER_PAGE = 8  
@@ -58,13 +58,8 @@ class CatalogItem < Item
 #    end
     
     def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
-
-#    def search_render; { :template => "shared/index.rjs" }; end
-#    def search_render_block; lambda { render :template => "shared/index.rjs" }; end 
     
-    def link_to_index_local( page )
-      page.link_to1 nil, index_text, plural_path, :method => :get
-    end
+    def link_to_index_local( page ); page.link_to1 nil, index_text, plural_path, :method => :get; end
 
     def index1( page, objects )
       super page, objects
@@ -72,8 +67,6 @@ class CatalogItem < Item
     end      
       
   end
-
-#  def show_text; name; end
 
   define_index do
     indexes name

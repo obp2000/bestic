@@ -47,7 +47,6 @@ class CartItem < ActiveRecord1
     { :item_id => item_id, :price => price, :amount => amount,  :size_id => size_id, :colour_id => colour_id }
   end
 
-# for "shared/create_or_update.rjs"
   def create_or_update_tag; tag; end
 
   private

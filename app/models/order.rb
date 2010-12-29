@@ -39,11 +39,9 @@ class Order < ActiveRecord1
 
   class << self
   
-    def all_objects( params ); paginate( :page => params[:page], :order => 'created_at desc', :per_page => 14 ); end
+    def all_objects( params ); paginate( :page => params[ :page ], :order => 'created_at desc', :per_page => 14 ); end
     
-    def index_page_title( * ); "Список #{class_name_rus}ов" + status_rus_nav; end
-      
-    def show_close_column; ProcessedOrder.count > 0; end
+    def index_page_title( params ); "Список #{class_name_rus}ов" + params[ :controller ].classify.constantize.status_rus_nav; end
 
     include Index1      
   
@@ -61,9 +59,7 @@ class Order < ActiveRecord1
     page.update_processed_orders_amount1
   end 
 
-#  def closed?; status == STATUS_OF_CLOSED_ORDER; end
-
-  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; self; end
 
   def status_tag; "order_status_#{id}"; end
 

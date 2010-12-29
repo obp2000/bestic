@@ -66,7 +66,7 @@
     end    
 
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).destroy.destroy_notice( flash )
+      find( params[ :id ] ).destroy_notice( flash ).destroy
     end     
     
     def new_object( params, session ); new params[ name.underscore ]; end
@@ -109,14 +109,8 @@
     end
 
     def link_to_index( page, params )
-#      text = if params[ :sort_by ]
-#        params[ :sort_by ].index_text
-#      else
-#        class_name_rus_cap.pluralize
-#      end
-      text = ( params[ :sort_by ].classify.constantize.index_text rescue send( params[ :sort_by ] + 
-              "_rus" ) ) rescue class_name_rus_cap.pluralize
-      page.link_to_remote1 image_with_title( index_image, index_title ), text, plural_path( params ), :method => :get    
+      page.link_to_remote1 image_with_title( index_image, index_title ),
+              ( params[ :index_text ] rescue class_name_rus_cap.pluralize ), plural_path( params ), :method => :get    
     end
 
     def link_to_season( page )
@@ -158,8 +152,8 @@
   end
   
   def save_object( session, flash )
-#    success = save
-    create_notice( flash ) if save
+    create_notice( flash ) if success = save
+    success
   end
   
   def delete_title; "Удалить #{self.class.class_name_rus} #{name_or_id}?"; end
@@ -175,20 +169,15 @@
   def name_or_id; respond_to?( :name ) ? name : id; end
  
   def item_id_or_id; respond_to?( :item ) ? item.id : id; end
-  
-############# tags
+
   def edit_tag; "edit_#{self.class.name.underscore}_#{id}"; end
 
   def tag; "#{self.class.name.underscore}_#{id}"; end
 
   def parent_tag; "#{self.class.name.underscore}_#{parent_id}"; end
 
-#####################################
-
-# for "shared/new_or_edit.rjs"
   def new_or_edit_tag; new_record? ? self.class.new_tag : edit_tag; end
 
-# for "shared/create_or_update.rjs"
   def create_or_update_tag; new_or_edit_tag; end
 
   def new_or_edit_or_reply1( page )

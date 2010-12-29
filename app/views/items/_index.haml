@@ -3,11 +3,11 @@
   %table{:summary => @page_title, :id => @object.class.name.tableize  }
     %caption= will_paginate @objects
     %tr
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "name"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "sizes.first.name"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "colours"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "category.name"
-      %th{:scope => "col"}= link_to_index Item, :sort_by => "price"        
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "name", :index_text => "Название"
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "sizes.first.name", :index_text => Size.class_name_rus_cap.split.first
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "colours.first.name", :index_text => Colour.class_name_rus_cap.split.first
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "category.name", :index_text => Category.class_name_rus_cap.split.first
+      %th{:scope => "col"}= link_to_index Item, :sort_by => "price", :index_text => "Цена"        
       %th{:scope => "col"}= link_to_new Item        
     = render :partial => 'item', :collection => @objects
   #item_content

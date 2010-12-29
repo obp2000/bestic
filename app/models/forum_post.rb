@@ -82,7 +82,7 @@ class ForumPost < ActiveRecord1
   def new_or_edit_tag; "post_new";  end
 
   def create_notice( flash )
-    flash.now[ :notice ] = root? ? "Новая тема создана" : "#{self.class.class_name_rus_cap} отправлено"
+    flash.now[ :notice ] = parent_id.zero? ? "Новая тема создана" : "Сообщение отправлено"
     self
   end
  

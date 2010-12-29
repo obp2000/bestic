@@ -18,7 +18,7 @@ class ProcessedOrder < Order
   self.submit_with_options = [ "submit_tag", "Разместить #{class_name_rus}", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   
   class_inheritable_accessor :close_image, :close_title, :close_confirm, :captcha_text,
-    :fade_duration, :new_or_edit_partial, :close_render_block 
+    :fade_duration, :new_or_edit_partial, :close_render_block, :new_page_title 
 
 #  self.new_page_title = "Оформление #{class_name_rus}а"
   self.close_image = "page_table_close.png"
@@ -30,7 +30,8 @@ class ProcessedOrder < Order
   self.close_render_block = lambda { render :template => "shared/close.rjs" }
   self.status_eng = "ProcessedOrder"
   self.status_rus_nav = " со статусом \"для исполнения\""
-  self.status_rus = "для исп."  
+  self.status_rus = "для исп."
+  self.new_page_title = "Оформление #{class_name_rus}а"  
 
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
@@ -42,7 +43,7 @@ class ProcessedOrder < Order
   
   class << self
     
-    def new_page_title; "Оформление #{class_name_rus}а"; end    
+#    def new_page_title; "Оформление #{class_name_rus}а"; end    
     
     def close_object( params, session, flash )
       ( object = find params[ :id ] ).close( flash )
@@ -89,11 +90,8 @@ class ProcessedOrder < Order
     true
   end
 
-# for "shared/new_or_edit.rjs"
   def new_or_edit_tag; "content"; end    
-    
-# for "shared/create_or_update.rjs"
-  def create_or_update_tag; new_or_edit_tag; end
-#  def duration; 20; end
+
+#  def create_or_update_tag; new_or_edit_tag; end
       
 end

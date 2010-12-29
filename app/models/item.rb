@@ -46,7 +46,7 @@ class Item < ActiveRecord1
 
   class << self
 
-    def item_objects( params ); all.sort_by { |item| item.send( params[:sort_by] ).sort_attr } rescue all; end
+    def item_objects( params ); all.sort_by { |item| eval( "item." + params[ :sort_by ] ) rescue "" }; end
 
     def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
@@ -81,13 +81,10 @@ class Item < ActiveRecord1
 
   def colour_ids=(ids_array); Colour.update_attr( self, ids_array ); end
 
-  def save_photos
-    photos.each { |photo| photo.save }
-  end
+  def save_photos; photos.each { |photo| photo.save }; end
 
   def update_object( params, session, flash )
     params[ :item ][ :existing_photo_attributes ] ||= {}
-#    update_attributes( params[ :item ] )
     super
   end
     

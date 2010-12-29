@@ -1,7 +1,7 @@
 %div{ :id => @object.class.name.tableize }
-  %h2= index_page_title_for @objects.first.class 
+  %h2= index_page_title_for Order 
   = render :partial => 'orders/navigation'
-  %table{:summary => @page_title}
+  %table{:summary => ""}
     %caption
       = will_paginate @objects
     %tr
