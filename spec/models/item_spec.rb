@@ -40,6 +40,8 @@ describe Item do
     before do
       @params = { "item" => valid_item_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new item" do
@@ -54,6 +56,8 @@ describe Item do
     before do
       @params = { "item" => valid_item_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "saves new item" do
@@ -75,11 +79,13 @@ describe Item do
               :type => "WinterCatalogItem" 
               } }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing item" do
       create_item
-      @item = Item.update_object( @updated_params.merge( :id => @item.id ), @session ).first
+      @item = Item.update_object( @updated_params.merge( :id => @item.id ), @session, @flash ).first
       @item.name.should == @updated_params[ :item ][ :name ]
     end
   
@@ -90,12 +96,14 @@ describe Item do
     before do
       @params = { "item" => valid_item_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys existing item" do
       create_item
       @params_for_destroy = { :id => @item.id }
-      @item = Item.destroy_object( @params_for_destroy, @session )
+      @item = Item.destroy_object( @params_for_destroy, @session, @flash )
       @item.name.should == valid_item_attributes[ :name ]
       Item.all.should_not include( @item )
     end
@@ -110,31 +118,31 @@ describe Item do
     
     it "sorts by name" do
       @params = {  :sort_by => "name" }
-      @items = Item.item_objects( @params[:sort_by] )
+      @items = Item.item_objects( @params )
       @items.first.name.should == "Jacket"
     end
     
     it "sorts by price" do
       @params = {  :sort_by => "price" }
-      @items = Item.item_objects( @params[:sort_by] )
+      @items = Item.item_objects( @params )
       @items.first.price.should == 300
     end    
     
     it "sorts by category" do
-      @params = {  :sort_by => "category" }
-      @items = Item.item_objects( @params[:sort_by] )
+      @params = {  :sort_by => "category.name" }
+      @items = Item.item_objects( @params )
       @items.first.category.name.should == "Jackets"
     end      
     
     it "sorts by sizes" do
-      @params = {  :sort_by => "sizes" }
-      @items = Item.item_objects( @params[:sort_by] )
+      @params = {  :sort_by => "sizes.first.name" }
+      @items = Item.item_objects( @params )
       @items.first.sizes.first.name.should == "L"
     end    
 
     it "sorts by colours" do
-      @params = {  :sort_by => "colours" }
-      @items = Item.item_objects( @params[:sort_by] )
+      @params = {  :sort_by => "colours.first.name" }
+      @items = Item.item_objects( @params )
       @items.first.colours.first.name.should == "Green"
     end        
     

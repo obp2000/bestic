@@ -37,6 +37,11 @@ class Order < ActiveRecord1
   self.status_rus_nav = ""
   self.status_rus = ""
 
+  attr_accessor_with_default( :status_tag ) { "order_status_#{id}" }
+  attr_accessor_with_default( :updated_tag ) { "order_updated_#{id}" }
+  attr_accessor_with_default( :close_tag ) { "close_order_#{id}" }
+  attr_accessor_with_default( :close_path ) { [ "close_#{self.class.name.underscore}_path", self ] }    
+
   class << self
   
     def all_objects( params ); paginate( :page => params[ :page ], :order => 'created_at desc', :per_page => 14 ); end
@@ -52,19 +57,11 @@ class Order < ActiveRecord1
             :html => { :id => close_tag }, :confirm => self.class.close_confirm
   end
 
-  def close_path; [ "close_#{self.class.name.underscore}_path", self ]; end
-
   def destroy1( page, session )
     super page, session
     page.update_processed_orders_amount1
   end 
 
   def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; self; end
-
-  def status_tag; "order_status_#{id}"; end
-
-  def updated_tag; "order_updated_#{id}"; end       
-
-  def close_tag; "close_order_#{id}"; end    
        
 end

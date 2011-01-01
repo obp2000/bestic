@@ -1,15 +1,6 @@
 # coding: utf-8
 class ProcessedOrder < Order
 
-#  validates_size_of :order_items, :minimum => 1 
-#  validates_length_of :ship_to_first_name, :in => 2..255 
-#  validates_length_of :phone_number, :in => 7..20 
-#  validates_length_of :customer_ip, :in => 7..15 
-#  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
-#  validates_inclusion_of :status, :in => [ 'open', 'processed', 'closed', 'failed', 'failed 1', 'failed 2' ] 
-
-#  STATUS = "ProcessedOrder"
-
   self.class_name_rus_cap = "Заказ для исполнения"
 #  self.new_or_edit_partial = "new"
   self.replace = :replace_html
@@ -33,6 +24,9 @@ class ProcessedOrder < Order
   self.status_rus = "для исп."
   self.new_page_title = "Оформление #{class_name_rus}а"  
 
+  attr_accessor_with_default( :new_or_edit_tag ) { "content" }
+#  attr_accessor_with_default( "closed?" ) { false }
+
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
     errors.add_to_base "Номер телефона слишком короткий (минимум 7 цифр)" if phone_number.size < 7  
@@ -40,16 +34,10 @@ class ProcessedOrder < Order
     errors.add_to_base "Проверочный код неверен" unless captcha_validated
     errors.add_to_base "#{Cart.class_name_rus_cap} пустая" unless cart.cart_items.size > 0
   end  
-  
-  class << self
     
-#    def new_page_title; "Оформление #{class_name_rus}а"; end    
-    
-    def close_object( params, session, flash )
-      ( object = find params[ :id ] ).close( flash )
-      object      
-    end
-      
+  def self.close_object( params, session, flash )
+    find( params[ :id ] ).close( flash )
+#      object      
   end
 
   def new_or_edit1( page )
@@ -64,7 +52,8 @@ class ProcessedOrder < Order
   def save_object( session, flash )
     self.captcha_validated = session[ :captcha_validated ]
     self.cart = session.cart
-    save && populate_order( self.cart ) && self.cart.clear_cart && create_notice( flash ) && OrderNotice.deliver_order_notice( self )
+    save && populate_order( self.cart ) && self.cart.clear_cart( flash ) && create_notice( flash ) &&
+            OrderNotice.deliver_order_notice( self )
   end     
 
   def populate_order( cart )
@@ -76,9 +65,8 @@ class ProcessedOrder < Order
     self.status = ClosedOrder.status_eng
     close_notice( flash ) 
     save( false )
+    self
   end
-  
-  def closed?; false; end
 
   def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт."; end
 
@@ -89,9 +77,7 @@ class ProcessedOrder < Order
             В случае необходимости используйте <b>номер #{self.class.class_name_rus}а #{id}.</b>"
     true
   end
-
-  def new_or_edit_tag; "content"; end    
-
-#  def create_or_update_tag; new_or_edit_tag; end
+      
+  def closed?; false; end      
       
 end

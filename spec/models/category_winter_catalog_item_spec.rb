@@ -17,7 +17,7 @@ describe CategoryWinterCatalogItem do
     end
  
     it "show proper page title" do
-      CategoryWinterCatalogItem.index_page_title.should == "Каталог товаров: #{WinterCatalogItem.season_name}: #{@category1.name}"
+      CategoryWinterCatalogItem.index_page_title( @params ).should == "Каталог товаров: #{WinterCatalogItem.season_name}: #{@category1.name}"
     end
   
   end

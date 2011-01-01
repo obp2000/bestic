@@ -148,19 +148,15 @@ module ApplicationHelper
   end
 
 ############################
-  def link_to_function1( image, title = "", js_string = nil, block = nil )
+  def link_to_function1( image, title, js_string = nil, block = nil )
     link_to_function image_tag( image, :title => title ), js_string, &block    
   end  
-
-#  def link_to_function2( image, title = "", js_string = "" )
-#    link_to_function image_tag( image, :title => title ), js_string    
-#  end   
  
-  def link_to_remote1( image = [], text = "", url = [], opts = {} )
+  def link_to_remote1( image, text, url, opts = {} )
     link_to_remote( image_with_text( image, text ), { :url => send( *url ) }.merge( opts ) )      
   end 
 
-  def link_to1( image = [], text = "", url = [], opts = {} )
+  def link_to1( image, text, url, opts = {} )
     link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts )
   end
 
@@ -257,6 +253,12 @@ class Object
   
   def colon; self + ":"; end
 
+  def total; inject(0) {|sum, n| n.price * n.amount + sum}; end
+
+end
+
+class Hash
+  
   def cart
     if self[ :cart_id ]
       Cart.find self[ :cart_id ]
@@ -264,23 +266,6 @@ class Object
       self[ :cart_id ] = ( cart1 = Cart.create ).id
       cart1
     end
-  end
-
-  def total; inject(0) {|sum, n| n.price * n.amount + sum}; end
-
-  def sort_attr
-    case self.class.name
-      when "String", "Float"
-        self
-      when "Array"
-        first.send( first.class.sort_attr )        
-      else
-        send( self.class.sort_attr )
-    end rescue ""
-  end
-
-#  def index_text
-#    self.classify.constantize.index_text rescue send( self + "_rus" )    
-#  end
-
+  end  
+  
 end

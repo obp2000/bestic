@@ -18,7 +18,7 @@ describe "orders/_order" do
     render :locals => { :order => @order }
     response.should have_selector( "tr", :onclick => "$.get('#{order_path(@order)}')" )
     response.should contain(@order.to_param)
-    response.should contain(@order.class::STATUS_RUS)
+    response.should contain(@order.class.status_rus)
     response.should contain(@order.total.to_s)
     response.should contain(@order.items.size.to_s)
     response.should contain(@order.created_at.strftime("%d.%m.%y"))

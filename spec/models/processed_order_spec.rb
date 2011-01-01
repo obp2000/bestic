@@ -43,6 +43,8 @@ describe ProcessedOrder do
     before do
       @params = { "processed_order" => valid_processed_order_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new processed order" do
@@ -56,10 +58,12 @@ describe ProcessedOrder do
   
     before do
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
       @item = Item.create!( valid_item_attributes )
       @params = valid_item_attributes
       @params[ :id ] = "catalog_item_" + @item.id.to_s
-      CartItem.update_object( @params, @session )
+      CartItem.update_object( @params, @session, @flash )
     end
   
     it "saves new processed order" do
@@ -68,7 +72,7 @@ describe ProcessedOrder do
       @session[ :captcha_validated ] = true                            
       @order = ProcessedOrder.new_object( @params, @session )
       OrderNotice.should_receive( :deliver_order_notice ).with( @order )
-      @order.save_object( @session )
+      @order.save_object( @session, @flash )
       @order.reload
       @order.email.should == valid_processed_order_attributes[ :email ]
       @order.order_items.first.price.should == @item.price      

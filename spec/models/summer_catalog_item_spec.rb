@@ -14,7 +14,7 @@ describe SummerCatalogItem do
     end
  
     it "show proper page title" do
-      SummerCatalogItem.index_page_title.should == "Каталог товаров: #{SummerCatalogItem.season_name}"
+      SummerCatalogItem.index_page_title( @params ).should == "Каталог товаров: #{SummerCatalogItem.season_name}"
     end
   
   end

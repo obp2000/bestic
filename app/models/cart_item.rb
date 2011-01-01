@@ -13,7 +13,9 @@ class CartItem < ActiveRecord1
   self.index_partial = "carts/cart"  
   
   class_inheritable_accessor :create_or_update_partial
-  self.create_or_update_partial = "cart_items/cart_item"   
+  self.create_or_update_partial = "cart_items/cart_item"
+  
+  attr_accessor_with_default( :create_or_update_tag ) { tag }     
   
   class << self
 
@@ -46,8 +48,6 @@ class CartItem < ActiveRecord1
   def populate_order_item_hash
     { :item_id => item_id, :price => price, :amount => amount,  :size_id => size_id, :colour_id => colour_id }
   end
-
-  def create_or_update_tag; tag; end
 
   private
   

@@ -30,6 +30,8 @@ describe ForumPost do
     before do
       @params = { "forum_post" => valid_forum_post_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new forum post" do
@@ -44,6 +46,8 @@ describe ForumPost do
     before do
       @params = { "forum_post" => valid_forum_post_attributes }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "saves new forum post" do
@@ -59,6 +63,8 @@ describe ForumPost do
     before do
       @params = { "forum_post" => valid_forum_post_attributes }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "reply to existing forum post" do
@@ -74,15 +80,17 @@ describe ForumPost do
     before do
       @params = { "forum_post" => valid_forum_post_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys thread of forum posts" do
       create_forum_post
       @reply_params = { "forum_post" => { :name => "Sergey", :subject => "Reply theme", :body => "Reply body", :parent_id => @forum_post.id } }         
       @reply_forum_post = ForumPost.new_object(  @reply_params, @session ) 
-      @reply_forum_post.save_object( @session )
+      @reply_forum_post.save_object( @session, @flash )
       @params_for_destroy = { :id => @forum_post.id }
-      @forum_posts = ForumPost.destroy_object( @params_for_destroy, @session )
+      @forum_posts = ForumPost.destroy_object( @params_for_destroy, @session, @flash )
       @forum_posts.size.should == 2
       @forum_posts.should include( @forum_post )
       @forum_posts.should include( @reply_forum_post )      

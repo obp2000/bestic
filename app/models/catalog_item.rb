@@ -45,7 +45,7 @@ class CatalogItem < Item
           "Результаты поиска по запросу \"#{params[ :q ]}\" ( всего найдено #{class_name_rus}ов: #{@search_amount} )"
         end        
       else
-        "Каталог #{class_name_rus}ов #{': ' + season_name}#{': ' + Category.find( params[ :category_id ] ).name rescue ''}"      
+        "Каталог #{class_name_rus}ов#{': ' + season_name}#{': ' + Category.find( params[ :category_id ] ).name rescue ''}"      
       end
     end
 
@@ -59,7 +59,7 @@ class CatalogItem < Item
     
     def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
     
-    def link_to_index_local( page ); page.link_to1 nil, index_text, plural_path, :method => :get; end
+    def link_to_index_local( page ); page.link_to1 [], index_text, plural_path, :method => :get; end
 
     def index1( page, objects )
       super page, objects

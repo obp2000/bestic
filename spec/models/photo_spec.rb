@@ -20,6 +20,8 @@ describe Photo do
     before do
       @params = { "photo" => valid_photo_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new photo" do
@@ -34,6 +36,8 @@ describe Photo do
     before do
       @params = { "photo" => valid_photo_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "saves new photo" do
@@ -50,11 +54,13 @@ describe Photo do
       @params = { "photo" => valid_photo_attributes }
       @updated_params = { "photo" => { :filename => "photo_of_shirt", :comment => "Photo of shirt" } }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing photo comment" do
       create_photo
-      @photo = Photo.update_object( @updated_params.merge( :id => @photo.id ), @session ).first
+      @photo = Photo.update_object( @updated_params.merge( :id => @photo.id ), @session, @flash ).first
       @photo.comment.should == @updated_params[ "photo" ][ :comment ]
     end
   
@@ -65,12 +71,14 @@ describe Photo do
     before do
       @params = { "photo" => valid_photo_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys existing photo" do
       create_photo
       @params_for_destroy = { :id => @photo.id }
-      @photo = Photo.destroy_object( @params_for_destroy, @session )
+      @photo = Photo.destroy_object( @params_for_destroy, @session, @flash )
       @photo.filename.should == valid_photo_attributes[ :filename ]
       Photo.all.should_not include( @photo )
     end

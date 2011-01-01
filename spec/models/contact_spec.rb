@@ -33,12 +33,14 @@ describe Contact do
       @params = { "contact" => valid_contact_attributes }
       @updated_params = { "contact" => { :name => "Sergey" } }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing contact" do
       @contact = Contact.new_object( @params, @session )
-      @contact.save_object( @session )
-      @contact = Contact.update_object( @updated_params.merge( :id => @contact.id ), @session ).first
+      @contact.save_object( @session, @flash )
+      @contact = Contact.update_object( @updated_params.merge( :id => @contact.id ), @session, @flash ).first
       @contact.name.should == @updated_params[ "contact" ][ :name ]
     end
   

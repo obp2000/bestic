@@ -17,8 +17,6 @@ class Item < ActiveRecord1
 
   self.class_name_rus = "товар"
   self.class_name_rus_cap = "Товар"
-#  self.submit_image = [ "document-save.png", { :title => "Сохранить изменения" } ]
-#  self.submit_title = "Сохранить изменения"
   self.submit_with_options = [ "image_submit_tag", "document-save.png", { :title => "Сохранить изменения" } ]     
 #  self.index_tag = "content"    
   self.index_partial = "index"
@@ -34,6 +32,10 @@ class Item < ActiveRecord1
   self.new_title = "Добавить "
   self.new_or_edit_partial = "form"
 #  self.index_page_title = "Список #{class_name_rus}ов"
+
+  attr_accessor_with_default( :new_or_edit_tag ) { "item_content" }
+  attr_accessor_with_default( :create_or_update_tag ) { tag }
+  attr_accessor_with_default( :deleted_notice ) { "#{self.class.class_name_rus_cap} удалён из каталога!" }       
 
   def validate
     errors.add_to_base "#{self.class.name_rus} #{self.class.class_name_rus}а не может быть пустым" if name.blank?  
@@ -87,13 +89,5 @@ class Item < ActiveRecord1
     params[ :item ][ :existing_photo_attributes ] ||= {}
     super
   end
-    
-# for "shared/new_or_edit.rjs"
-  def new_or_edit_tag; "item_content"; end    
-
-# for "shared/create_or_update.rjs"
-  def create_or_update_tag; tag; end
-
-  def deleted_notice; "#{self.class.class_name_rus_cap} удалён из каталога!"; end      
    
 end

@@ -110,12 +110,15 @@ end
 
 def create_cart_item
   @session = {}
+  @flash = {}
+#  @flash[ :notice ] = "Test"
+  @flash.stub( :now ).and_return( @flash )
   @item = Item.create!( valid_item_attributes )
   @params = { :id => "catalog_item_" + @item.id.to_s,
             :blurb => @item.blurb,
             :category_id => @item.category_id,
             :type => @item.type }
-  @cart_item, @success = CartItem.update_object( @params, @session )
+  @cart_item, @success = CartItem.update_object( @params, @session, @flash )
 end
 
 def create_4_catalog_items_with_different_categories_and_seasons
@@ -160,32 +163,32 @@ end
 
 def create_category
   @category = Category.new_object( @params, @session )
-  @category.save_object( @session )  
+  @category.save_object( @session, @flash )  
 end
 
 def create_colour
   @colour = Colour.new_object( @params, @session )
-  @colour.save_object( @session )
+  @colour.save_object( @session, @flash )
 end
 
 def create_photo
   @photo = Photo.new_object( @params, @session )
-  @photo.save_object( @session )
+  @photo.save_object( @session, @flash )
 end
 
 def create_size
   @size = Size.new_object( @params, @session )
-  @size.save_object( @session )
+  @size.save_object( @session, @flash )
 end
 
 def create_item
   @item = Item.new_object( @params, @session )
-  @item.save_object( @session )  
+  @item.save_object( @session, @flash )  
 end
 
 def create_forum_post
   @forum_post = ForumPost.new_object( @params, @session )
-  @forum_post.save_object( @session )  
+  @forum_post.save_object( @session, @flash )  
 end
 
 shared_examples_for "object" do

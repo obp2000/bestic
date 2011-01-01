@@ -38,6 +38,8 @@ describe Size do
     before do
       @params = { "size" => valid_size_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new size" do
@@ -52,6 +54,8 @@ describe Size do
     before do
       @params = { "size" => valid_size_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "saves new size" do
@@ -68,11 +72,13 @@ describe Size do
       @params = { "size" => valid_size_attributes }
       @updated_params = { "size" => { :name => "S" } }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing size" do
       create_size
-      @size = Size.update_object( @updated_params.merge( :id => @size.id ), @session ).first
+      @size = Size.update_object( @updated_params.merge( :id => @size.id ), @session, @flash ).first
       @size.name.should == @updated_params[ "size" ][ :name ]
     end
   
@@ -83,12 +89,14 @@ describe Size do
     before do
       @params = { "size" => valid_size_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys existing size" do
       create_size
       @params_for_destroy = { :id => @size.id }
-      @size = Size.destroy_object( @params_for_destroy, @session )
+      @size = Size.destroy_object( @params_for_destroy, @session, @flash )
       @size.name.should == valid_size_attributes[ :name ]
       Size.all.should_not include( @size )
     end

@@ -41,6 +41,8 @@ describe Colour do
     before do
       @params = { "colour" => valid_colour_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new colour" do
@@ -55,6 +57,8 @@ describe Colour do
     before do
       @params = { "colour" => valid_colour_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "saves new colour" do
@@ -71,11 +75,13 @@ describe Colour do
       @params = { "colour" => valid_colour_attributes }
       @updated_params = { "colour" => { :name => "Green", :html_code => "#00ff00" } }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing colour" do
       create_colour
-      @colour = Colour.update_object( @updated_params.merge( :id => @colour.id ), @session ).first
+      @colour = Colour.update_object( @updated_params.merge( :id => @colour.id ), @session, @flash ).first
       @colour.name.should == @updated_params[ "colour" ][ :name ]
     end
   
@@ -86,12 +92,14 @@ describe Colour do
     before do
       @params = { "colour" => valid_colour_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys existing colour" do
       create_colour
       @params_for_destroy = { :id => @colour.id }
-      @colour = Colour.destroy_object( @params_for_destroy, @session )
+      @colour = Colour.destroy_object( @params_for_destroy, @session, @flash )
       @colour.name.should == valid_colour_attributes[ :name ]
       Colour.all.should_not include( @colour )
     end

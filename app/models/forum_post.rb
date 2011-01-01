@@ -17,7 +17,7 @@ class ForumPost < ActiveRecord1
   self.name_rus = "Автор"
 
   class_inheritable_accessor :new_or_edit_partial, :no_forum_posts_text, :subject_rus, :body_rus, :reply_image,
-  :reply_text, :reply_render_block
+          :reply_text, :reply_render_block
   self.new_or_edit_partial = "new"
   self.no_forum_posts_text = "В форуме пока ещё нет сообщений. Будьте первым!"
   self.subject_rus = "Тема"
@@ -29,6 +29,13 @@ class ForumPost < ActiveRecord1
 #  validates_length_of :name, :within => 2..50
 #  validates_length_of :subject, :within => 5..255
 #  validates_length_of :body, :within => 5..5000
+  
+  attr_accessor_with_default( :show_text ) { subject }
+  attr_accessor_with_default( :style ) { "margin-left: #{depth*20 + 30}px" }
+  attr_accessor_with_default( :new_or_edit_tag ) { "post_new" }
+  attr_accessor_with_default( :parent_tag ) { "#{self.class.name.underscore}_#{parent_id}" }  
+  attr_accessor_with_default( :reply_path ) { [ "reply_#{self.class.name.underscore}_path", self ] }  
+  
   
   def validate
     errors.add_to_base "Имя слишком короткое (минимум 2 буквы)" if name.size < 2  
@@ -55,8 +62,6 @@ class ForumPost < ActiveRecord1
 
   end
 
-  def show_text; subject; end
-
   def link_to_reply( page )
     image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
     text = self.class.reply_text rescue ""    
@@ -77,16 +82,10 @@ class ForumPost < ActiveRecord1
     page.create_forum_post parent_id, parent_tag, self.class.name.underscore, self    
   end
 
-  def reply_path; [ "reply_#{self.class.name.underscore}_path", self ]; end   
-
-  def new_or_edit_tag; "post_new";  end
-
   def create_notice( flash )
     flash.now[ :notice ] = parent_id.zero? ? "Новая тема создана" : "Сообщение отправлено"
     self
   end
- 
-  def style; "margin-left: #{depth*20 + 30}px"; end
 
   def destroy_notice( flash ); flash.now[ :notice ] = "Ветвь сообщений удалена"; end
 

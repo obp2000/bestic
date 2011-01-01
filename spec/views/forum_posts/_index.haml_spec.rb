@@ -8,7 +8,8 @@ describe "forum_posts/_index" do
   end
   
   it "renders only one existing forum post" do
-    template.should_receive( :page_title )      
+#    template.should_receive( :page_title )
+    template.should_receive( :index_page_title_for ).with( ForumPost )      
     template.should_receive(:render).with( :partial => "forum_post", :collection => assigns[:objects] )
     template.should_receive( :will_paginate ).with( assigns[:objects] )     
     render

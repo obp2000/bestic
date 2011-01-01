@@ -2,13 +2,13 @@ class ItemAttribute < ActiveRecord1
   
   self.abstract_class = true
   
-  class_inheritable_accessor :delete_from_item_title, :delete_from_item_js_string, :sort_attr, :insert_attr,
+  class_inheritable_accessor :delete_from_item_title, :delete_from_item_js_string, :insert_attr,
     :change_image, :add_to_item_image, :add_to_item_title
   
   self.delete_from_item_title = "Удалить из #{Item.class_name_rus}а"
   self.delete_from_item_js_string =
     "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
-  self.sort_attr = "name"
+#  self.sort_attr = "name"
   self.insert_attr = "attr"      
   self.change_image = []
   self.add_to_item_image = "arrow_large_right.png"

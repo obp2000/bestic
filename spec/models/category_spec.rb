@@ -40,6 +40,8 @@ describe Category do
     before do
       @params = { "category" => valid_category_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )      
     end
   
     it "saves new category" do
@@ -56,11 +58,13 @@ describe Category do
       @params = { "category" => valid_category_attributes }
       @updated_params = { "category" => { :name => "Shirts" } }      
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "updates existing category" do
       create_category
-      @category = Category.update_object( @updated_params.merge( :id => @category.id ), @session ).first
+      @category = Category.update_object( @updated_params.merge( :id => @category.id ), @session, @flash ).first
       @category.name.should == @updated_params[ "category" ][ :name ]
     end
   
@@ -71,12 +75,14 @@ describe Category do
     before do
       @params = { "category" => valid_category_attributes }
       @session = {}
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "destroys existing category" do
       create_category
       @params_for_destroy = { :id => @category.id }
-      @category = Category.destroy_object( @params_for_destroy, @session )
+      @category = Category.destroy_object( @params_for_destroy, @session, @flash )
       @category.name.should == @params[ "category" ][ :name ]
       Category.all.should_not include( @category )
     end

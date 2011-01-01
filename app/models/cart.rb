@@ -18,16 +18,14 @@ class Cart < ActiveRecord1
   self.delete_text = "Очистить корзину"
   self.nav_image = "basket.png"
   self.nav_text = "Корзина"
-#  self.submit_over_image = "basket_add_over.png"  
           
   class_inheritable_accessor :cart, :index_tag
   self.index_tag = "cart"
 
-  class << self
+  attr_accessor_with_default( :delete_title ) { nil }
+  attr_accessor_with_default( :total_items ) { cart_items.sum( :amount ) }  
 
-    def destroy_object( params, session, flash ); session.cart.clear_cart( flash ); end
-    
-  end
+  def self.destroy_object( params, session, flash ); session.cart.clear_cart( flash ); end
 
   def clear_cart( flash )
     cart_items1 = self.cart_items.dup
@@ -36,14 +34,8 @@ class Cart < ActiveRecord1
     cart_items1
    end
 
-  def total_items; cart_items.sum( :amount ); end
-
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 
   def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена"; end
-
-  def delete_title; nil; end   
-
-#  def update_notice( flash ); flash.now[ :notice ] = "Добавлен товар"; end
 
 end

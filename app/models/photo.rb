@@ -24,15 +24,11 @@ class Photo < ItemAttribute
   def validate
     errors.add_to_base "Не выбрана #{self.class.class_name_rus} для загрузки" if filename.blank?  
   end
-
-  class << self
  
-    def all_objects( params )
-      paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :page => params[ :page ],
-              :per_page => 5)
-    end
-  
-  end 
+  def self.all_objects( params )
+    paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :page => params[ :page ],
+            :per_page => 5)
+  end
 
   def add_to_item1( page )
     super page

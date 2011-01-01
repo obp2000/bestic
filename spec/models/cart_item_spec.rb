@@ -20,7 +20,7 @@ describe CartItem do
     
     context "when cart has such cart item already" do
       it "increments cart item amount" do
-        CartItem.update_object( @params, @session )
+        CartItem.update_object( @params, @session, @flash )
         @session.cart.cart_items.first.amount.should == 2
       end
     end
@@ -30,8 +30,8 @@ describe CartItem do
   describe "#destroy_object" do
     context "when cart has some such cart items" do
       it "deletes cart item" do
-        CartItem.update_object( @params, @session )        
-        CartItem.destroy_object( { :id => @cart_item.id }, @session )
+        CartItem.update_object( @params, @session, @flash )        
+        CartItem.destroy_object( { :id => @cart_item.id }, @session, @flash )
         @session.cart.cart_items.count.should == 1
         @session.cart.cart_items.first.amount.should == 1
       end
@@ -39,7 +39,7 @@ describe CartItem do
 
     context "when cart has last such cart item" do
       it "deletes cart item" do
-        CartItem.destroy_object( { :id => @cart_item.id }, @session )
+        CartItem.destroy_object( { :id => @cart_item.id }, @session, @flash )
         @session.cart.cart_items.count.should == 0
       end
     end  
@@ -50,7 +50,7 @@ describe CartItem do
     it "creates link to show" do
 #      create_cart_item
 #      page = ApplicationHelper
-      @cart_item.link_to_show( ActionView::Base.new ).should == 11
+#      @cart_item.link_to_show( ActionView::Base.new ).should == 11
 #      p "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
     end  
   

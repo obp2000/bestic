@@ -54,8 +54,17 @@
   self.edit_render_block = lambda { render New_or_edit_template_hash }   
   self.create_render_block = lambda { render Create_or_update_template_hash }
   self.update_render_block = lambda { render Create_or_update_template_hash }
-  self.destroy_render_block = lambda { render Destroy_template_hash }     
-    
+  self.destroy_render_block = lambda { render Destroy_template_hash }
+#  self.create_or_update_partial = new_or_edit_partial
+
+  attr_accessor_with_default( :show_text ) { name }
+  attr_accessor_with_default( :delete_title ) { "Удалить #{self.class.class_name_rus} #{name_or_id}?" }
+  attr_accessor_with_default( :tag ) { "#{self.class.name.underscore}_#{id}" }
+  attr_accessor_with_default( :edit_tag ) { "edit_#{self.class.name.underscore}_#{id}" }
+  attr_accessor_with_default( :new_or_edit_tag ) { new_record? ? self.class.new_tag : edit_tag }
+  attr_accessor_with_default( :create_or_update_tag ) { new_or_edit_tag }
+  attr_accessor_with_default( :single_path ) { [ "#{self.class.name.underscore}_path", self ] }      
+  
   class << self
 
     def all_objects( params ); all; end
@@ -128,7 +137,7 @@
   end
 
   def link_to_category( page, seasons )
-    page.link_to_remote1 nil, name + " (#{send( seasons ).size})", [ "category_#{seasons}_path", self ],
+    page.link_to_remote1 [], name + " (#{send( seasons ).size})", [ "category_#{seasons}_path", self ],
             :html => { :class => "category" }, :method => :get    
   end
 
@@ -137,14 +146,10 @@
             page.html_escape( show_text ), single_path, :method => :get ) ) rescue self.class.deleted_notice
   end
 
-  def show_text; name; end
-
   def link_to_delete( page ) 
     page.link_to_remote1 self.class.image_with_title( self.class.delete_image, delete_title ), self.class.delete_text,
             single_path, :method => :delete, :confirm => delete_title     
   end
-  
-  def single_path; [ "#{self.class.name.underscore}_path", self ]; end
     
   def update_object( params, session, flash )
     update_attributes( params[ self.class.name.underscore ] )
@@ -155,30 +160,14 @@
     create_notice( flash ) if success = save
     success
   end
-  
-  def delete_title; "Удалить #{self.class.class_name_rus} #{name_or_id}?"; end
 
   def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно."; true; end
 
   def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён."; self; end
 
   def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён."; self; end  
-
-  def subject_or_name; respond_to?( :subject ) ? subject : name; end
     
   def name_or_id; respond_to?( :name ) ? name : id; end
- 
-  def item_id_or_id; respond_to?( :item ) ? item.id : id; end
-
-  def edit_tag; "edit_#{self.class.name.underscore}_#{id}"; end
-
-  def tag; "#{self.class.name.underscore}_#{id}"; end
-
-  def parent_tag; "#{self.class.name.underscore}_#{parent_id}"; end
-
-  def new_or_edit_tag; new_record? ? self.class.new_tag : edit_tag; end
-
-  def create_or_update_tag; new_or_edit_tag; end
 
   def new_or_edit_or_reply1( page )
     page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self

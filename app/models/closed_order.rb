@@ -6,6 +6,8 @@ class ClosedOrder < Order
   self.status_rus_nav = " со статусом \"закрытые\""
   self.status_rus = "закрыт"   
 
+#  attr_accessor_with_default( :closed? ) { true }
+
 #  STATUS = "ClosedOrder"
 
   def closed?; true; end
