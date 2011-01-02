@@ -8,8 +8,8 @@ module ForumPostsHelper
     show_notice
   end
   
-  def reply1
-    delay( DURATION ) { fade_with_duration :link_to_reply }
-  end  
+#  def reply1
+#    delay( DURATION ) { fade_with_duration :link_to_reply }
+#  end  
 
 end

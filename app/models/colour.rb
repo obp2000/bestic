@@ -39,7 +39,7 @@ class Colour < ItemAttribute
      
   end
 
-  def new_or_edit1( page )
+  def new_or_edit( page )
     super page
     page.attach_js( "attach_mColorPicker" )
   end

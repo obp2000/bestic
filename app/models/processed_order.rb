@@ -9,9 +9,8 @@ class ProcessedOrder < Order
   self.submit_with_options = [ "submit_tag", "Разместить #{class_name_rus}", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   
   class_inheritable_accessor :close_image, :close_title, :close_confirm, :captcha_text,
-    :fade_duration, :new_or_edit_partial, :close_render_block, :new_page_title 
+    :fade_duration, :new_or_edit_partial, :close_render_block
 
-#  self.new_page_title = "Оформление #{class_name_rus}а"
   self.close_image = "page_table_close.png"
   self.close_title = "Закрыть #{class_name_rus}"
   self.close_confirm = "Закрыть #{class_name_rus}?"
@@ -22,10 +21,8 @@ class ProcessedOrder < Order
   self.status_eng = "ProcessedOrder"
   self.status_rus_nav = " со статусом \"для исполнения\""
   self.status_rus = "для исп."
-  self.new_page_title = "Оформление #{class_name_rus}а"  
 
   attr_accessor_with_default( :new_or_edit_tag ) { "content" }
-#  attr_accessor_with_default( "closed?" ) { false }
 
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
@@ -36,11 +33,12 @@ class ProcessedOrder < Order
   end  
     
   def self.close_object( params, session, flash )
-    find( params[ :id ] ).close( flash )
-#      object      
+    find( params[ :id ] ).close_notice( flash ).close
   end
 
-  def new_or_edit1( page )
+  def self.new_page_title_for( * ); "Оформление #{class_name_rus}а"; end  
+
+  def new_or_edit( page )
     super page
     page.new_processed_order
   end
@@ -61,14 +59,13 @@ class ProcessedOrder < Order
     save
   end
   
-  def close( flash ) 
+  def close
     self.status = ClosedOrder.status_eng
-    close_notice( flash ) 
     save( false )
     self
   end
 
-  def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт."; end
+  def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт.";  self; end
 
   def create_notice( flash )
     flash.now[ :notice ] =

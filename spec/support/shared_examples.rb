@@ -270,7 +270,7 @@ shared_examples_for "object" do
   describe "PUT update" do
     it "updates the requested object" do
       @object.class.should_receive( :update_object ).with( { @object.class.name.underscore => { "name" => "Test" }, "action" => "update",
-                              "id" => @object.to_param, "controller" => @object.class.name.tableize }, {} )
+                              "id" => @object.to_param, "controller" => @object.class.name.tableize }, {}, {} )
       xhr :put, :update, :id => @object.to_param, @object.class.name.underscore => { "name" => "Test" }
     end
 
@@ -297,7 +297,7 @@ shared_examples_for "object" do
   describe "DELETE destroy" do
     it "destroys the requested object and renders destroy template" do
       @object.class.should_receive( :destroy_object ).with( { "action" => "destroy", "id"=>@object.to_param,
-                          "controller" => @object.class.name.tableize }, {} ).and_return( @object )
+                          "controller" => @object.class.name.tableize }, {}, {} ).and_return( @object )
       xhr :delete, :destroy, :id => @object.to_param
       assigns[ :object ].should equal( @object )
       response.should render_template( "shared/destroy.rjs" )
@@ -306,14 +306,14 @@ shared_examples_for "object" do
     
 end
 
-shared_examples_for "show index page title" do
+#shared_examples_for "show index page title" do
 
-  describe "GET index" do
-    it "renders index page title" do
-      @object.class.should_receive( :index_page_title ).and_return( "Test" )
-      xhr :get, :index
-      assigns[ :page_title ].should == "Test"        
-    end
-  end
+#  describe "GET index" do
+#    it "renders index page title" do
+#      @object.class.should_receive( :index_page_title ).and_return( "Test" )
+#      xhr :get, :index
+#      assigns[ :page_title ].should == "Test"        
+#    end
+#  end
 
-end
+#end

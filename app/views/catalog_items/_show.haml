@@ -1,5 +1,5 @@
 %h2
-  = link_to_back @object
+  = link_to_back @object.class
   = @object.name
 .ui-widget-content  
   - remote_form_for @object, :url => cart_item_path( @object ) do 

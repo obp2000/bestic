@@ -13,7 +13,7 @@ describe ForumPostsController do
   
   it_should_behave_like "object"  
 
-  it_should_behave_like "show index page title"    
+#  it_should_behave_like "show index page title"    
   
   describe "GET reply" do
     it "assigns a new forum post as @object and renders reply template" do

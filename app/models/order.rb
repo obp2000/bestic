@@ -46,7 +46,7 @@ class Order < ActiveRecord1
   
     def all_objects( params ); paginate( :page => params[ :page ], :order => 'created_at desc', :per_page => 14 ); end
     
-    def index_page_title( params ); "Список #{class_name_rus}ов" + params[ :controller ].classify.constantize.status_rus_nav; end
+    def index_page_title_for( params ); "Список #{class_name_rus}ов" + params[ :controller ].classify.constantize.status_rus_nav; end
 
     include Index1      
   

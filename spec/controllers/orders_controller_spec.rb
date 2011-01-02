@@ -8,6 +8,6 @@ describe OrdersController do
 
   it_should_behave_like "object"
   
-  it_should_behave_like "show index page title"    
+#  it_should_behave_like "show index page title"    
 
 end

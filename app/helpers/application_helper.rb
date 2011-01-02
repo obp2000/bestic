@@ -6,24 +6,37 @@ module ApplicationHelper
     objects.index1( self )
   end 
  
-  def show1( object )
-    object.class.show1( self )
+#  def show1( class_const )
+#    class_const.show1( self )
+#  end
+
+#  def new_or_edit( object )
+#    object.new_or_edit( self )    
+#  end
+
+#  def link_to_add_to_item( object )
+#    object.link_to_add_to_item( self )
+#  end
+
+  [ :show1, :new_or_edit, :reply, :link_to_add_to_item, :link_to_show, :link_to_delete, :link_to_close, :link_to_new,
+    :submit_to, :link_to_season, :link_to_back, :link_to_show_with_comment, :link_to_reply_to,
+    :link_to_logout ].each do |method|
+    define_method method do |object|
+      object.send( method, self )
+    end
   end
 
-  def fade_appear( fade, appear )
-    fade_with_duration fade
-    appear_with_duration appear    
+  [ :index_page_title_for, :show_page_title_for, :new_page_title_for ].each do |method|
+    define_method method do |object|
+      object.send( method, params )
+    end
   end
 
-  def new_or_edit( object )
-    object.new_or_edit1( self )    
-  end
-
-  def reply( object )
-    object.reply1( self )
-  end  
+#  def reply( object )
+#    object.reply( self )
+#  end  
   
-  def create_or_update( object, session, action_name )
+  def create_or_update( object, session )
     object.create_or_update1( self, session )
   end
   
@@ -39,6 +52,11 @@ module ApplicationHelper
     delay( DURATION ) { call( js ) }    
   end
 
+  def fade_appear( fade, appear )
+    fade_with_duration fade
+    appear_with_duration appear    
+  end
+
   def action( action1, *opts )
     fade_with_duration opts.first
     delay( DURATION ) do    
@@ -49,11 +67,12 @@ module ApplicationHelper
     
   def show_notice( opts = {} )
     appear_duration = 1
-    fade_duration = opts[:delay] || appear_duration
+    fade_duration = opts[ :delay ] || appear_duration
     insert_html :top, :content, :partial => "shared/notice"
     hide :notice
     appear_with_duration :notice, appear_duration    
     delay( appear_duration ) do
+#      action :remove, :notice
       fade_with_duration :notice, fade_duration
       delay( fade_duration ) do
         remove :notice
@@ -61,9 +80,9 @@ module ApplicationHelper
     end
   end
 
-  def link_to_back( object )
-    object.class.link_to_back( self )
-  end 
+#  def link_to_back( class_const )
+#    class_const.link_to_back( self )
+#  end 
 
   def check_cart_links
     replace_html "link_to_new_order_form", :partial => "carts/link_to_new_order_form"
@@ -75,65 +94,49 @@ module ApplicationHelper
     replace_html "cart_total_sum", session.cart.total
   end
 
-  def link_to_add_to_item( object )
-    object.link_to_add_to_item( self )
-  end
-
-  def red_star
-    "<span style='color: red'>*</span>"
-  end
+  def red_star; "<span style='color: red'>*</span>"; end
     
-  def roubles( arg )
-    number_to_currency( arg, :unit => "", :precision => 0, :delimiter => " ")  
-  end
+  def roubles( arg ); number_to_currency( arg, :unit => "", :precision => 0, :delimiter => " "); end
 
-  def date_time_rus( arg )
-    arg.strftime("%d.%m.%yг.&nbsp;%H:%M:%S") rescue ""
-  end
+  def date_time_rus( arg ); arg.strftime("%d.%m.%yг.&nbsp;%H:%M:%S") rescue ""; end
 
-  def do_not_show( cart )
-    controller_name == 'processed_orders' or cart.cart_items.empty?
-  end
+  def do_not_show( cart ); controller_name == 'processed_orders' or cart.cart_items.empty?; end
 
-  def link_to_show_with_comment( object )
-    object.link_to_show_with_comment( self )
-  end  
+#  def link_to_show_with_comment( object )
+#    object.link_to_show_with_comment( self )
+#  end  
   
   def link_to_index( class_const, params = nil )
     class_const.link_to_index( self, params )     
   end    
 
-  def link_to_show( object )
-    object.link_to_show( self )              
-  end  
+#  def link_to_show( object )
+#    object.link_to_show( self )              
+#  end  
   
-  def link_to_new( class_const )
-    class_const.link_to_new( self )  
-  end  
+#  def link_to_new( class_const )
+#    class_const.link_to_new( self )  
+#  end  
   
-  def link_to_reply_to( object )
-    object.link_to_reply( self )                 
-  end  
+#  def link_to_reply_to( object )
+#    object.link_to_reply_to( self )                 
+#  end  
   
-  def link_to_delete( object )
-    object.link_to_delete( self )    
-  end
+#  def link_to_delete( object )
+#    object.link_to_delete( self )    
+#  end
   
-  def link_to_close( object )
-    object.link_to_close( self )    
-  end  
-  
-  def link_to_logout( class_const )
-    link_to class_const.logout_text, logout_path
-  end
+#  def link_to_close( object )
+#    object.link_to_close( self )    
+#  end  
 
-  def submit_to( class_const )
-    class_const.submit_to( self )
-  end
+#  def submit_to( class_const )
+#    class_const.submit_to( self )
+#  end
 
-  def link_to_season( season_class )
-    season_class.link_to_season( self )
-  end
+#  def link_to_season( season_class )
+#    season_class.link_to_season( self )
+#  end
 
   def link_to_category( category, season_class )
     category.link_to_category( self, season_class.name.tableize )
@@ -147,6 +150,18 @@ module ApplicationHelper
     objects.to_a.render_options( self ) rescue nil     
   end
 
+#  def index_page_title_for( class_const )
+#    class_const.index_page_title_for( params )
+#  end
+
+#  def show_page_title_for( class_const )
+#    class_const.show_page_title_for
+#  end
+
+#  def new_page_title_for( class_const )
+#    class_const.new_page_title_for
+#  end
+
 ############################
   def link_to_function1( image, title, js_string = nil, block = nil )
     link_to_function image_tag( image, :title => title ), js_string, &block    
@@ -159,6 +174,10 @@ module ApplicationHelper
   def link_to1( image, text, url, opts = {} )
     link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts )
   end
+
+#  def link_to_logout( class_const )
+#    class_const.link_to_logout( self )
+#  end
 
   def image_with_text( image, text )
     ( image_tag( *image ) rescue "" ) + text
@@ -204,18 +223,6 @@ module ApplicationHelper
     fade_with_duration :errorExplanation        
   end
 
-  def index_page_title_for( class_const )
-    class_const.index_page_title( params )
-  end
-
-  def show_page_title_for( class_const )
-    class_const.show_page_title
-  end
-
-  def new_page_title_for( class_const )
-    class_const.new_page_title
-  end
-
 end
 
 class Array
@@ -241,9 +248,7 @@ end
 class Enumerable::Enumerator
   
   def destroy1( page, session )
-    each do |object|
-      object.destroy1( page, session )        
-    end   
+    each { |object| object.destroy1( page, session ) }        
     page.show_notice
   end 
   
@@ -263,8 +268,9 @@ class Hash
     if self[ :cart_id ]
       Cart.find self[ :cart_id ]
     else
-      self[ :cart_id ] = ( cart1 = Cart.create ).id
-      cart1
+      returning Cart.create do |cart1|
+        self[ :cart_id ] = cart1.id
+      end
     end
   end  
   

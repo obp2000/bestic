@@ -52,7 +52,7 @@ class Item < ActiveRecord1
 
     def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
-    def index_page_title( * ); "Список #{class_name_rus}ов"; end
+    def index_page_title_for( * ); "Список #{class_name_rus}ов"; end
 
     def create_or_update_partial; edit_partial; end  
 
@@ -86,7 +86,7 @@ class Item < ActiveRecord1
   def save_photos; photos.each { |photo| photo.save }; end
 
   def update_object( params, session, flash )
-    params[ :item ][ :existing_photo_attributes ] ||= {}
+    params[ "item" ][ :existing_photo_attributes ] ||= {}
     super
   end
    

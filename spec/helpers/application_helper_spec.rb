@@ -231,4 +231,17 @@ describe ApplicationHelper do
     
   end
 
+  describe "#index_page_title_for( class_const )" do
+    
+    before do
+      @class_const = catalog_items_proxy.first.class
+    end
+    
+    it "renders page title" do
+      @class_const.should_receive( :index_page_title )       
+      helper.index_page_title_for( @class_const ) 
+    end
+    
+  end
+
 end

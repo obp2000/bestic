@@ -28,9 +28,10 @@ class CartItem < ActiveRecord1
   end
 
   def delete_cart_item
-    update_amount( -1 )    
-    destroy unless amount > 0
-    self
+    returning self do
+      update_amount( -1 )    
+      destroy if amount.zero?
+    end
   end   
   
   def create_or_update1( page, session )

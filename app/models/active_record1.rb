@@ -70,8 +70,14 @@
     def all_objects( params ); all; end
 
     def update_object( params, session, flash )
-      success = ( object = find params[ :id ] ).update_object( params, session, flash )
-      [ object, success ]
+#      success = ( object = find params[ :id ] ).update_object( params, session, flash )
+#      [ object, success ]
+      returning [] do |result|
+        result[ 1 ] = ( result[ 0 ] = find params[ :id ] ).update_object( params, session, flash )
+      end
+#      returning do |object, success|
+#        success = ( object = find params[ :id ] ).update_object( params, session, flash )
+#      end      
     end    
 
     def destroy_object( params, session, flash )
@@ -126,6 +132,12 @@
       page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get 
     end
   
+    def link_to_logout( page )
+      page.link_to1 [], logout_text, logout_path
+    end
+  
+    def logout_path; [ "logout_path" ]; end
+  
     def plural_path( params = nil ); [ "#{name.tableize}_path", params ]; end   
 
     def new_path; [ "new_#{name.underscore}_path" ]; end
@@ -169,12 +181,10 @@
     
   def name_or_id; respond_to?( :name ) ? name : id; end
 
-  def new_or_edit_or_reply1( page )
+  def new_or_edit( page )
     page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
     page.attach_js( "attach_yoxview" )      
   end 
-  alias_method :reply1, :new_or_edit_or_reply1
-  alias_method :new_or_edit1, :new_or_edit_or_reply1
 
   def close1( page ); page.close1 status_tag, updated_tag, updated_at; end  
 

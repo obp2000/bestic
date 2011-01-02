@@ -72,11 +72,11 @@ describe Item do
   
     before do
       @params = { "item" => valid_item_attributes }
-      @updated_params = { :item => { :name => "Jacket",
+      @updated_params = { "item" => { :name => "Jacket",
               :blurb => "Jacket for walking",
-              :price => "300",
-              :category_id => 2,
-              :type => "WinterCatalogItem" 
+              :price => "500",
+              :category_id => 1,
+              :type => "SummerCatalogItem" 
               } }
       @session = {}
       @flash = {}
@@ -86,7 +86,7 @@ describe Item do
     it "updates existing item" do
       create_item
       @item = Item.update_object( @updated_params.merge( :id => @item.id ), @session, @flash ).first
-      @item.name.should == @updated_params[ :item ][ :name ]
+      @item.name.should == @updated_params[ "item" ][ :name ]
     end
   
   end

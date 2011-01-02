@@ -37,7 +37,7 @@ class CatalogItem < Item
       results
     end
 
-    def index_page_title( params )
+    def index_page_title_for( params )
       if params[ :q ]
         if @search_amount.zero?
           "По Вашему запросу \"#{params[ :q ]}\" #{class_name_rus}ы не найдены"        

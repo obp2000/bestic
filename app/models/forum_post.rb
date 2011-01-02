@@ -56,25 +56,25 @@ class ForumPost < ActiveRecord1
       forum_posts
     end
 
-    def index_page_title( * ); class_name_rus_cap; end
+    def index_page_title_for( * ); class_name_rus_cap; end
 
     include Index1
 
   end
 
-  def link_to_reply( page )
+  def link_to_reply_to( page )
     image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
     text = self.class.reply_text rescue ""    
     page.link_to_remote1 image, text, reply_path, :method => :get, :html => { :id => "link_to_reply" }  
   end
 
-  def new_or_edit1( page )
+  def new_or_edit( page )
     super page
     page.fade :post
   end  
 
-  def reply1( page )
-    super page    
+  def reply( page )
+    self.class.superclass.instance_method( :new_or_edit ).bind( self )[ page ]    
     page.fade :link_to_reply    
   end 
   

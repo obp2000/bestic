@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Contact do
   before(:each) do
     @valid_attributes = valid_contact_attributes
-    @contact = Contact.first
+#    @contact = Contact.first
+    @contact = Contact.new( @valid_attributes )    
   end
 
   it "is valid with valid attributes" do
-    p @contact
     @contact.should be_valid
   end
 

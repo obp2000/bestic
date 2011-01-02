@@ -28,11 +28,11 @@ class Cart < ActiveRecord1
   def self.destroy_object( params, session, flash ); session.cart.clear_cart( flash ); end
 
   def clear_cart( flash )
-    cart_items1 = self.cart_items.dup
-    self.cart_items.clear
-    destroy_notice( flash )
-    cart_items1
-   end
+    returning cart_items.dup do
+      cart_items.clear
+      destroy_notice( flash )
+    end   
+  end
 
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 

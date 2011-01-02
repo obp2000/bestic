@@ -35,9 +35,9 @@ class Contact < ActiveRecord1
     errors.add_to_base "В номере телефона должно быть не менее семи символов" if phone.size < 7  
   end
       
-  def self.new( * ); nil; end
+#  def self.new( * ); nil; end
 
-  def self.show_page_title; class_name_rus_cap.pluralize; end
+  def self.show_page_title_for( * ); class_name_rus_cap.pluralize; end
 
   def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} успешно обновлены."; end
 
