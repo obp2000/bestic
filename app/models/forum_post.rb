@@ -25,18 +25,13 @@ class ForumPost < ActiveRecord1
   self.reply_image = new_image
   self.reply_text = "Ответить"
   self.reply_render_block = lambda { render :template => "shared/reply.rjs" }
-
-#  validates_length_of :name, :within => 2..50
-#  validates_length_of :subject, :within => 5..255
-#  validates_length_of :body, :within => 5..5000
   
   attr_accessor_with_default( :show_text ) { subject }
   attr_accessor_with_default( :style ) { "margin-left: #{depth*20 + 30}px" }
   attr_accessor_with_default( :new_or_edit_tag ) { "post_new" }
   attr_accessor_with_default( :parent_tag ) { "#{self.class.name.underscore}_#{parent_id}" }  
   attr_accessor_with_default( :reply_path ) { [ "reply_#{self.class.name.underscore}_path", self ] }  
-  
-  
+    
   def validate
     errors.add_to_base "Имя слишком короткое (минимум 2 буквы)" if name.size < 2  
     errors.add_to_base "#{self.class.subject_rus} слишком короткая (минимум 5 букв)" if subject.size < 5  
@@ -45,15 +40,12 @@ class ForumPost < ActiveRecord1
   
   class << self
 
-    def all_objects( params ); paginate( :page => params[ :page ], :order =>  'root_id desc, lft',  :per_page => 15 ); end
+    def all_objects( params, flash ); paginate( :page => params[ :page ], :order =>  'root_id desc, lft',  :per_page => 15 ); end
 
     def reply( params ); new :parent_id => params[ :id ]; end
     
     def destroy_object( params, session, flash )
-      forum_post = find params[ :id ] 
-      delete forum_posts = forum_post.full_set
-      forum_post.destroy_notice( flash )
-      forum_posts
+      find( params[ :id ] ).full_set.tap { |objects| delete objects; objects.first.destroy_notice( flash ) }
     end
 
     def index_page_title_for( * ); class_name_rus_cap; end
@@ -63,9 +55,8 @@ class ForumPost < ActiveRecord1
   end
 
   def link_to_reply_to( page )
-    image = [ self.class.reply_image, { :title => ( self.class.reply_title rescue nil ) } ]    
-    text = self.class.reply_text rescue ""    
-    page.link_to_remote1 image, text, reply_path, :method => :get, :html => { :id => "link_to_reply" }  
+    page.link_to_remote1 [ self.class.reply_image ], self.class.reply_text, reply_path, :method => :get,
+            :html => { :id => "link_to_reply" }  
   end
 
   def new_or_edit( page )
@@ -84,7 +75,6 @@ class ForumPost < ActiveRecord1
 
   def create_notice( flash )
     flash.now[ :notice ] = parent_id.zero? ? "Новая тема создана" : "Сообщение отправлено"
-    self
   end
 
   def destroy_notice( flash ); flash.now[ :notice ] = "Ветвь сообщений удалена"; end

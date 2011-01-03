@@ -11,12 +11,8 @@ module CatalogItemsHelper
         :url => { :controller => "cart_items", :action => "update" }, :tolerance => "touch", :hoverClass => "cart_hover "
   end
 
-  def radio_button_tag_for( attr, checked, visibility )
-    attr.radio_button_tag1( self, checked, visibility )
-  end
+  def radio_button_tag_for( attr, checked, visibility ); attr.radio_button_tag1( self, checked, visibility ); end
   
-  def link_to_index_local( class_const )
-    class_const.link_to_index_local( self )
-  end
+#  def link_to_index_local( class_const ); class_const.link_to_index_local( self ); end
 
 end

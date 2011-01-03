@@ -50,7 +50,7 @@ class Item < ActiveRecord1
 
     def item_objects( params ); all.sort_by { |item| eval( "item." + params[ :sort_by ] ) rescue "" }; end
 
-    def all_objects( params ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
+    def all_objects( params, flash ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
 
     def index_page_title_for( * ); "Список #{class_name_rus}ов"; end
 

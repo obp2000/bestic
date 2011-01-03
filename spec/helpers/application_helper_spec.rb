@@ -178,7 +178,7 @@ describe ApplicationHelper do
     
     before do
       @object = forum_posts_proxy.first
-      @object.stub( :link_to_reply ).with( helper ).and_return( link_to_remote @object.name,
+      @object.stub( :link_to_reply_to ).with( helper ).and_return( link_to_remote @object.name,
             :url => reply_forum_post_path( @object ), :method => :get )        
     end
     
@@ -238,10 +238,19 @@ describe ApplicationHelper do
     end
     
     it "renders page title" do
-      @class_const.should_receive( :index_page_title )       
+      @class_const.should_receive( :index_page_title_for )       
       helper.index_page_title_for( @class_const ) 
     end
     
   end
+
+  describe "#link_to_change" do
+
+    it "renders link to change item attribute" do
+      Size.stub( :link_to_change ).and_return( link_to_remote "Test", :url => sizes_path, :method => :get )
+      helper.link_to_change( Size ).should have_link_to_remote_get( sizes_path )       
+    end    
+    
+  end 
 
 end

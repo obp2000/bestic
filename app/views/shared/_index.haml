@@ -1,7 +1,7 @@
 .ui-widget-content{ :id => objects.first.class.index_tag }
   = link_to_close_window objects.first.class
   = will_paginate objects rescue nil
-  = render :partial => objects.first.class.new_partial, :object => objects.first.class.new rescue nil
+  = render :partial => objects.first.class.new_partial, :object => objects.first.class.new1 rescue nil
   = render :partial => objects.first.class.edit_partial, :collection => objects
   = draggable_element objects.first.class.index_tag
   

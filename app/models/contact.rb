@@ -34,10 +34,14 @@ class Contact < ActiveRecord1
     errors.add_to_base "Неверный формат адреса электронной почты" if email !~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i   
     errors.add_to_base "В номере телефона должно быть не менее семи символов" if phone.size < 7  
   end
-      
-#  def self.new( * ); nil; end
 
-  def self.show_page_title_for( * ); class_name_rus_cap.pluralize; end
+  class << self
+   
+    def show_page_title_for( * ); class_name_rus_cap.pluralize; end
+
+    def new1; nil; end
+
+  end
 
   def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} успешно обновлены."; end
 

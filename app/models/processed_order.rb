@@ -32,11 +32,15 @@ class ProcessedOrder < Order
     errors.add_to_base "#{Cart.class_name_rus_cap} пустая" unless cart.cart_items.size > 0
   end  
     
-  def self.close_object( params, session, flash )
-    find( params[ :id ] ).close_notice( flash ).close
-  end
+  class << self
+    
+    def close_object( params, session, flash )
+      find( params[ :id ] ).tap { |object| object.close; object.close_notice( flash ) }
+    end
 
-  def self.new_page_title_for( * ); "Оформление #{class_name_rus}а"; end  
+    def new_page_title_for( * ); "Оформление #{class_name_rus}а"; end
+            
+  end
 
   def new_or_edit( page )
     super page
@@ -50,7 +54,7 @@ class ProcessedOrder < Order
   def save_object( session, flash )
     self.captcha_validated = session[ :captcha_validated ]
     self.cart = session.cart
-    save && populate_order( self.cart ) && self.cart.clear_cart( flash ) && create_notice( flash ) &&
+    save && populate_order( self.cart ) && self.cart.clear_cart && create_notice( flash ) &&
             OrderNotice.deliver_order_notice( self )
   end     
 
@@ -62,17 +66,15 @@ class ProcessedOrder < Order
   def close
     self.status = ClosedOrder.status_eng
     save( false )
-    self
   end
 
-  def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт.";  self; end
+  def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт."; end
 
   def create_notice( flash )
     flash.now[ :notice ] =
             "<h3>Спасибо за заказ!</h3><br />В ближайшее время наши менеджеры свяжутся с Вами.<br />
             На адрес Вашей электронной почты отправлено информационное сообщение.<br />
             В случае необходимости используйте <b>номер #{self.class.class_name_rus}а #{id}.</b>"
-    true
   end
       
   def closed?; false; end      

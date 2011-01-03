@@ -26,15 +26,16 @@ class Colour < ItemAttribute
 
   class << self
 
-    def all_objects( params ); paginate( :order => "name", :page => params[:page], :per_page => 10 ); end
+    def all_objects( params, flash ); paginate( :order => "name", :page => params[:page], :per_page => 10 ); end
       
     def index1( page, objects )
       super page, objects
       page.attach_js( "attach_mColorPicker" )          
     end   
      
-    def link_to_add_html_code( page )
-      page.link_to_function1 add_html_code_to_colour_image, add_html_code_to_colour_title, add_html_code_to_colour_js_string
+    def link_to_add_html_code_to( page )
+      page.link_to_function1 add_html_code_to_colour_image, add_html_code_to_colour_title,
+              add_html_code_to_colour_js_string
     end
      
   end

@@ -21,41 +21,28 @@ class CatalogItem < Item
 
   class << self
 
-    def all_objects( params )
+    def all_objects( params, flash )
       catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" )
     end
 
     def catalog_items( params ); all; end
 
-    def search_results( params )
-#      search_params1 = lambda { [ self[ :q ], { :page => self[ :page ], :per_page => CatalogItem::SEARCH_PER_PAGE,
-#                :order => :id, :sort_mode => :desc } ] }
-#      @search_amount = ( results = search( *search_params1.bind( params )[] ) ).size
-      @search_amount = ( results = search( params[ :q ], { :page => params[ :page ],
-              :per_page => CatalogItem::SEARCH_PER_PAGE, :order => :id, :sort_mode => :desc } ) ).size      
-#      @q = params[ :q ]
-      results
+    def search_results( params, flash )
+      ( results1 = search( *params.search_args ) ).tap { |results| not_found_notice( params, flash ) if results.size.zero? }              
+      results1
+    end
+
+    def not_found_notice( params, flash )
+      flash.now[ :notice ] = "По Вашему запросу \"#{params[ :q ]}\" #{class_name_rus}ы не найдены"         
     end
 
     def index_page_title_for( params )
       if params[ :q ]
-        if @search_amount.zero?
-          "По Вашему запросу \"#{params[ :q ]}\" #{class_name_rus}ы не найдены"        
-        else
-          "Результаты поиска по запросу \"#{params[ :q ]}\" ( всего найдено #{class_name_rus}ов: #{@search_amount} )"
-        end        
+        "Результаты поиска по запросу \"#{params[ :q ]}\" ( всего найдено #{class_name_rus}ов: #{search( *params.search_args ).size} )"
       else
         "Каталог #{class_name_rus}ов#{': ' + season_name}#{': ' + Category.find( params[ :category_id ] ).name rescue ''}"      
       end
     end
-
-#    def search_page_title
-#      if @search_amount.zero?
-#        "По Вашему запросу \"#{@q}\" #{class_name_rus}ы не найдены"        
-#      else
-#        "Результаты поиска по запросу \"#{@q}\" ( всего найдено #{class_name_rus}ов: #{@search_amount} )"
-#      end
-#    end
     
     def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
     
@@ -79,3 +66,13 @@ class CatalogItem < Item
   end
   
 end
+
+class Hash
+  
+  def search_args
+    [ self[ :q ], { :page => self[ :page ], :per_page => CatalogItem::SEARCH_PER_PAGE, :order => :id,
+            :sort_mode => :desc } ]
+  end
+  
+end
+

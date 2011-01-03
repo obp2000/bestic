@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   
   def index
-    @objects = controller_name.classify.constantize.all_objects( params )
+    @objects = controller_name.classify.constantize.all_objects( params, flash )
     @object = controller_name.classify.constantize.new_object( params, session )
     render_block_call     
   end
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   end
 
   def new
-    @object = controller_name.classify.constantize.new
+    @object = controller_name.classify.constantize.new1
     render_block_call    
   end
 

@@ -25,7 +25,7 @@ class Photo < ItemAttribute
     errors.add_to_base "Не выбрана #{self.class.class_name_rus} для загрузки" if filename.blank?  
   end
  
-  def self.all_objects( params )
+  def self.all_objects( params, flash )
     paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :page => params[ :page ],
             :per_page => 5)
   end

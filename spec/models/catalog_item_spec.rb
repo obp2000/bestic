@@ -16,10 +16,10 @@ describe CatalogItem do
   
   end
  
-  describe "#index_page_title" do 
+  describe "#index_page_title_for" do 
   
     it "show proper page title" do
-      CatalogItem.index_page_title( @params ).should == "Каталог товаров: #{CatalogItem.season_name}"
+      CatalogItem.index_page_title_for( @params ).should == "Каталог товаров: #{CatalogItem.season_name}"
     end
   
   end
@@ -28,26 +28,21 @@ describe CatalogItem do
 
     before do
       CatalogItem.stub( :search ).and_return( [ @catalog_item1 ] )
-      @params[ :q ] = "Test"        
+      @params[ :q ] = "Test"
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )         
     end  
   
     describe "#search_results" do
      
-      it "lists search results" do
-        CatalogItem.search_results( @params ).count.should == 1
-        CatalogItem.search_results( @params ).first.name.should == @catalog_item1.name      
+      it "lists search results and proper page title" do
+        CatalogItem.search_results( @params, @flash ).count.should == 1
+        CatalogItem.search_results( @params, @flash ).first.name.should == @catalog_item1.name
+        CatalogItem.index_page_title_for( @params ).should =~ /Test.*: 1/
+        @flash.now[ :notice ].should be_blank           
       end  
 
     end
-
-#    describe "#search_page_title" do
-
-#      it "show search page title" do
-#        CatalogItem.search_results( @params )      
-#        CatalogItem.search_page_title.should =~ /Test.*: 1/       
-#      end  
-
-#    end
 
   end
 
@@ -55,21 +50,15 @@ describe CatalogItem do
       
     before do
       CatalogItem.stub( :search ).and_return( [] )
-      @params[ :q ] = "Test"        
+      @params[ :q ] = "Test"
+      @flash = {}
+      @flash.stub( :now ).and_return( @flash )         
     end
       
     it "renders empty list of results" do
-      CatalogItem.search_results( @params ).should be_empty
+      CatalogItem.search_results( @params, @flash ).should be_empty
+      @flash.now[ :notice ].should =~ /не найдены/       
     end  
-
-    describe "#search_page_title" do
-
-      it "show search page title" do
-        CatalogItem.search_results( @params )      
-#        CatalogItem.search_page_title.should =~ /не найден/
-      end  
-
-    end
 
   end
 

@@ -25,17 +25,20 @@ class Cart < ActiveRecord1
   attr_accessor_with_default( :delete_title ) { nil }
   attr_accessor_with_default( :total_items ) { cart_items.sum( :amount ) }  
 
-  def self.destroy_object( params, session, flash ); session.cart.clear_cart( flash ); end
+  class << self
 
-  def clear_cart( flash )
-    returning cart_items.dup do
-      cart_items.clear
-      destroy_notice( flash )
-    end   
+#    def find_or_create( cart_id1 ); cart_id1 ? find( cart_id1 ) : create.tap { |cart1| cart_id1 = cart1.id }; end
+
+    def destroy_object( params, session, flash )
+      session.cart.clear_cart.tap { |objects| objects.first.destroy_notice( flash ) }
+    end
+
   end
+
+  def clear_cart; cart_items.dup.tap { cart_items.clear }; end
 
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена"; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена"; end  
 
 end

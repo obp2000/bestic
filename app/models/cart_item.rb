@@ -22,16 +22,14 @@ class CartItem < ActiveRecord1
     def update_object( params, session, flash ); [ update_cart_item( params.conditions_hash( session ), flash ), true ]; end
 
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).delete_cart_item.destroy_notice( flash )
+      find( params[ :id ] ).tap { |object| object.delete_cart_item; object.destroy_notice( flash ) }
     end
 
   end
 
   def delete_cart_item
-    returning self do
-      update_amount( -1 )    
-      destroy if amount.zero?
-    end
+    update_amount( -1 )    
+    destroy if amount.zero?
   end   
   
   def create_or_update1( page, session )
@@ -42,9 +40,9 @@ class CartItem < ActiveRecord1
 
   def update_amount( i ); update_attribute :amount, amount + i; self; end   
 
-  def update_notice( flash ); flash.now[ :notice ] = "Добавлен товар<br /> <em>#{name}</em>"; self;  end
+  def update_notice( flash ); flash.now[ :notice ] = "Добавлен товар<br /> <em>#{name}</em>"; end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "Удален товар <em>#{name}</em>"; self; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Удален товар <em>#{name}</em>"; end
 
   def populate_order_item_hash
     { :item_id => item_id, :price => price, :amount => amount,  :size_id => size_id, :colour_id => colour_id }
@@ -53,7 +51,8 @@ class CartItem < ActiveRecord1
   private
   
     def self.update_cart_item( conditions, flash )
-      ( first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge( :amount => 1 ) ) ).update_notice( flash )
+      ( first( :conditions => conditions ).update_amount( 1 ) rescue create( 
+              conditions.merge( :amount => 1 ) ) ).tap { |object| object.update_notice( flash ) }
     end
     
 end

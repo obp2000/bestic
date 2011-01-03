@@ -67,25 +67,20 @@
   
   class << self
 
-    def all_objects( params ); all; end
+    def all_objects( params, flash ); all; end
 
     def update_object( params, session, flash )
-#      success = ( object = find params[ :id ] ).update_object( params, session, flash )
-#      [ object, success ]
-      returning [] do |result|
-        result[ 1 ] = ( result[ 0 ] = find params[ :id ] ).update_object( params, session, flash )
-      end
-#      returning do |object, success|
-#        success = ( object = find params[ :id ] ).update_object( params, session, flash )
-#      end      
+      [].tap { |result| result[ 1 ] = ( result[ 0 ] = find params[ :id ] ).update_object( params, session, flash ) }
     end    
 
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).destroy_notice( flash ).destroy
+      find( params[ :id ] ).destroy.tap { |object| object.destroy_notice( flash ) }
     end     
     
-    def new_object( params, session ); new params[ name.underscore ]; end
+    def new1; new; end
     
+    def new_object( params, session ); new params[ name.underscore ]; end
+        
     def link_to_back( page ); page.link_to_function1 back_image, back_title, nil, back_block.bind( self ); end
     
     def back_block; lambda { |page| page.fade_appear( appear_tag, fade_tag )  }; end    
@@ -165,19 +160,16 @@
     
   def update_object( params, session, flash )
     update_attributes( params[ self.class.name.underscore ] )
-    update_notice( flash )
+    tap { update_notice( flash ) }
   end
   
-  def save_object( session, flash )
-    create_notice( flash ) if success = save
-    success
-  end
+  def save_object( session, flash ); save.tap { |success| create_notice( flash ) if success }; end
 
-  def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно."; true; end
+  def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно."; end
 
-  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён."; self; end
+  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён."; end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён."; self; end  
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён."; end  
     
   def name_or_id; respond_to?( :name ) ? name : id; end
 
