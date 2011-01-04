@@ -70,7 +70,8 @@ class ForumPost < ActiveRecord1
   end 
   
   def create_or_update1( page, session )
-    page.create_forum_post parent_id, parent_tag, self.class.name.underscore, self    
+    page.create_forum_post [ ( parent_id.zero? ? "top"  : "after" ), ( parent_id.zero? ? "posts"  : parent_tag ),
+            { :partial => self.class.name.underscore, :object => self } ], [ :post, :new_forum_post ]    
   end
 
   def create_notice( flash )

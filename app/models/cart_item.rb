@@ -19,7 +19,8 @@ class CartItem < ActiveRecord1
   
   class << self
 
-    def update_object( params, session, flash ); [ update_cart_item( params.conditions_hash( session ), flash ), true ]; end
+    def update_object( params, session, flash ); [ update_cart_item( params.conditions_hash( session ) ).tap {
+              |object| object.update_notice( flash ) }, true ]; end
 
     def destroy_object( params, session, flash )
       find( params[ :id ] ).tap { |object| object.delete_cart_item; object.destroy_notice( flash ) }
@@ -34,7 +35,7 @@ class CartItem < ActiveRecord1
   
   def create_or_update1( page, session )
     super page, session
-    page.after_create_or_update_cart_item tag, amount, session
+    page.after_create_or_update_cart_item tag, ( amount.zero? or session.cart.cart_items.empty? ), session
   end  
   alias_method :destroy1, :create_or_update1
 
@@ -50,9 +51,8 @@ class CartItem < ActiveRecord1
 
   private
   
-    def self.update_cart_item( conditions, flash )
-      ( first( :conditions => conditions ).update_amount( 1 ) rescue create( 
-              conditions.merge( :amount => 1 ) ) ).tap { |object| object.update_notice( flash ) }
+    def self.update_cart_item( conditions )
+      first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge :amount => 1 )
     end
     
 end

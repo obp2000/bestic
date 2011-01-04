@@ -8,21 +8,15 @@ module ApplicationHelper
     :submit_to, :link_to_season, :link_to_back, :link_to_show_with_comment, :link_to_reply_to,
     :link_to_logout, :link_to_add_html_code_to, :link_to_remove_from_item, :link_to_change,
     :link_to_close_window, :link_to_index_local ].each do |method|
-    define_method method do
-      |object| object.send( method, self )
-    end
+    define_method( method ) { |object| object.send( method, self ) }
   end
 
   [ :index_page_title_for, :show_page_title_for, :new_page_title_for ].each do |method|
-    define_method method do
-      |object| object.send( method, params )
-    end
+    define_method( method ) { |object| object.send( method, params ) }
   end
 
   [ :render_attrs, :render_options ].each do |method|
-    define_method method do
-      |object| object.to_a.send( method, self ) rescue nil
-    end
+    define_method( method ) { |object| object.to_a.send( method, self ) rescue nil }
   end
   
   def create_or_update( object, session ); object.create_or_update1( self, session ); end
@@ -53,7 +47,6 @@ module ApplicationHelper
     hide :notice
     appear_with_duration :notice, appear_duration    
     delay( appear_duration ) do
-#      action :remove, :notice
       fade_with_duration :notice, fade_duration
       delay( fade_duration ) do
         remove :notice
@@ -61,15 +54,9 @@ module ApplicationHelper
     end
   end
 
-  def check_cart_links
-    replace_html "link_to_new_order_form", :partial => "carts/link_to_new_order_form"
-    replace_html "link_to_clear_cart", :partial => "carts/link_to_clear_cart"       
-  end
+  def check_cart_links; Cart.cart_links.each { |link| replace_html link, :partial => "carts/#{link}" }; end
 
-  def check_cart_totals( session )
-    replace_html "cart_total_items", session.cart.total_items
-    replace_html "cart_total_sum", session.cart.total
-  end
+  def check_cart_totals( session ); session.cart.cart_totals.each { |args| replace_html *args }; end
 
   def red_star; "<span style='color: red'>*</span>"; end
     
@@ -92,9 +79,7 @@ module ApplicationHelper
     link_to_remote( image_with_text( image, text ), { :url => send( *url ) }.merge( opts ) )      
   end 
 
-  def link_to1( image, text, url, opts = {} )
-    link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts )
-  end
+  def link_to1( image, text, url, opts = {} ); link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts ); end
 
   def image_with_text( image, text ); ( image_tag( *image ) rescue "" ) + text; end
 
@@ -104,34 +89,31 @@ module ApplicationHelper
   end
 
   def insert_index_partial( index_tag, index_partial, objects )
-    action :remove, index_tag
-    delay( DURATION ) do
-      insert_html :after, "tabs",  :partial => index_partial, :locals => { :objects => objects }
-    end    
+    remove_and_insert [ :remove, index_tag ],
+            [ :after, "tabs", { :partial => index_partial, :locals => { :objects => objects } } ]       
   end
 
   def replace_index_partial( index_tag, index_partial, objects )
     page.action :replace_html, index_tag,  :partial => index_partial, :locals => { :objects => objects }    
   end
   
-  def destroy2( edit_tag, tag )
-    action :remove, edit_tag rescue nil      
-    action :remove, tag rescue nil    
-  end
+  def destroy2( edit_tag, tag ); [ edit_tag, tag ].each { |tag1| action :remove, tag1 rescue nil }; end
   
   def fade_with_duration( tag, duration = DURATION ); visual_effect :fade, tag, :duration => duration; end
   alias_method :fade, :fade_with_duration
 
   def appear_with_duration( tag, duration = DURATION ); visual_effect :appear, tag, :duration => duration; end  
 
-  def create_or_update1( create_or_update_tag, index_tag, create_or_update_partial, object )
-    action :remove, create_or_update_tag   
-    delay( DURATION ) do      
-      insert_html :bottom, index_tag, :partial => create_or_update_partial, :object => object 
-    end
+  def create_or_update1( remove_args, insert_args )
+    remove_and_insert remove_args, insert_args    
     show_notice   
-    visual_effect :highlight, create_or_update_tag, :duration => HIGHLIGHT_DURATION
+    visual_effect :highlight, remove_args[ 1 ], :duration => HIGHLIGHT_DURATION
     fade_with_duration :errorExplanation        
+  end
+
+  def remove_and_insert( remove_args, insert_args )
+    action *remove_args   
+    delay( DURATION ) { insert_html *insert_args }
   end
 
 end
@@ -154,6 +136,10 @@ class Array
     first.class.index1( page, self ) rescue nil
     page.show_notice      
   end
+ 
+  def update_object( params, session, flash )
+    self[ 0 ].update_notice( flash ) if self[ 1 ] = self[ 0 ].update_object( params, session )
+  end  
  
 end
 

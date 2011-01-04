@@ -85,7 +85,7 @@ class Item < ActiveRecord1
 
   def save_photos; photos.each { |photo| photo.save }; end
 
-  def update_object( params, session, flash )
+  def update_object( params, session )
     params[ "item" ][ :existing_photo_attributes ] ||= {}
     super
   end

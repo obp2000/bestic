@@ -7,9 +7,7 @@ module ProcessedOrdersHelper
     delay( fade_duration ) { redirect_to "/" }    
   end 
  
-  def update_processed_orders_amount
-    action :replace_html, "processed_orders_amount", ProcessedOrder.count    
-  end
+  def update_processed_orders_amount; action :replace_html, "processed_orders_amount", ProcessedOrder.count; end
 
   def update_processed_orders_amount1; delay( DURATION ) { update_processed_orders_amount }; end
 

@@ -1,10 +1,8 @@
 module ForumPostsHelper
 
-  def create_forum_post( parent_id, parent_tag, partial, object )
-    place, tag = parent_id == 0 ? [ "top", "posts" ]  : [ "after", parent_tag ]
-    insert_html place, tag, :partial => partial, :object => object
-    fade :post
-    fade :new_forum_post
+  def create_forum_post( insert_args, fade_tags )
+    insert_html *insert_args
+    fade_tags.each { |tag1| fade tag1 }    
     show_notice
   end
 

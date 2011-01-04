@@ -45,13 +45,18 @@ class ItemAttribute < ActiveRecord1
   end 
  
   def add_to_item_block1; lambda { |page| add_to_item1( page ) }; end
-
-  def add_to_item1( page ); page.add_to_item1 tag, self.class.index_tag, self.class.insert_attr, self; end   
+  
+  def add_to_item1( page )
+    page.remove_and_insert [ :remove, tag ],
+            [ :bottom, "form_#{self.class.index_tag}", { :partial => "items/#{self.class.insert_attr}", :object => self } ]
+  end    
   
   def create_or_update1( page, session )
     super page, session
-    page.after_create_or_update_item_attribute self.class.new_tag, self.class.create_or_update_partial,
-            tag, self.class.new_or_edit_partial, self
+    [ [ self.class.new_tag, { :partial => self.class.create_or_update_partial, :object => self.class.new1 } ],
+            [ tag, { :partial => "items/" + self.class.new_or_edit_partial, :object => self } ] ].each do |replace_args|
+      page.replace *replace_args rescue nil
+    end  
   end  
 
   def radio_button_tag1( page, checked, visibility )

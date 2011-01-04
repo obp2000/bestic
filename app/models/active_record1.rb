@@ -55,7 +55,6 @@
   self.create_render_block = lambda { render Create_or_update_template_hash }
   self.update_render_block = lambda { render Create_or_update_template_hash }
   self.destroy_render_block = lambda { render Destroy_template_hash }
-#  self.create_or_update_partial = new_or_edit_partial
 
   attr_accessor_with_default( :show_text ) { name }
   attr_accessor_with_default( :delete_title ) { "Удалить #{self.class.class_name_rus} #{name_or_id}?" }
@@ -70,7 +69,7 @@
     def all_objects( params, flash ); all; end
 
     def update_object( params, session, flash )
-      [].tap { |result| result[ 1 ] = ( result[ 0 ] = find params[ :id ] ).update_object( params, session, flash ) }
+      [ find params[ :id ], nil ].tap { |result| result.update_object( params, session, flash ) }
     end    
 
     def destroy_object( params, session, flash )
@@ -127,9 +126,7 @@
       page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get 
     end
   
-    def link_to_logout( page )
-      page.link_to1 [], logout_text, logout_path
-    end
+    def link_to_logout( page ); page.link_to1 [], logout_text, logout_path; end
   
     def logout_path; [ "logout_path" ]; end
   
@@ -158,9 +155,8 @@
             single_path, :method => :delete, :confirm => delete_title     
   end
     
-  def update_object( params, session, flash )
+  def update_object( params, session )
     update_attributes( params[ self.class.name.underscore ] )
-    tap { update_notice( flash ) }
   end
   
   def save_object( session, flash ); save.tap { |success| create_notice( flash ) if success }; end
@@ -175,13 +171,14 @@
 
   def new_or_edit( page )
     page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
-    page.attach_js( "attach_yoxview" )      
+    page.attach_js( "attach_yoxview" )
   end 
 
   def close1( page ); page.close1 status_tag, updated_tag, updated_at; end  
 
   def create_or_update1( page, session )
-    page.create_or_update1 create_or_update_tag, self.class.name.tableize, self.class.create_or_update_partial, self
+    page.create_or_update1 [ :remove, create_or_update_tag ],
+            [ :bottom, self.class.name.tableize, { :partial => self.class.create_or_update_partial, :object => self } ]
   end  
   
   def destroy1( page, session ); page.destroy2 edit_tag, tag; end  

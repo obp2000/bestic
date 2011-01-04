@@ -19,8 +19,9 @@ class Cart < ActiveRecord1
   self.nav_image = "basket.png"
   self.nav_text = "Корзина"
           
-  class_inheritable_accessor :cart, :index_tag
+  class_inheritable_accessor :cart, :index_tag, :cart_links
   self.index_tag = "cart"
+  self.cart_links = [ "link_to_new_order_form", "link_to_clear_cart" ]
 
   attr_accessor_with_default( :delete_title ) { nil }
   attr_accessor_with_default( :total_items ) { cart_items.sum( :amount ) }  
@@ -40,5 +41,7 @@ class Cart < ActiveRecord1
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
 
   def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена"; end  
+
+  def cart_totals; [ [ "cart_total_items", total_items ], [ "cart_total_sum", total ] ]; end
 
 end
