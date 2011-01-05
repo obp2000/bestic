@@ -3,16 +3,18 @@ class ItemAttribute < ActiveRecord1
   self.abstract_class = true
   
   class_inheritable_accessor :delete_from_item_title, :delete_from_item_js_string, :insert_attr,
-    :change_image, :add_to_item_image, :add_to_item_title
+    :change_image, :add_to_item_image
   
   self.delete_from_item_title = "Удалить из #{Item.class_name_rus}а"
   self.delete_from_item_js_string =
     "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
-#  self.sort_attr = "name"
   self.insert_attr = "attr"      
   self.change_image = []
-  self.add_to_item_image = "arrow_large_right.png"
-  self.add_to_item_title = "Добавить к #{Item.class_name_rus}у"  
+  self.add_to_item_image = [ "arrow_large_right.png", { :title =>"Добавить к #{Item.class_name_rus}у" } ]  
+
+  attr_accessor_with_default( :options_for_replace_item_attributes ) { [ tag, { :partial => "items/" + 
+          self.class.attr_partial, :object => self } ] }
+  attr_accessor_with_default( :add_to_item_block1 ) { lambda { |page| add_to_item1( page ) } }
 
   def validate
     errors.add_to_base "#{self.class.class_name_rus_cap} не может быть пустым" if name.blank?  
@@ -28,7 +30,7 @@ class ItemAttribute < ActiveRecord1
     end
  
     def link_to_remove_from_item( page )
-      page.link_to_function1 delete_image, delete_from_item_title, delete_from_item_js_string
+      page.link_to_function1 [ delete_image, { :title => delete_from_item_title } ], delete_from_item_js_string
     end
     
     def update_attr( item, ids_array )
@@ -38,13 +40,15 @@ class ItemAttribute < ActiveRecord1
       end    
     end    
      
+    def options_for_replace_new_tag; [ new_tag, { :partial => create_or_update_partial, :object => new1 } ]; end
+
+    def attr_partial; "attr"; end     
+     
   end
 
   def link_to_add_to_item( page )
-    page.link_to_function1 self.class.add_to_item_image, self.class.add_to_item_title, nil, add_to_item_block1.bind( self )
+    page.link_to_function1 self.class.add_to_item_image, nil, add_to_item_block1.bind( self )
   end 
- 
-  def add_to_item_block1; lambda { |page| add_to_item1( page ) }; end
   
   def add_to_item1( page )
     page.remove_and_insert [ :remove, tag ],
@@ -53,8 +57,7 @@ class ItemAttribute < ActiveRecord1
   
   def create_or_update1( page, session )
     super page, session
-    [ [ self.class.new_tag, { :partial => self.class.create_or_update_partial, :object => self.class.new1 } ],
-            [ tag, { :partial => "items/" + self.class.new_or_edit_partial, :object => self } ] ].each do |replace_args|
+    [ self.class.options_for_replace_new_tag, options_for_replace_item_attributes ].each do |replace_args|
       page.replace *replace_args rescue nil
     end  
   end  

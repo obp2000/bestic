@@ -16,7 +16,8 @@ class Order < ActiveRecord1
 #  self.index_tag = "content"    
   self.index_partial = "orders/index"
   self.fade_tag = "item_content"
-  self.appear_tag = "order_details"  
+  self.appear_tag = "order_details"
+  self.paginate_options = {  :order => 'created_at desc', :per_page => 14 }
 
   class_inheritable_accessor :id_rus, :status_header_rus, :total_rus, :count_rus, :email_rus, :phone_number_rus,
     :ship_to_first_name_rus, :ship_to_city_rus, :ship_to_address_rus, :comments_rus, :details_title,
@@ -44,7 +45,7 @@ class Order < ActiveRecord1
 
   class << self
   
-    def all_objects( params, flash ); paginate( :page => params[ :page ], :order => 'created_at desc', :per_page => 14 ); end
+    def all_objects( params, * ); paginate_objects( params ); end
     
     def index_page_title_for( params )
       "Список #{class_name_rus}ов" + params[ :controller ].classify.constantize.status_rus_nav
@@ -55,15 +56,15 @@ class Order < ActiveRecord1
   end
 
   def link_to_close( page )
-    page.link_to_remote1 [ self.class.close_image, { :title => self.class.close_title } ] , "", close_path, :method => :get,
-            :html => { :id => close_tag }, :confirm => self.class.close_confirm
+    page.link_to_remote1 self.class.close_image, "", close_path, :method => :get, :html => { :id => close_tag },
+            :confirm => self.class.close_confirm
   end
 
   def destroy1( page, session )
     super page, session
-    page.update_processed_orders_amount1
+    page.update_processed_orders_amount( ProcessedOrder.update_amount )
   end 
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; self; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
        
 end

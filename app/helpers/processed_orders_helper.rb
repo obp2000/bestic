@@ -4,24 +4,12 @@ module ProcessedOrdersHelper
  
   def create_processed_order( fade_duration )
     show_notice( :delay => fade_duration ) 
+    fade_with_duration :errorExplanation
     delay( fade_duration ) { redirect_to "/" }    
   end 
- 
-  def update_processed_orders_amount; action :replace_html, "processed_orders_amount", ProcessedOrder.count; end
 
-  def update_processed_orders_amount1; delay( DURATION ) { update_processed_orders_amount }; end
+  def update_processed_orders_amount( action1 ); delay( DURATION ) { action *action1 }; end
 
-  def change_to_closed( status_tag ); action :replace_html, status_tag, ClosedOrder.status_rus; end
-
-  def change_close_tag_to( updated_tag, updated_at )
-    action :replace_html, updated_tag, date_time_rus( updated_at )
-  end
-  
-  def close1( status_tag, updated_tag, updated_at )
-    change_to_closed status_tag
-    change_close_tag_to updated_tag, updated_at
-    update_processed_orders_amount    
-    show_notice
-  end 
+  def close1( *actions ); actions.each { |action1| action *action1 }; show_notice; end 
  
 end

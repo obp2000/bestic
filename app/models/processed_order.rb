@@ -4,15 +4,15 @@ class ProcessedOrder < Order
   self.class_name_rus_cap = "Заказ для исполнения"
 #  self.new_or_edit_partial = "new"
   self.replace = :replace_html
-  self.new_image = "tick_16.png"
+  self.new_image = [ "tick_16.png" ]
   self.new_text = "Оформить #{class_name_rus}"   
   self.submit_with_options = [ "submit_tag", "Разместить #{class_name_rus}", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   
-  class_inheritable_accessor :close_image, :close_title, :close_confirm, :captcha_text,
-    :fade_duration, :new_or_edit_partial, :close_render_block
+  class_inheritable_accessor :close_image, :close_confirm, :captcha_text, :fade_duration, :new_or_edit_partial,
+            :close_render_block
 
-  self.close_image = "page_table_close.png"
-  self.close_title = "Закрыть #{class_name_rus}"
+  self.close_image = [ "page_table_close.png", { :title => "Закрыть #{class_name_rus}" } ]
+#  self.close_title = "Закрыть #{class_name_rus}"
   self.close_confirm = "Закрыть #{class_name_rus}?"
   self.captcha_text = "Введите, пожалуйста, проверочный код:"
   self.fade_duration = 20
@@ -23,6 +23,7 @@ class ProcessedOrder < Order
   self.status_rus = "для исп."
 
   attr_accessor_with_default( :new_or_edit_tag ) { "content" }
+  attr_accessor_with_default( :change_to_closed ) { [ :replace_html, status_tag, ClosedOrder.status_rus ] }  
 
   def validate
     errors.add_to_base "#{self.class.ship_to_first_name_rus} слишком короткое (минимум 2 буквы)" if ship_to_first_name.size < 2  
@@ -37,6 +38,8 @@ class ProcessedOrder < Order
     def close_object( params, session, flash )
       find( params[ :id ] ).tap { |object| object.close; object.close_notice( flash ) }
     end
+
+    def update_amount; [ :replace_html, "processed_orders_amount", count ]; end
 
     def new_page_title_for( * ); "Оформление #{class_name_rus}а"; end
             
@@ -69,6 +72,12 @@ class ProcessedOrder < Order
   end
 
   def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт."; end
+
+  def close1( page )
+    page.close1 change_to_closed, change_close_tag_to_updated_tag( page ), self.class.update_amount
+  end
+
+  def change_close_tag_to_updated_tag( page ); [ :replace_html, updated_tag, page.date_time_rus( updated_at ) ]; end
 
   def create_notice( flash )
     flash.now[ :notice ] =

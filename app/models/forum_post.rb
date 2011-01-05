@@ -9,12 +9,13 @@ class ForumPost < ActiveRecord1
   self.replace = :replace_html
   self.fade_tag = "post_new"
   self.appear_tag = "post"  
-  self.index_image = "agt_forum.png"  
+  self.index_image = [ "agt_forum.png" ]  
   self.index_text = "Форум"
-  self.new_image = "document-edit.png"
+  self.new_image = [ "document-edit.png" ]
   self.new_text = "Новая тема"
   self.submit_with_options = [ "submit_tag", "Отправить", { :onclick => "$(this).fadeOut().fadeIn()" } ]
   self.name_rus = "Автор"
+  self.paginate_options = { :order =>  'root_id desc, lft',  :per_page => 15 }
 
   class_inheritable_accessor :new_or_edit_partial, :no_forum_posts_text, :subject_rus, :body_rus, :reply_image,
           :reply_text, :reply_render_block
@@ -40,7 +41,7 @@ class ForumPost < ActiveRecord1
   
   class << self
 
-    def all_objects( params, flash ); paginate( :page => params[ :page ], :order =>  'root_id desc, lft',  :per_page => 15 ); end
+    def all_objects( params, * ); paginate_objects( params ); end
 
     def reply( params ); new :parent_id => params[ :id ]; end
     
@@ -59,10 +60,7 @@ class ForumPost < ActiveRecord1
             :html => { :id => "link_to_reply" }  
   end
 
-  def new_or_edit( page )
-    super page
-    page.fade :post
-  end  
+  def new_or_edit( page ); super page; page.fade :post; end  
 
   def reply( page )
     self.class.superclass.instance_method( :new_or_edit ).bind( self )[ page ]    

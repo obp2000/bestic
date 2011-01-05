@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   [ :render_attrs, :render_options ].each do |method|
-    define_method( method ) { |object| object.to_a.send( method, self ) rescue nil }
+    define_method( method ) { |object| Array( object ).send( method, self ) rescue nil }
   end
   
   def create_or_update( object, session ); object.create_or_update1( self, session ); end
@@ -71,8 +71,8 @@ module ApplicationHelper
   def link_to_category( category, season_class ); category.link_to_category( self, season_class.name.tableize ); end
 
 ############################
-  def link_to_function1( image, title, js_string = nil, block = nil )
-    link_to_function image_tag( image, :title => title ), js_string, &block    
+  def link_to_function1( image, js_string = nil, block = nil )
+    link_to_function image_tag( *image ), js_string, &block    
   end  
  
   def link_to_remote1( image, text, url, opts = {} )
@@ -106,8 +106,8 @@ module ApplicationHelper
 
   def create_or_update1( remove_args, insert_args )
     remove_and_insert remove_args, insert_args    
-    show_notice   
-    visual_effect :highlight, remove_args[ 1 ], :duration => HIGHLIGHT_DURATION
+    show_notice
+    delay( DURATION ) { visual_effect :highlight, remove_args[ 1 ], :duration => HIGHLIGHT_DURATION }
     fade_with_duration :errorExplanation        
   end
 

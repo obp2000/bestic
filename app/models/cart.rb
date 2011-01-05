@@ -13,7 +13,6 @@ class Cart < ActiveRecord1
      :onmouseover => "$(this).attr('src', 'images/basket_add_over.png')",
      :onmouseout => "$(this).attr('src', 'images/basket_add.png')",
      :onclick => "$(this).fadeOut().fadeIn()" } ]
-  self.submit_title = "Добавить этот #{CatalogItem.class_name_rus} в корзину"
   self.index_partial = "carts/cart"
   self.delete_text = "Очистить корзину"
   self.nav_image = "basket.png"

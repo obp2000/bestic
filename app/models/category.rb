@@ -9,18 +9,22 @@ class Category < ItemAttribute
   self.class_name_rus = "вид одежды"  
   self.class_name_rus_cap = "Вид одежды"
   self.change_image = "color_line.png"
-  self.index_text = "Вид одежды"  
+  self.index_text = "Вид одежды"
+  self.paginate_options = { :order => 'name' }
  
   class << self
 
-    def all_objects( params, flash ); all( :order => 'name' ); end
+    def all_objects( * ); all paginate_options ; end
       
     def all_of( season_class ); all.reject { |category| category.send( season_class.name.tableize ).empty? }; end
+
+    def attr_partial; "category"; end      
       
   end
 
   def add_to_item1( page )
-    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}", :object => self                      
+    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
+              :object => self                      
   end
    
 end

@@ -8,37 +8,27 @@ class Photo < ItemAttribute
 
   self.class_name_rus = "фотография"  
   self.class_name_rus_cap = "Фотография"
-  self.submit_title = "Сохранить"
   self.change_image = "insert-image.png"
   self.delete_from_item_js_string =
     "$(this).siblings(':checkbox').removeAttr('checked');$(this).siblings(':not(:checkbox)').remove();$(this).remove();"  
   self.insert_attr = "photo"
-  self.create_render_block = lambda { responds_to_parent { render Create_or_update_template_hash } }  
+  self.create_render_block = lambda { responds_to_parent { render Create_or_update_template_hash } }
+  self.paginate_options = { :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :per_page => 5  }
 
-  class_inheritable_accessor :upload_image, :upload_title, :new_partial
-
-  self.upload_image = "load.png"
-  self.upload_title = "Загрузить фотографию"
+  class_inheritable_accessor :new_partial
+#  self.upload_image = "load.png"
+#  self.upload_title = "Загрузить фотографию"
   self.new_partial = "upload_photo"  
 
   def validate
     errors.add_to_base "Не выбрана #{self.class.class_name_rus} для загрузки" if filename.blank?  
   end
  
-  def self.all_objects( params, flash )
-    paginate( :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :page => params[ :page ],
-            :per_page => 5)
-  end
+  def self.all_objects( params, * ); paginate_objects( params ); end
 
-  def add_to_item1( page )
-    super page
-    page.attach_js( "attach_yoxview" )    
-  end 
+  def add_to_item1( page ); super page; page.attach_js( "attach_yoxview" ); end 
 
-  def create_or_update1( page, session )
-    super page, session
-    page.attach_js( "attach_yoxview" )    
-  end   
+  def create_or_update1( page, session ); super page, session; page.attach_js( "attach_yoxview" ); end   
 
   def link_to_show( page, comment = "" ); page.link_to1 [ public_filename :small ], comment, public_filename; end
 

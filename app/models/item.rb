@@ -23,13 +23,14 @@ class Item < ActiveRecord1
   self.replace = :replace_html
   self.fade_tag = "item_content"
   self.appear_tag = "item_content"
-  self.new_image = "newdoc.png"
+  self.new_image = [ "newdoc.png", { :title => "Добавить " } ]
   self.name_rus = "Название"
   self.index_render_block = lambda { render request.xhr? ? Index_template_hash : { :partial => "index", :layout => "items" } }
+  self.paginate_options = { :per_page => 14 }
 
   class_inheritable_accessor :price_rus, :new_or_edit_partial
   self.price_rus = "Цена"   
-  self.new_title = "Добавить "
+#  self.new_title = "Добавить "
   self.new_or_edit_partial = "form"
 #  self.index_page_title = "Список #{class_name_rus}ов"
 
@@ -50,7 +51,7 @@ class Item < ActiveRecord1
 
     def item_objects( params ); all.sort_by { |item| eval( "item." + params[ :sort_by ] ) rescue "" }; end
 
-    def all_objects( params, flash ); item_objects( params ).paginate( :page => params[:page], :per_page => 14 ); end
+    def all_objects( params, * ); item_objects( params ).paginate paginate_hash( params ); end
 
     def index_page_title_for( * ); "Список #{class_name_rus}ов"; end
 

@@ -11,8 +11,9 @@ class CatalogItem < Item
   self.submit_with_options = [ "image_submit_tag", "search_32.png", { :title => "Поиск #{class_name_rus}а" } ]
   self.index_render_block = lambda { render request.xhr? ? Index_template_hash : { :partial => "index", :layout => "application" } }
 #  self.search_render_block = lambda { render Index_template_hash }
+  self.paginate_options = { :per_page => 8, :order => "items.id desc" }
 
-  PER_PAGE = 8
+#  PER_PAGE = 8
   SEARCH_PER_PAGE = 8  
 
   belongs_to :category
@@ -21,11 +22,10 @@ class CatalogItem < Item
 
   class << self
 
-    def all_objects( params, flash )
-      catalog_items( params ).paginate( :page => params[:page], :per_page => PER_PAGE, :order => "items.id desc" )
-    end
-
-    def catalog_items( params ); all; end
+    def all_objects( params, * ); catalog_items( params ).paginate paginate_hash( params ); end
+ 
+#    def catalog_items( params ); all; end
+    define_method( :catalog_items ) { |*| all }
 
     def search_results( params, flash )
       ( results1 = search( *params.search_args ) ).tap { |results| not_found_notice( params, flash ) if results.size.zero? }              
