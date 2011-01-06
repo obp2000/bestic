@@ -1,9 +1,20 @@
 require 'spec_helper'
 
 describe Item do
-  before(:each) do
+  
+  before do
     @valid_attributes = valid_item_attributes
     @item = Item.new( @valid_attributes )
+    @params = { "item" => valid_item_attributes }
+    @updated_params = { "item" => { :name => "Jacket",
+            :blurb => "Jacket for walking",
+            :price => "500",
+            :category_id => 1,
+            :type => "SummerCatalogItem" 
+            } }    
+    @session = {}
+    @flash = {}
+    @flash.stub( :now ).and_return( @flash )      
   end
 
   it "is valid with valid attributes" do
@@ -37,13 +48,6 @@ describe Item do
 
   describe "#new_object" do
   
-    before do
-      @params = { "item" => valid_item_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "builds new item" do
       @item = Item.new_object( @params, @session )
       @item.name.should == "Shirt"
@@ -53,52 +57,27 @@ describe Item do
  
   describe "#save_object" do
   
-    before do
-      @params = { "item" => valid_item_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "saves new item" do
       create_item
       @item.reload
       @item.name.should == valid_item_attributes[ :name ]
+      @flash.now[ :notice ].should contain( "создан" )        
     end
   
   end  
   
   describe "#update_object" do
   
-    before do
-      @params = { "item" => valid_item_attributes }
-      @updated_params = { "item" => { :name => "Jacket",
-              :blurb => "Jacket for walking",
-              :price => "500",
-              :category_id => 1,
-              :type => "SummerCatalogItem" 
-              } }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "updates existing item" do
       create_item
       @item = Item.update_object( @updated_params.merge( :id => @item.id ), @session, @flash ).first
       @item.name.should == @updated_params[ "item" ][ :name ]
+      @flash.now[ :notice ].should contain( "обновлён" )        
     end
   
   end
   
   describe "#destroy_object" do
-  
-    before do
-      @params = { "item" => valid_item_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
   
     it "destroys existing item" do
       create_item
@@ -106,6 +85,7 @@ describe Item do
       @item = Item.destroy_object( @params_for_destroy, @session, @flash )
       @item.name.should == valid_item_attributes[ :name ]
       Item.all.should_not include( @item )
+      @flash.now[ :notice ].should contain( "удалён" )         
     end
   
   end

@@ -1,12 +1,23 @@
 require 'spec_helper'
 
 describe ProcessedOrder do
-  before(:each) do
+  
+  before do
     @valid_attributes = valid_order_attributes
     @order = ProcessedOrder.new( @valid_attributes )
     @cart = {}.cart
     @cart.cart_items.create
     @order.cart = @cart
+    @session = {}
+    @flash = {}
+    @flash.stub( :now ).and_return( @flash )        
+    @item = Item.create!( valid_item_attributes )
+    @params = valid_item_attributes
+    @params[ :id ] = "catalog_item_" + @item.id.to_s
+    OrderNotice.stub( :deliver_order_notice ).and_return( true )
+    @session[ :captcha_validated ] = true      
+    
+    CartItem.update_object( @params, @session, @flash )    
   end
 
   it "is valid with valid attributes" do
@@ -42,9 +53,6 @@ describe ProcessedOrder do
   
     before do
       @params = { "processed_order" => valid_processed_order_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
     end
   
     it "builds new processed order" do
@@ -56,28 +64,32 @@ describe ProcessedOrder do
 
   describe "#save_object" do
   
-    before do
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-      @item = Item.create!( valid_item_attributes )
-      @params = valid_item_attributes
-      @params[ :id ] = "catalog_item_" + @item.id.to_s
-      CartItem.update_object( @params, @session, @flash )
-    end
-  
     it "saves new processed order" do
-      OrderNotice.stub( :deliver_order_notice ).and_return( true )
       @params = { "processed_order" => valid_processed_order_attributes }
-      @session[ :captcha_validated ] = true                            
       @order = ProcessedOrder.new_object( @params, @session )
       OrderNotice.should_receive( :deliver_order_notice ).with( @order )
       @order.save_object( @session, @flash )
-      @order.reload
       @order.email.should == valid_processed_order_attributes[ :email ]
-      @order.order_items.first.price.should == @item.price      
+      @order.order_items.first.price.should == @item.price
+      @flash.now[ :notice ].should contain( @order.id.to_s )  
     end
   
   end 
+
+  describe "#close_object" do
+  
+    it "closes processed order" do
+      @params = { "processed_order" => valid_processed_order_attributes }
+      @order = ProcessedOrder.new_object( @params, @session )
+      @order.save_object( @session, @flash )
+      @params_for_close = { :id => @order.id }
+      @order = ProcessedOrder.close_object( @params_for_close, @session, @flash )
+      @order.email.should == valid_processed_order_attributes[ :email ]
+      ProcessedOrder.all.should_not include( @order )
+      @order.status.should == "ClosedOrder"
+      @flash.now[ :notice ].should contain( "закрыт" )           
+    end
+  
+  end
 
 end

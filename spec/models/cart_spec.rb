@@ -13,6 +13,8 @@ describe Cart do
         @session.cart.cart_items.first.amount.should == 2
         Cart.destroy_object( @params, @session, @flash )
         @session.cart.cart_items.count.should == 0
+        @flash.now[ :notice ].should contain( "Корзина" )
+        @flash.now[ :notice ].should contain( "очищена" )        
       end
   end
 

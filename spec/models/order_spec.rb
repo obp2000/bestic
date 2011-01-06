@@ -18,6 +18,7 @@ describe Order do
       @order = Order.destroy_object( @params_for_destroy, @session, @flash )
       @order.email.should == valid_order_attributes[ :email ]
       Order.all.should_not include( @order )
+      @flash.now[ :notice ].should contain( "удалён" )      
     end
   
   end

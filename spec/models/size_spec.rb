@@ -1,9 +1,15 @@
 require 'spec_helper'
 
 describe Size do
-  before(:each) do
+  
+  before do
     @valid_attributes = valid_size_attributes
     @size = Size.new( @valid_attributes )
+    @params = { "size" => valid_size_attributes }
+    @updated_params = { "size" => { :name => "S" } }      
+    @session = {}
+    @flash = {}
+    @flash.stub( :now ).and_return( @flash )       
   end
 
   it "is valid with valid attributes" do
@@ -35,13 +41,6 @@ describe Size do
 
   describe "#new_object" do
   
-    before do
-      @params = { "size" => valid_size_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "builds new size" do
       @size = Size.new_object( @params, @session )
       @size.name.should == valid_size_attributes[ :name ]
@@ -51,47 +50,27 @@ describe Size do
  
   describe "#save_object" do
   
-    before do
-      @params = { "size" => valid_size_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "saves new size" do
       create_size
       @size.reload
       @size.name.should == valid_size_attributes[ :name ]
+      @flash.now[ :notice ].should contain( "создан" )         
     end
   
   end  
   
   describe "#update_object" do
   
-    before do
-      @params = { "size" => valid_size_attributes }
-      @updated_params = { "size" => { :name => "S" } }      
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
-  
     it "updates existing size" do
       create_size
       @size = Size.update_object( @updated_params.merge( :id => @size.id ), @session, @flash ).first
       @size.name.should == @updated_params[ "size" ][ :name ]
+      @flash.now[ :notice ].should contain( "обновлён" )         
     end
   
   end
   
   describe "#destroy_object" do
-  
-    before do
-      @params = { "size" => valid_size_attributes }
-      @session = {}
-      @flash = {}
-      @flash.stub( :now ).and_return( @flash )        
-    end
   
     it "destroys existing size" do
       create_size
@@ -99,6 +78,7 @@ describe Size do
       @size = Size.destroy_object( @params_for_destroy, @session, @flash )
       @size.name.should == valid_size_attributes[ :name ]
       Size.all.should_not include( @size )
+      @flash.now[ :notice ].should contain( "удалён" )           
     end
   
   end

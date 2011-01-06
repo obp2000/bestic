@@ -8,6 +8,11 @@ describe CartItem do
 
   describe "#update_object" do
     
+    it "shows add cart item notice" do
+      @flash.now[ :notice ].should contain( @cart_item.name )
+      @flash.now[ :notice ].should contain( "Добавлен" )         
+    end    
+    
     context "when cart has no such cart item" do
       it "adds new cart item" do
         @session.cart.cart_items.should include( @cart_item )
@@ -28,6 +33,13 @@ describe CartItem do
   end
 
   describe "#destroy_object" do
+    
+    it "shows delete cart item notice" do
+      CartItem.destroy_object( { :id => @cart_item.id }, @session, @flash )      
+      @flash.now[ :notice ].should contain( @cart_item.name )
+      @flash.now[ :notice ].should contain( "Удален" )         
+    end        
+    
     context "when cart has some such cart items" do
       it "deletes cart item" do
         CartItem.update_object( @params, @session, @flash )        
