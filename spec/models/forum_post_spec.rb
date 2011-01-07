@@ -38,30 +38,37 @@ describe ForumPost do
     end
   
   end
- 
-  describe "#save_object" do
-  
-    it "saves new forum post" do
-      create_forum_post
-      @forum_post.reload
-      @forum_post.name.should == valid_forum_post_attributes[ :name ]
-      @flash.now[ :notice ].should contain( "тема" )
-      @flash.now[ :notice ].should contain( "создана" )        
-    end
-  
-  end  
 
   describe "#reply" do
   
-    it "reply to existing forum post" do
-      create_forum_post
-#      @params[ :parent_id ] = @forum_post.id
-      @valid_attributes[ :id ] = @forum_post.id
-      @reply_forum_post = ForumPost.reply( @valid_attributes )
-#      @reply_forum_post.save_object( @session, @flash )      
-      @reply_forum_post.parent_id.should == @forum_post.id
-      @flash.now[ :notice ].should contain( "Сообщение" )
-      @flash.now[ :notice ].should contain( "отправлено" )        
+    it "builds reply to forum post" do
+      @forum_post = ForumPost.reply( @params )
+      @forum_post.parent_id.should == @params[ :id ]
+    end
+  
+  end 
+ 
+  describe "#save_object" do
+  
+    context "when forum post is new" do
+      it "saves new forum post" do
+        create_forum_post
+        @forum_post.name.should == valid_forum_post_attributes[ :name ]
+        @flash.now[ :notice ].should contain( "тема" )
+        @flash.now[ :notice ].should contain( "создана" )        
+      end
+    end
+  
+    context "when reply to existing forum post" do
+      it "reply to existing forum post" do
+        create_forum_post
+        @params[ "forum_post" ][ :parent_id ] = @forum_post.to_param
+        @reply_forum_post = ForumPost.new_object( @params, @session )
+        @reply_forum_post.save_object( @session, @flash ) 
+        @reply_forum_post.parent_id.should == @forum_post.id
+        @flash.now[ :notice ].should contain( "Сообщение" )
+        @flash.now[ :notice ].should contain( "отправлено" )        
+      end
     end
   
   end  
