@@ -1,1 +1,1 @@
-page.create_or_update @object, session
+@object.render_create_or_update page, session

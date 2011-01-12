@@ -3,14 +3,15 @@ class ItemAttribute < ActiveRecord1
   self.abstract_class = true
   
   class_inheritable_accessor :delete_from_item_title, :delete_from_item_js_string, :insert_attr,
-    :change_image, :add_to_item_image
+    :change_image, :add_to_item_image, :attr_partial
   
   self.delete_from_item_title = "Удалить из #{Item.class_name_rus}а"
   self.delete_from_item_js_string =
     "$(this).prev().remove();$(this).next(':hidden').remove();$(this).next(':checked').remove();$(this).next('textarea').remove();$(this).remove()"
   self.insert_attr = "attr"      
   self.change_image = []
-  self.add_to_item_image = [ "arrow_large_right.png", { :title =>"Добавить к #{Item.class_name_rus}у" } ]  
+  self.add_to_item_image = [ "arrow_large_right.png", { :title =>"Добавить к #{Item.class_name_rus}у" } ]
+  self.attr_partial = "attr"
 
   attr_accessor_with_default( :options_for_replace_item_attributes ) { [ tag, { :partial => "items/" + 
           self.class.attr_partial, :object => self } ] }
@@ -40,9 +41,7 @@ class ItemAttribute < ActiveRecord1
       end    
     end    
      
-    def options_for_replace_new_tag; [ new_tag, { :partial => create_or_update_partial, :object => new1 } ]; end
-
-    def attr_partial; "attr"; end     
+    def options_for_replace_new_tag; [ new_tag, { :partial => create_or_update_partial, :object => new1 } ] end
      
   end
 
@@ -55,8 +54,8 @@ class ItemAttribute < ActiveRecord1
             [ :bottom, "form_#{self.class.index_tag}", { :partial => "items/#{self.class.insert_attr}", :object => self } ]
   end    
   
-  def create_or_update1( page, session )
-    super page, session
+  def render_create_or_update( page, session )
+    super
     [ self.class.options_for_replace_new_tag, options_for_replace_item_attributes ].each do |replace_args|
       page.replace *replace_args rescue nil
     end  

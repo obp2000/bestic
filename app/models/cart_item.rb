@@ -19,28 +19,29 @@ class CartItem < ActiveRecord1
   
   class << self
 
-    def update_object( params, session, flash ); [ update_cart_item( params.conditions_hash( session ) ).tap {
-              |object| object.update_notice( flash ) }, true ]; end
+    def update_object( params, session, flash )
+      [ update_cart_item( params.conditions_hash( session ) ).tap { |cart_item| cart_item.update_notice( flash ) }, true ]
+    end
 
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).tap { |object| object.delete_cart_item; object.destroy_notice( flash ) }
+      find( params[ :id ] ).tap { |cart_item| cart_item.delete_cart_item; cart_item.destroy_notice( flash ) }
     end
 
   end
 
-  def delete_cart_item; update_amount( -1 ); destroy if amount.zero? end   
+  def delete_cart_item; tap { update_amount( -1 ) }; destroy if amount.zero? end   
   
-  def create_or_update1( page, session )
-    super page, session
+  def render_create_or_update( page, session )
+    super
     page.after_create_or_update_cart_item tag, ( amount.zero? or session.cart.cart_items.empty? ), session
   end  
-  alias_method :destroy1, :create_or_update1
+  alias_method :render_destroy, :render_create_or_update
 
-  def update_amount( i ); update_attribute :amount, amount + i; self; end   
+  def update_amount( i ); update_attribute :amount, amount + i end   
 
-  def update_notice( flash ); flash.now[ :notice ] = "Добавлен товар<br /> <em>#{name}</em>"; end
+  def update_notice( flash ); flash.now[ :notice ] = "Добавлен товар<br /> <em>#{name}</em>" end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "Удален товар <em>#{name}</em>"; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Удален товар <em>#{name}</em>" end
 
   def populate_order_item_hash
     { :item_id => item_id, :price => price, :amount => amount,  :size_id => size_id, :colour_id => colour_id }
@@ -49,7 +50,8 @@ class CartItem < ActiveRecord1
   private
   
     def self.update_cart_item( conditions )
-      first( :conditions => conditions ).update_amount( 1 ) rescue create( conditions.merge :amount => 1 )
+      first( :conditions => conditions ).tap { |cart_item| cart_item.update_amount( 1 ) } rescue
+              create( conditions.merge :amount => 1 )
     end
     
 end
@@ -57,7 +59,7 @@ end
 class Hash
   
   def conditions_hash( session )
-      { :item_id => self[:id].gsub(/catalog_item_/, ""), :size_id => self[:size_id], :colour_id => self[:colour_id],
+      { :item_id => self[ :id ].gsub(/catalog_item_/, ""), :size_id => self[ :size_id ], :colour_id => self[ :colour_id ],
               :cart_id => session.cart.id }
   end  
   

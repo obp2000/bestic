@@ -1,1 +1,1 @@
-page.new_or_edit @object
+@object.render_new_or_edit page

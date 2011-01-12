@@ -1,6 +1,6 @@
 module ProcessedOrdersHelper
 
-  def new_processed_order; delay( DURATION ) { check_cart_links }; end 
+  def new_processed_order; delay( DURATION ) { check_cart_links } end 
  
   def create_processed_order( fade_duration )
     show_notice( :delay => fade_duration ) 
@@ -8,8 +8,8 @@ module ProcessedOrdersHelper
     delay( fade_duration ) { redirect_to "/" }    
   end 
 
-  def update_processed_orders_amount( action1 ); delay( DURATION ) { action *action1 }; end
+  def update_processed_orders_amount( action1 ); delay( DURATION ) { action *action1 } end
 
-  def close1( *actions ); actions.each { |action1| action *action1 }; show_notice; end 
+  def render_close( *actions ); actions.each { |action1| action *action1 }; show_notice end 
  
 end

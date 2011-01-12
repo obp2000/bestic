@@ -11,14 +11,13 @@ class Category < ItemAttribute
   self.change_image = "color_line.png"
   self.index_text = "Вид одежды"
   self.paginate_options = { :order => 'name' }
+  self.attr_partial = "category"     
  
   class << self
 
-    def all_objects( * ); all paginate_options ; end
+    def all_objects( * ); all paginate_options end
       
-    def all_of( season_class ); all.reject { |category| category.send( season_class.name.tableize ).empty? }; end
-
-    def attr_partial; "category"; end      
+    def all_of( season_class ); all.reject { |category| category.send( season_class.name.tableize ).empty? } end
       
   end
 

@@ -108,9 +108,9 @@ class User < ActiveRecord1
      электронной почты не найден!"
   end
 
-  def reset_password_notice; "Пароль удачно изменен."; end
+  def reset_password_notice; "Пароль удачно изменен." end
   
-  def reset_password_page_title; "Переустановка пароля"; end
+  def reset_password_page_title; "Переустановка пароля" end
 
   def new_user_notice
     "Спасибо за регистрацию! На Ваш адрес электронной почты
@@ -118,21 +118,21 @@ class User < ActiveRecord1
      чего Вы сможете войти в систему."    
   end
   
-  def activate_user_notice; "Регистрация закончена!"; end
+  def activate_user_notice; "Регистрация закончена!" end
 
-  def self.logout_text; "Выйти"; end
+  def self.logout_text; "Выйти" end
 
-  def self.login_rus; "Имя пользователя"; end
+  def self.login_rus; "Имя пользователя" end
 
-  def self.email_rus; "Адрес электронной почты"; end
+  def self.email_rus; "Адрес электронной почты" end
   
-  def self.last_name_rus; "Фамилия"; end
+  def self.last_name_rus; "Фамилия" end
   
-  def self.first_name_rus; "Имя"; end
+  def self.first_name_rus; "Имя" end
 
-  def self.password_rus; "Пароль"; end
+  def self.password_rus; "Пароль" end
   
-  def self.password_confirmation_rus; "Подтверждение пароля"; end
+  def self.password_confirmation_rus; "Подтверждение пароля" end
         
   protected
   

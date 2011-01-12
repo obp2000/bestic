@@ -1,1 +1,1 @@
-page.index @objects
+@objects.render_index page

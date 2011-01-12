@@ -37,12 +37,12 @@ class Contact < ActiveRecord1
 
   class << self
    
-    def show_page_title_for( * ); class_name_rus_cap.pluralize; end
+    def show_page_title_for( * ); class_name_rus_cap.pluralize end
 
-    def new1; nil; end
+    def new1; nil end
 
   end
 
-  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} успешно обновлены."; end
+  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} успешно обновлены." end
 
 end

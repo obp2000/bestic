@@ -41,15 +41,15 @@ class ForumPost < ActiveRecord1
   
   class << self
 
-    def all_objects( params, * ); paginate_objects( params ); end
+    def all_objects( params, * ); paginate_objects( params ) end
 
-    def reply( params ); new :parent_id => params[ :id ]; end
+    def reply( params ); new :parent_id => params[ :id ] end
     
     def destroy_object( params, session, flash )
       find( params[ :id ] ).full_set.tap { |objects| delete objects; objects.first.destroy_notice( flash ) }
     end
 
-    def index_page_title_for( * ); class_name_rus_cap; end
+    def index_page_title_for( * ); class_name_rus_cap end
 
     include Index1
 
@@ -60,14 +60,14 @@ class ForumPost < ActiveRecord1
             :html => { :id => "link_to_reply" }  
   end
 
-  def new_or_edit( page ); super page; page.fade :post; end  
+  def render_new_or_edit( page ); super; page.fade :post end  
 
-  def reply( page )
+  def render_reply( page )
     self.class.superclass.instance_method( :new_or_edit ).bind( self )[ page ]    
     page.fade :link_to_reply    
   end 
   
-  def create_or_update1( page, session )
+  def render_create_or_update( page, session )
     page.create_forum_post [ ( parent_id.zero? ? "top"  : "after" ), ( parent_id.zero? ? "posts"  : parent_tag ),
             { :partial => self.class.name.underscore, :object => self } ], [ :post, :new_forum_post ]    
   end
@@ -76,6 +76,6 @@ class ForumPost < ActiveRecord1
     flash.now[ :notice ] = parent_id.zero? ? "Новая тема создана" : "Сообщение отправлено"
   end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "Ветвь сообщений удалена"; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Ветвь сообщений удалена" end
 
 end

@@ -10,17 +10,11 @@
   Destroy_template_hash = { :template => "shared/destroy.rjs" }      
    
   class_inheritable_accessor :class_name_rus, :class_name_rus_cap, :back_image, :delete_image, :delete_title,
-    :close_window_image,
-    :submit_image, :submit_text, :created_at_rus, :updated_at_rus,
-    :index_partial, :index_image, :index_text,  :replace,
-    :fade_tag, :appear_tag, :delete_text, :nav_image, :nav_text, 
-    :new_image, :new_text,
-    :show_image,
-    :name_rus, :submit_with_options, :change_text,
+    :close_window_image, :submit_image, :submit_text, :created_at_rus, :updated_at_rus,
+    :index_partial, :index_image, :index_text,  :replace, :fade_tag, :appear_tag, :delete_text, :nav_image, :nav_text, 
+    :new_image, :new_text, :show_image, :name_rus, :submit_with_options, :change_text,
     :index_render_block, :show_render_block, :new_render_block, :edit_render_block, :create_render_block,
     :update_render_block, :destroy_render_block, :paginate_options
-
-#  class_inheritable_array :index_image
 
   self.class_name_rus = ""
   self.class_name_rus_cap = ""  
@@ -62,13 +56,11 @@
   
   class << self
 
-#    def all_objects( params, flash ); all; end
     define_method( :all_objects ) { |*| all }
-    
-#    define_method( :paginate_hash ) { |params| paginate_options.merge :page => params[ :page ] }   
-    def paginate_hash( params ); paginate_options.merge :page => params[ :page ]; end
 
-    def paginate_objects( params ); paginate paginate_hash( params ); end 
+    def paginate_hash( params ); paginate_options.merge :page => params[ :page ] end
+
+    def paginate_objects( params ); paginate paginate_hash( params ) end 
 
     def update_object( params, session, flash )
       [ find params[ :id ], nil ].tap { |result| result.update_object( params, session, flash ) }
@@ -78,39 +70,39 @@
       find( params[ :id ] ).destroy.tap { |object| object.destroy_notice( flash ) }
     end     
     
-    def new1; new; end
+    def new1; new end
     
-    def new_object( params, session ); new params[ name.underscore ]; end
+    def new_object( params, session ); new params[ name.underscore ] end
         
-    def link_to_back( page ); page.link_to_function1 back_image, nil, back_block.bind( self ); end
+    def link_to_back( page ); page.link_to_function1 back_image, nil, back_block.bind( self ) end
     
-    def back_block; lambda { |page| page.fade_appear( appear_tag, fade_tag )  }; end    
+    def back_block; lambda { |page| page.fade_appear( appear_tag, fade_tag )  } end    
     
     def link_to_close_window( page )
       page.link_to_function1 close_window_image, nil, close_window_block.bind( self )      
     end
   
-    def close_window_block; lambda { |page| page.action :remove, index_tag }; end
+    def close_window_block; lambda { |page| page.action :remove, index_tag } end
    
-    def index_tag; name.tableize; end    
+    def index_tag; name.tableize end    
 
-    def new_tag; "new_#{name.underscore}"; end
+    def new_tag; "new_#{name.underscore}" end
 
-    def new_partial; name.underscore; end
+    def new_partial; name.underscore end
       
-    def edit_partial; name.underscore; end      
+    def edit_partial; name.underscore end      
 
-    def new_or_edit_partial; name.underscore; end
+    def new_or_edit_partial; name.underscore end
 
-    def create_or_update_partial; new_or_edit_partial; end
+    def create_or_update_partial; new_or_edit_partial end
     
-    def index1( page, objects )
+    def render_index( page, objects )
       page.insert_index_partial index_tag, index_partial, objects      
       page.attach_js( "attach_js" )  
     end      
 
-    def show1( page )
-      page.show2 appear_tag, fade_tag      
+    def render_show( page )
+      page.render_show appear_tag, fade_tag      
       page.attach_js( "attach_yoxview" )      
     end     
 
@@ -127,15 +119,15 @@
       page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get 
     end
   
-    def link_to_logout( page ); page.link_to1 [], logout_text, logout_path; end
+    def link_to_logout( page ); page.link_to1 [], logout_text, logout_path end
   
-    def logout_path; [ "logout_path" ]; end
+    def logout_path; [ "logout_path" ] end
   
-    def plural_path( params = nil ); [ "#{name.tableize}_path", params ]; end   
+    def plural_path( params = nil ); [ "#{name.tableize}_path", params ] end   
 
-    def new_path; [ "new_#{name.underscore}_path" ]; end
+    def new_path; [ "new_#{name.underscore}_path" ] end
       
-    def submit_to( page ); page.send( *submit_with_options ); end
+    def submit_to( page ); page.send( *submit_with_options ) end
   
   end
 
@@ -154,28 +146,28 @@
             :method => :delete, :confirm => delete_title     
   end
     
-  def update_object( params, session ); update_attributes( params[ self.class.name.underscore ] ); end
+  def update_object( params, session ); update_attributes( params[ self.class.name.underscore ] ) end
   
-  def save_object( session, flash ); save.tap { |success| create_notice( flash ) if success }; end
+  def save_object( session, flash ); save.tap { |success| create_notice( flash ) if success } end
 
-  def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно."; end
+  def create_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} создан удачно." end
 
-  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён."; end
+  def update_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удачно обновлён." end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён."; end  
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} удалён." end  
 
-  def new_or_edit( page )
+  def render_new_or_edit( page )
     page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
     page.attach_js( "attach_yoxview" )
   end 
 
-  def create_or_update1( page, session )
-    page.create_or_update1 [ :remove, create_or_update_tag ],
+  def render_create_or_update( page, session )
+    page.render_create_or_update [ :remove, create_or_update_tag ],
             [ :bottom, self.class.name.tableize, { :partial => self.class.create_or_update_partial, :object => self } ]
   end  
   
-  def destroy1( page, session ); page.destroy2 edit_tag, tag; end  
+  def render_destroy( page, session ); page.render_destroy edit_tag, tag end  
 
-  def each; yield self; end
+#  def each; yield self end
 
 end

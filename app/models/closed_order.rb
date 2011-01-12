@@ -6,6 +6,6 @@ class ClosedOrder < Order
   self.status_rus_nav = " со статусом \"закрытые\""
   self.status_rus = "закрыт"   
 
-  def closed?; true; end
+  def closed?; true end
      
 end

@@ -28,18 +28,16 @@ class Cart < ActiveRecord1
 
   class << self
 
-#    def find_or_create( cart_id1 ); cart_id1 ? find( cart_id1 ) : create.tap { |cart1| cart_id1 = cart1.id }; end
+#    def find_or_create( cart_id1 ); cart_id1 ? find( cart_id1 ) : create.tap { |cart1| cart_id1 = cart1.id } end
 
-    def destroy_object( params, session, flash ); session.cart.tap { |cart| cart.destroy_notice( flash ) }.clear_cart; end
+    def destroy_object( params, session, flash ); session.cart.tap { |cart| cart.destroy_notice( flash ) }.clear_cart end
 
   end
 
-  def clear_cart; cart_items.dup.tap { cart_items.clear }; end
+  def clear_cart; cart_items.dup.tap { cart_items.clear } end
 
-  def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) }; end
+  def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) } end
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена"; end  
-
-#  def cart_totals; [ [ "cart_total_items", total_items ], [ "cart_total_sum", total ] ]; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "Корзина очищена" end  
 
 end

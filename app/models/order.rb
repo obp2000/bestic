@@ -45,7 +45,7 @@ class Order < ActiveRecord1
 
   class << self
   
-    def all_objects( params, * ); paginate_objects( params ); end
+    def all_objects( params, * ); paginate_objects( params ) end
     
     def index_page_title_for( params )
       "Список #{class_name_rus}ов" + params[ :controller ].classify.constantize.status_rus_nav
@@ -60,11 +60,11 @@ class Order < ActiveRecord1
             :confirm => self.class.close_confirm
   end
 
-  def destroy1( page, session )
+  def render_destroy( page, session )
     super page, session
     page.update_processed_orders_amount( ProcessedOrder.update_amount )
   end 
 
-  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён."; end
+  def destroy_notice( flash ); flash.now[ :notice ] = "#{self.class.class_name_rus_cap} № #{id} успешно удалён." end
        
 end

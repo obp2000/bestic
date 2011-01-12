@@ -11,6 +11,6 @@ module CatalogItemsHelper
         :url => { :controller => "cart_items", :action => "update" }, :tolerance => "touch", :hoverClass => "cart_hover "
   end
 
-  def radio_button_tag_for( attr, checked, visibility ); attr.radio_button_tag1( self, checked, visibility ); end
+  def radio_button_tag_for( attr, checked, visibility ); attr.radio_button_tag1( self, checked, visibility ) end
 
 end

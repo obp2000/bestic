@@ -26,9 +26,9 @@ class Colour < ItemAttribute
 
   class << self
 
-    def all_objects( params, * ); paginate_objects( params ); end
+    def all_objects( params, * ); paginate_objects( params ) end
       
-    def index1( page, objects ); super page, objects; page.attach_js( "attach_mColorPicker" ); end   
+    def render_index( page, objects ); super; page.attach_js( "attach_mColorPicker" ) end   
      
     def link_to_add_html_code_to( page )
       page.link_to_function1 add_html_code_to_colour_image, add_html_code_to_colour_js_string
@@ -36,8 +36,8 @@ class Colour < ItemAttribute
      
   end
 
-  def new_or_edit( page ); super page; page.attach_js( "attach_mColorPicker" ); end
+  def render_new_or_edit( page ); super; page.attach_js( "attach_mColorPicker" ) end
 
-  def create_or_update1( page, session ); super page, session; page.attach_js( "attach_mColorPicker" ); end
+  def render_create_or_update( page, session ); super; page.attach_js( "attach_mColorPicker" ) end
     
 end

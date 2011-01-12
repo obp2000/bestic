@@ -22,9 +22,8 @@ class CatalogItem < Item
 
   class << self
 
-    def all_objects( params, * ); catalog_items( params ).paginate paginate_hash( params ); end
- 
-#    def catalog_items( params ); all; end
+    def all_objects( params, * ); catalog_items( params ).paginate paginate_hash( params ) end
+
     define_method( :catalog_items ) { |*| all }
 
     def search_results( params, flash )
@@ -44,14 +43,11 @@ class CatalogItem < Item
       end
     end
     
-    def current_catalog_items; name.tableize.gsub!( "category_", "" ); end        
+    def current_catalog_items; name.tableize.gsub!( "category_", "" ) end        
     
-    def link_to_index_local( page ); page.link_to1 [], index_text, plural_path, :method => :get; end
+    def link_to_index_local( page ); page.link_to1 [], index_text, plural_path, :method => :get end
 
-    def index1( page, objects )
-      super page, objects
-      page.attach_js( "attach_js" )         
-    end      
+    def render_index( page, objects ); super; page.attach_js( "attach_js" ) end      
       
   end
 
