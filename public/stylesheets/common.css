@@ -6,7 +6,7 @@ body {
   background-image: url("/stylesheets/images/ui-bg_highlight-soft_100_feeebd_1x100_h.png");
   background-repeat: repeat-y; }
 
-h1 {
+h1, h2 {
   text-align: center; }
 
 table {
@@ -99,16 +99,16 @@ img {
   margin-left: auto; }
 
 #header {
+  display: table;
+  width: 100%;
   font-family: "Comic Sans MS";
   padding-top: 10px;
-  border-bottom: 4px solid #c74809;
-  height: 60px; }
-  #header form, #header h3, #header h5, #header > a, #header > img {
-    float: left; }
-  #header form, #header > a {
-    margin-right: 80px; }
+  padding-bottom: 5px;
+  border-bottom: 4px solid #c74809; }
+  #header > * {
+    display: table-cell;
+    vertical-align: top; }
   #header h3 {
-    text-align: right;
     font-style: italic; }
   #header h5 a {
     color: red; }
@@ -149,8 +149,8 @@ img {
   padding: 0.3em;
   border-width: 0; }
   .catalog_item > * {
-    vertical-align: top;
-    display: table-cell; }
+    display: table-cell;
+    vertical-align: top; }
   .catalog_item form {
     padding: 0;
     line-height: 1.2em; }
@@ -163,16 +163,16 @@ img {
     max-width: 140px;
     margin-left: 4px; }
 
-.thumbs {
-  float: left; }
-  .thumbs a {
-    float: left;
-    max-width: 120px;
-    font-size: 0.8em;
-    line-height: 1em; }
-    .thumbs a img {
-      border: 1px solid #00a7ec;
-      display: block; }
+.thumbs > * {
+  display: table-cell;
+  vertical-align: top; }
+.thumbs a {
+  max-width: 120px;
+  font-size: 0.8em;
+  line-height: 1em; }
+  .thumbs a img {
+    border: 1px solid #00a7ec;
+    display: block; }
 
 .pagination {
   clear: both;

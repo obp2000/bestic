@@ -19,17 +19,11 @@ module ApplicationHelper
 
   def attach_js( js ); delay( DURATION ) { call( js ) } end
 
-  def fade_appear( fade, appear )
-    fade_with_duration fade
-    appear_with_duration appear    
-  end
+  def fade_appear( fade, appear ); fade_with_duration fade; appear_with_duration appear end
 
   def action( action1, *opts )
     fade_with_duration opts.first
-    delay( DURATION ) do    
-      send action1, *opts
-      appear_with_duration opts.first unless action1 == :remove       
-    end
+    delay( DURATION ) { send action1, *opts; appear_with_duration opts.first unless action1 == :remove }       
   end
     
   def show_notice( opts = {} )
@@ -38,12 +32,7 @@ module ApplicationHelper
     insert_html :top, :content, :partial => "shared/notice"
     hide :notice
     appear_with_duration :notice, appear_duration    
-    delay( appear_duration ) do
-      fade_with_duration :notice, fade_duration
-      delay( fade_duration ) do
-        remove :notice
-      end
-    end
+    delay( appear_duration ) { fade_with_duration :notice, fade_duration; delay( fade_duration ) { remove :notice } }
   end
 
   def check_cart_links; Cart.cart_links.each { |link| replace_html link, :partial => "carts/#{link}" } end
@@ -131,15 +120,6 @@ class Array
   end  
   
 end
-
-#class Enumerable::Enumerator
-  
-# def destroy1( page, session ) render_destroy
-#    each { |object| object.destroy1( page, session ) }        
-#    page.show_notice
-#  end 
-  
-#end
 
 class Object
   
