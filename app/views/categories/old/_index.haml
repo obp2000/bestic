@@ -1,6 +1,0 @@
-#categories.ui-widget-content.ui-corner-all.shadow
-  = link_to_function image_tag("close.png", :title => "Закрыть окно") do |page|
-    - page.visual_effect "fade", "edit_categories", :duration => 1
-  = render :partial => "category", :collection => @categories
-.ui-widget-content.ui-corner-all.shadow= render :partial => "category", :object => @category
-    

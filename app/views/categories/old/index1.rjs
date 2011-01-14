@@ -1,5 +1,0 @@
-@categories = Category.find :all, :order =>  'name'
-@category_new = Category.new
-page.replace_html "content", :partial => "index"
-page.visual_effect :fade, 'category_notice', :duration => 3
-

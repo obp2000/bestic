@@ -1,2 +1,0 @@
-#page.content :content => "cart", :partial => "carts/cart"
-page.content @object.destroy_with_options

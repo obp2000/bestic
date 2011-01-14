@@ -1,3 +1,0 @@
-class SeasonCatalogItemsController < CatalogItemsController
-  
-end

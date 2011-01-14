@@ -1,3 +1,0 @@
-#page.content :content => "order_details", :partial => "show"
-page.content @object.show_options
-page.visual_effect :fade, :item_content, :duration => 1

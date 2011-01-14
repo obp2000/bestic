@@ -1,6 +1,0 @@
-#colours.ui-widget-content.ui-corner-all.shadow
-  = link_to_function image_tag("close.png", :title => "Закрыть окно") do |page|
-    - page.visual_effect "fade", "edit_colours", :duration => 1
-  = render :partial => "colour", :collection => @colours 
-.ui-widget-content.ui-corner-all.shadow= render :partial => "colour", :object => @colour
-    

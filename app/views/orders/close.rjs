@@ -1,1 +1,0 @@
-page.close @object, Order.processed_amount

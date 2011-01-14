@@ -1,7 +1,0 @@
-%h1 Загрузка фотографий
-= form_tag( {:action => 'uploadFile'}, :multipart => true )
-  %p
-    %label(for="upload_file") Выберите фотографию
-  = file_field 'upload', 'datafile'
-  = submit_tag "Загрузить"
-= form_tag 

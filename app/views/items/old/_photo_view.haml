@@ -1,4 +1,0 @@
-%span(id="photo_#{photo_view.id}" style="float: left; margin_left: 0px; padding: 20px; width: 150")
-  = image_tag( url_for_file_column( photo_view, "name" ), :height => '80' ) if photo_view.name
-  %br
-  = photo_view.comment if photo_view.comment

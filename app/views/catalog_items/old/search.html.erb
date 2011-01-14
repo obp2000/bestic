@@ -1,7 +1,0 @@
-<%= render :partial => "search_box" %>
-
-<% if @catalog_items %>
-	<p>Ваш запрос "<%= params[:q] %>" вернул
-	<%= pluralize @catalog_items.size, "результат" %>:</p>
-	<%= render :partial => 'catalog_item', :collection => @catalog_items %>
-<% end %>

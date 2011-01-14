@@ -1,4 +1,0 @@
-page.replace_html "content", :partial => "index"
-page.insert_html :bottom, "size_new", :partial => "size_notice" if flash[:size_notice] 
-page.visual_effect :fade, 'size_notice', :duration => 3
-page.delay(3) { page.remove "size_notice" }
