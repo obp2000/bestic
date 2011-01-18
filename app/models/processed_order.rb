@@ -35,9 +35,7 @@ class ProcessedOrder < Order
     
   class << self
     
-    def close_object( params, session, flash )
-      find( params[ :id ] ).tap { |object| object.close; object.close_notice( flash ) }
-    end
+    def close_object( params, session, flash ); find( params[ :id ] ).tap { |order| order.close; order.close_notice( flash ) } end
 
     def update_amount; [ :replace_html, "processed_orders_amount", count ] end
 
