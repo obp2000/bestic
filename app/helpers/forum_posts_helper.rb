@@ -1,3 +1,4 @@
+# encoding: cp1251
 module ForumPostsHelper
 
   def create_forum_post( insert_args, fade_tags )

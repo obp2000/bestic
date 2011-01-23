@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class OrderItem < ActiveRecord1
   belongs_to :order 
   belongs_to :item

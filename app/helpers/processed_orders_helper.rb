@@ -1,3 +1,4 @@
+# encoding: cp1251
 module ProcessedOrdersHelper
 
   def new_processed_order; delay( DURATION ) { check_cart_links } end 

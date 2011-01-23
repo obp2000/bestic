@@ -1,3 +1,4 @@
+# encoding: cp1251
 class ItemAttribute < ActiveRecord1
   
   self.abstract_class = true

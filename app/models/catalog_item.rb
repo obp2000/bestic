@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class CatalogItem < Item
 
   class_inheritable_accessor :season_icon, :season_name
@@ -10,7 +10,6 @@ class CatalogItem < Item
   self.appear_tag = "details"    
   self.submit_with_options = [ "image_submit_tag", "search_32.png", { :title => "Поиск #{class_name_rus}а" } ]
   self.index_render_block = lambda { render request.xhr? ? Index_template_hash : { :partial => "index", :layout => "application" } }
-#  self.search_render_block = lambda { render Index_template_hash }
   self.paginate_options = { :per_page => 8, :order => "items.id desc" }
 
 #  PER_PAGE = 8
@@ -66,8 +65,7 @@ end
 class Hash
   
   def search_args
-    [ self[ :q ], { :page => self[ :page ], :per_page => CatalogItem::SEARCH_PER_PAGE, :order => :id,
-            :sort_mode => :desc } ]
+    [ self[ :q ], { :page => self[ :page ], :per_page => CatalogItem::SEARCH_PER_PAGE, :order => :id, :sort_mode => :desc } ]
   end
   
 end

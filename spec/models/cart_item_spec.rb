@@ -57,16 +57,4 @@ describe CartItem do
     end  
   end
 
-  describe "#link_to_show( page )" do
-  
-    it "creates link to show" do
-#      create_cart_item
-#      page = ApplicationHelper
-#      @cart_item.link_to_show( ActionView::Base.new ).should == 11
-#      p "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"
-    end  
-  
-  end
-
-
 end

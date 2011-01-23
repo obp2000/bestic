@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class UserMailer < ActionMailer::Base
 
   def self.deliver_notifications( user )

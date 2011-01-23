@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class Contact < ActiveRecord1
 #  validates_length_of :name, :in => 2..255
 #  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i 
@@ -24,7 +24,6 @@ class Contact < ActiveRecord1
   self.icq_rus = "ICQ"
   self.icq_image = "icq_protocol.png"
   self.email_subject = "Сообщение от пользователя интернет-магазина BEST&C"
-#  self.show_text = class_name_rus_cap.pluralize
   self.show_image = "contacts.png"  
 
   attr_accessor_with_default( :show_text ) { class_name_rus_cap.pluralize }  

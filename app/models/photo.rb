@@ -1,10 +1,8 @@
-# coding: utf-8
+# encoding: cp1251
 class Photo < ItemAttribute
   belongs_to :item
   has_attachment :content_type => :image, :storage => :file_system, :resize_to => '768x512>',
               :thumbnails => { :small => '100x100>' }
-#  validates_as_attachment
-#  validates_presence_of :filename
 
   self.class_name_rus = "фотография"  
   self.class_name_rus_cap = "Фотография"
@@ -16,8 +14,6 @@ class Photo < ItemAttribute
   self.paginate_options = { :conditions => { :parent_id => nil, :item_id => nil }, :order => "id desc", :per_page => 5  }
 
   class_inheritable_accessor :new_partial
-#  self.upload_image = "load.png"
-#  self.upload_title = "Загрузить фотографию"
   self.new_partial = "upload_photo"  
 
   def validate
@@ -30,7 +26,9 @@ class Photo < ItemAttribute
 
   def render_create_or_update( page, session ); super; page.attach_js( "attach_yoxview" ) end   
 
-  def link_to_show( page, comment = "" ); page.link_to1 [ public_filename :small ], comment, public_filename end
+  def link_to_show( page, comment = "" )
+    page.link_to1 [ public_filename( :small ) ], comment, public_filename
+  end
 
   def link_to_show_with_comment( page ); link_to_show( page, comment ) end
 

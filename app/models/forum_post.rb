@@ -1,10 +1,9 @@
-# coding: utf-8
+# encoding: cp1251
 class ForumPost < ActiveRecord1
   acts_as_threaded
 
   self.class_name_rus = "сообщение"  
   self.class_name_rus_cap = "Форум"
-#  self.index_tag = "content"   
   self.index_partial = "index"
   self.replace = :replace_html
   self.fade_tag = "post_new"
@@ -46,7 +45,7 @@ class ForumPost < ActiveRecord1
     def reply( params ); new :parent_id => params[ :id ] end
     
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).full_set.tap { |objects| delete objects; objects.first.destroy_notice( flash ) }
+      find( params[ :id ] ).tap { |forum_post| forum_post.destroy_notice( flash ) }.full_set.tap { |full_set| delete full_set }
     end
 
     def index_page_title_for( * ); class_name_rus_cap end

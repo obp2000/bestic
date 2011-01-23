@@ -1,5 +1,4 @@
-# coding: utf-8
-
+# encoding: cp1251
 class Category < ItemAttribute
   has_many :items, :include => [:sizes, :colours, :photos]
   has_many :catalog_items, :include => [:sizes, :colours, :photos]
@@ -22,8 +21,7 @@ class Category < ItemAttribute
   end
 
   def add_to_item1( page )
-    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}",
-              :object => self                      
+    page.action :replace_html, "form_#{self.class.index_tag}", :partial => "items/#{self.class.name.underscore}", :object => self                      
   end
    
 end

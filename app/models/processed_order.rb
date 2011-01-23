@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class ProcessedOrder < Order
 
   self.class_name_rus_cap = "Заказ для исполнения"
@@ -35,7 +35,7 @@ class ProcessedOrder < Order
     
   class << self
     
-    def close_object( params, session, flash ); find( params[ :id ] ).tap { |order| order.close; order.close_notice( flash ) } end
+    def close_object( params, session, flash ); find( params[ :id ] ).tap { |processed_order| processed_order.close( flash ) } end
 
     def update_amount; [ :replace_html, "processed_orders_amount", count ] end
 
@@ -59,7 +59,7 @@ class ProcessedOrder < Order
     save
   end
   
-  def close; self.status = ClosedOrder.status_eng; save( false ) end
+  def close( flash ); self.status = ClosedOrder.status_eng; save( false ); close_notice( flash ) end
 
   def close_notice( flash ); flash.now[ :notice ] = "#{Order.class_name_rus_cap} № #{id} успешно закрыт." end
 

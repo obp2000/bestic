@@ -1,3 +1,4 @@
+# encoding: cp1251
 module LayoutsHelper
   
   def application_javascripts

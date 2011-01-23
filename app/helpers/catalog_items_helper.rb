@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 module CatalogItemsHelper
 
   def set_drop_receiving_element( element )

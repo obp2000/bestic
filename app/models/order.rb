@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class Order < ActiveRecord1
   attr_protected :id, :status, :updated_at, :created_at
   attr_accessor :captcha_validated, :cart
@@ -13,7 +13,6 @@ class Order < ActiveRecord1
   self.class_name_rus = "заказ"  
   self.class_name_rus_cap = "Заказ"
   self.updated_at_rus = "Закрыт"
-#  self.index_tag = "content"    
   self.index_partial = "orders/index"
   self.fade_tag = "item_content"
   self.appear_tag = "order_details"

@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
@@ -55,8 +55,7 @@ module ApplicationHelper
   def link_to_function1( image, js_string = nil, block = nil ); link_to_function image_tag( *image ), js_string, &block end  
  
   def link_to_remote1( image, text, url, opts = {} )
-    link_to_remote( image_with_text( image, text ), { :url => send( *url ) }.merge( opts ) )      
-  end 
+    link_to_remote image_with_text( image, text ), { :url => send( *url ) }.merge( opts ) end 
 
   def link_to1( image, text, url, opts = {} ); link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts ) end
 
@@ -68,8 +67,7 @@ module ApplicationHelper
   end
 
   def insert_index_partial( index_tag, index_partial, objects )
-    remove_and_insert [ :remove, index_tag ],
-            [ :after, "tabs", { :partial => index_partial, :locals => { :objects => objects } } ]       
+    remove_and_insert [ :remove, index_tag ], [ :after, "tabs", { :partial => index_partial, :locals => { :objects => objects } } ]       
   end
 
   def replace_index_partial( index_tag, index_partial, objects )
@@ -130,8 +128,22 @@ class Object
 end
 
 class Hash
-  
-  def cart; self[ :cart_id ] ? Cart.find( self[ :cart_id ] ) : Cart.create.tap { |cart1| self[ :cart_id ] = cart1.id } end
-#  def cart; Cart.find_or_create( self[ :cart_id ] ) end
+
+  def cart; Cart.find_or_create self end
   
 end
+
+APPLICATION_TITLE = "Одежда для русских тоев BEST&C"
+ADMIN_TITLE = "Администрирование магазина BEST&C"
+RUB = "руб."
+SHT = "шт."  
+DEMO = "Демо"
+REQUIRED_FIELDS = "обязательные поля"
+ITOGO = "Итого"
+VSE = "все"
+DURATION = 0.5
+HIGHLIGHT_DURATION = 2
+SEASON = "Сезон"
+
+WillPaginate::ViewHelpers.pagination_options[:previous_label] = 'Пред.'
+WillPaginate::ViewHelpers.pagination_options[:next_label] = 'След.'

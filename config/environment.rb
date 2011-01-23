@@ -1,5 +1,3 @@
-# coding: utf-8
- 
 # Be sure to restart your server when you modify this file
 
 # Uncomment below to force Rails into production mode when
@@ -98,25 +96,9 @@ ActionMailer::Base.smtp_settings ={
   :authentication => :plain
 }
 
-require "will_paginate"
+#require "will_paginate"
 #require "textile_toolbar"
-require "sass"
+#require "sass"
 #require "RedCloth"
 
 CAPTCHA_SALT = "d9caf6a3ad0847d0e05d758e7817dfb5d77f1c141b16530656ada793a26f71dd1"
-
-APPLICATION_TITLE = "Одежда для русских тоев BEST&C"
-ADMIN_TITLE = "Администрирование магазина BEST&C"
-RUB = "руб."
-SHT = "шт."  
-DEMO = "Демо"
-REQUIRED_FIELDS = "обязательные поля"
-ITOGO = "Итого"
-VSE = "все"
-DURATION = 0.5
-HIGHLIGHT_DURATION = 2
-SEASON = "Сезон"
-
-WillPaginate::ViewHelpers.pagination_options[:previous_label] = 'Пред.'
-WillPaginate::ViewHelpers.pagination_options[:next_label] = 'След.'
-

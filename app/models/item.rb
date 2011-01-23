@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class Item < ActiveRecord1
   has_many :items_sizes, :dependent => :delete_all
   has_many :sizes, :through => :items_sizes
@@ -18,7 +18,6 @@ class Item < ActiveRecord1
   self.class_name_rus = "товар"
   self.class_name_rus_cap = "Товар"
   self.submit_with_options = [ "image_submit_tag", "document-save.png", { :title => "Сохранить изменения" } ]     
-#  self.index_tag = "content"    
   self.index_partial = "index"
   self.replace = :replace_html
   self.fade_tag = "item_content"
@@ -31,9 +30,7 @@ class Item < ActiveRecord1
 
   class_inheritable_accessor :price_rus, :new_or_edit_partial
   self.price_rus = "Цена"   
-#  self.new_title = "Добавить "
   self.new_or_edit_partial = "form"
-#  self.index_page_title = "Список #{class_name_rus}ов"
 
   attr_accessor_with_default( :new_or_edit_tag ) { "item_content" }
   attr_accessor_with_default( :create_or_update_tag ) { tag }

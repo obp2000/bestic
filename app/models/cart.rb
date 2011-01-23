@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class Cart < ActiveRecord1
   has_many :cart_items, :dependent => :delete_all
   has_many :items, :through => :cart_items
@@ -28,13 +28,13 @@ class Cart < ActiveRecord1
 
   class << self
 
-#    def find_or_create( cart_id1 ); cart_id1 ? find( cart_id1 ) : create.tap { |cart1| cart_id1 = cart1.id } end
+    def find_or_create( session ); find( session[ :cart_id ] ) rescue create.tap { |cart| session[ :cart_id ] = cart.id } end
 
-    def destroy_object( params, session, flash ); session.cart.tap { |cart| cart.destroy_notice( flash ) }.clear_cart end
+    def destroy_object( params, session, flash ); session.cart.clear_cart( flash ) end      
 
   end
 
-  def clear_cart; cart_items.dup.tap { cart_items.clear } end
+  def clear_cart( flash = nil ); cart_items.dup.tap { cart_items.clear; destroy_notice( flash ) if flash } end
 
   def populate_order( order ); cart_items.each { |cart_item| order.populate_order_item( cart_item ) } end
 

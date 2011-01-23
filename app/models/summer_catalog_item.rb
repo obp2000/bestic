@@ -1,3 +1,4 @@
+# encoding: cp1251
 class SummerCatalogItem < CatalogItem
 
   self.season_icon = "gadu.png"

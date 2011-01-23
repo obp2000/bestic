@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: cp1251
 class Colour < ItemAttribute
   has_many :items_colours, :dependent => :delete_all
   has_many :items, :through => :items_colours
@@ -14,8 +14,7 @@ class Colour < ItemAttribute
   class_inheritable_accessor :add_html_code_to_colour_image, :add_html_code_to_colour_js_string
     
   self.add_html_code_to_colour_image = [ "arrow-180.png", { :title => "Добавить в #{class_name_rus}" } ]
-  self.add_html_code_to_colour_js_string =
-          "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"  
+  self.add_html_code_to_colour_js_string = "$(this).prev('input').val( $(this).prev('input').val() + ' ' + $(this).next('input').val() )"  
   
   def validate
     super

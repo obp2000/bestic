@@ -1,4 +1,4 @@
-# encoding: utf-8
+# encoding: cp1251
 require 'digest/sha1'
 class User < ActiveRecord1
   # Virtual attribute for the unencrypted password

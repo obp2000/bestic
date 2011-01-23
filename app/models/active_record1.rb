@@ -1,4 +1,4 @@
-# encoding: utf-8
+# encoding: cp1251
  class ActiveRecord1 < ActiveRecord::Base
    
   self.abstract_class = true   
@@ -63,12 +63,10 @@
     def paginate_objects( params ); paginate paginate_hash( params ) end 
 
     def update_object( params, session, flash )
-      [ find params[ :id ], nil ].tap { |result| result.update_object( params, session, flash ) }
-    end    
+      [ find( params[ :id ] ), nil ].tap { |result| result.update_object( params, session, flash ) } end    
 
     def destroy_object( params, session, flash )
-      find( params[ :id ] ).destroy.tap { |object| object.destroy_notice( flash ) }
-    end     
+      find( params[ :id ] ).destroy.tap { |object| object.destroy_notice( flash ) } end     
     
     def new1; new end
     
@@ -96,28 +94,19 @@
 
     def create_or_update_partial; new_or_edit_partial end
     
-    def render_index( page, objects )
-      page.insert_index_partial index_tag, index_partial, objects      
-      page.attach_js( "attach_js" )  
-    end      
+    def render_index( page, objects ); page.insert_index_partial index_tag, index_partial, objects; page.attach_js( "attach_js" ) end      
 
-    def render_show( page )
-      page.render_show appear_tag, fade_tag      
-      page.attach_js( "attach_yoxview" )      
-    end     
+    def render_show( page ); page.render_show appear_tag, fade_tag; page.attach_js( "attach_yoxview" ) end     
 
     def link_to_new( page )
-      page.link_to_remote1 new_image, new_text, new_path, :method => :get, :html => { :id => "link_to_new" }
-    end
+      page.link_to_remote1 new_image, new_text, new_path, :method => :get, :html => { :id => "link_to_new" } end
 
     def link_to_index( page, params )
       page.link_to_remote1 index_image, ( params[ :index_text ] rescue class_name_rus_cap.pluralize ),
-              plural_path( params ), :method => :get    
-    end
+              plural_path( params ), :method => :get end
 
     def link_to_season( page )
-      page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get 
-    end
+      page.link_to_remote1 [ season_icon ], season_name + " (#{count})", plural_path, :method => :get end
   
     def link_to_logout( page ); page.link_to1 [], logout_text, logout_path end
   
@@ -133,18 +122,15 @@
 
   def link_to_category( page, seasons )
     page.link_to_remote1 [], name + " (#{send( seasons ).size})", [ "category_#{seasons}_path", self ],
-            :html => { :class => "category" }, :method => :get    
-  end
+            :html => { :class => "category" }, :method => :get end
 
   def link_to_show( page )
     ( page.link_to_remote1 self.class.show_image, page.html_escape( show_text ), single_path,
-            :method => :get ) rescue self.class.deleted_notice
-  end
+            :method => :get ) rescue self.class.deleted_notice end
 
   def link_to_delete( page ) 
     page.link_to_remote1 [ self.class.delete_image, { :title => delete_title } ], self.class.delete_text, single_path,
-            :method => :delete, :confirm => delete_title     
-  end
+            :method => :delete, :confirm => delete_title end
     
   def update_object( params, session ); update_attributes( params[ self.class.name.underscore ] ) end
   
@@ -158,13 +144,11 @@
 
   def render_new_or_edit( page )
     page.action self.class.replace, new_or_edit_tag, :partial => self.class.new_or_edit_partial, :object => self
-    page.attach_js( "attach_yoxview" )
-  end 
+    page.attach_js( "attach_yoxview" ) end 
 
   def render_create_or_update( page, session )
     page.render_create_or_update [ :remove, create_or_update_tag ],
-            [ :bottom, self.class.name.tableize, { :partial => self.class.create_or_update_partial, :object => self } ]
-  end  
+            [ :bottom, self.class.name.tableize, { :partial => self.class.create_or_update_partial, :object => self } ] end  
   
   def render_destroy( page, session ); page.render_destroy edit_tag, tag end  
 
