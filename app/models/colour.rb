@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Colour < ItemAttribute
   has_many :items_colours, :dependent => :delete_all
   has_many :items, :through => :items_colours

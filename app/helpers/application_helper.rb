@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
@@ -92,6 +92,12 @@ module ApplicationHelper
     action *remove_args   
     delay( DURATION ) { insert_html *insert_args }
   end
+  
+  def colour_style( colour, index )
+    "background-color: #{colour}; border: 1px solid black; margin-left: -#{index.zero? ? 0 : 6}px; margin-right: 0;"
+  end
+
+  def colour_render( colour ); "&nbsp;&nbsp;" * ( colour.html_code.split.second ? 1 : 2 ) end
 
 end
 

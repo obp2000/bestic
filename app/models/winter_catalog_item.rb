@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class WinterCatalogItem < CatalogItem
 
   self.season_icon = "weather-snow.png"

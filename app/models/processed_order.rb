@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class ProcessedOrder < Order
 
   self.class_name_rus_cap = "Заказ для исполнения"

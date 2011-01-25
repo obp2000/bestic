@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Cart < ActiveRecord1
   has_many :cart_items, :dependent => :delete_all
   has_many :items, :through => :cart_items

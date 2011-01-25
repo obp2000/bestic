@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class CatalogItem < Item
 
   class_inheritable_accessor :season_icon, :season_name

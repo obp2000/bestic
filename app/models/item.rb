@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Item < ActiveRecord1
   has_many :items_sizes, :dependent => :delete_all
   has_many :sizes, :through => :items_sizes

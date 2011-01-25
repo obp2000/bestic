@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class ClosedOrder < Order
 
   self.class_name_rus_cap = "Закрытые заказ"

@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Order < ActiveRecord1
   attr_protected :id, :status, :updated_at, :created_at
   attr_accessor :captcha_validated, :cart

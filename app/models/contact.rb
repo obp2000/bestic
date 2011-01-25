@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Contact < ActiveRecord1
 #  validates_length_of :name, :in => 2..255
 #  validates_format_of :email, :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i 

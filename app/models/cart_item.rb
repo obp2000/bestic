@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class CartItem < ActiveRecord1
   belongs_to :cart
   belongs_to :item

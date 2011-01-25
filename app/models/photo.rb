@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Photo < ItemAttribute
   belongs_to :item
   has_attachment :content_type => :image, :storage => :file_system, :resize_to => '768x512>',

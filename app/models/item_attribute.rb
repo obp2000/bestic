@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class ItemAttribute < ActiveRecord1
   
   self.abstract_class = true
@@ -16,7 +16,7 @@ class ItemAttribute < ActiveRecord1
 
   attr_accessor_with_default( :options_for_replace_item_attributes ) { [ tag, { :partial => "items/" + 
           self.class.attr_partial, :object => self } ] }
-  attr_accessor_with_default( :add_to_item_block1 ) { lambda { |page| add_to_item1( page ) } }
+  attr_accessor_with_default( :add_to_item_block ) { lambda { |page| add_to_item1( page ) } }
 
   def validate
     errors.add_to_base "#{self.class.class_name_rus_cap} не может быть пустым" if name.blank?  
@@ -47,7 +47,7 @@ class ItemAttribute < ActiveRecord1
   end
 
   def link_to_add_to_item( page )
-    page.link_to_function1 self.class.add_to_item_image, nil, add_to_item_block1.bind( self )
+    page.link_to_function1 self.class.add_to_item_image, nil, add_to_item_block.bind( self )
   end 
   
   def add_to_item1( page )

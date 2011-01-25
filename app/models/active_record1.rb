@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
  class ActiveRecord1 < ActiveRecord::Base
    
   self.abstract_class = true   
@@ -125,7 +125,7 @@
             :html => { :class => "category" }, :method => :get end
 
   def link_to_show( page )
-    ( page.link_to_remote1 self.class.show_image, page.html_escape( show_text ), single_path,
+    ( page.link_to_remote1 self.class.show_image, page.sanitize( show_text ), single_path,
             :method => :get ) rescue self.class.deleted_notice end
 
   def link_to_delete( page ) 

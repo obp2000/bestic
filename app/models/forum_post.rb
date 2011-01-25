@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class ForumPost < ActiveRecord1
   acts_as_threaded
 
@@ -62,7 +62,7 @@ class ForumPost < ActiveRecord1
   def render_new_or_edit( page ); super; page.fade :post end  
 
   def render_reply( page )
-    self.class.superclass.instance_method( :new_or_edit ).bind( self )[ page ]    
+    self.class.superclass.instance_method( :render_new_or_edit ).bind( self )[ page ]    
     page.fade :link_to_reply    
   end 
   

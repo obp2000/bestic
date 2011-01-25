@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class Category < ItemAttribute
   has_many :items, :include => [:sizes, :colours, :photos]
   has_many :catalog_items, :include => [:sizes, :colours, :photos]

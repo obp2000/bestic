@@ -1,4 +1,4 @@
-# encoding: cp1251
+# encoding: utf-8
 class OrderNotice < ActionMailer::Base
   
   def order_notice(order)
