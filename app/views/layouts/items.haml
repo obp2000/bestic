@@ -13,19 +13,13 @@
       
     #tabs.ui-tabs
       %ul.ui-tabs-nav.ui-widget-header.ui-helper-clearfix
-        %li.ui-state-default
-          = link_to_index Order
-        %li.ui-state-default
-          = link_to_index Item            
-        %li.ui-state-default
-          = link_to_index Contact            
-        %li.ui-state-default
-          = link_to_index_local CatalogItem            
-        %li.ui-state-default
-          = link_to_logout User
+        %li.ui-state-default= link_to_index Order
+        %li.ui-state-default= link_to_index Item            
+        %li.ui-state-default= link_to_index Contact            
+        %li.ui-state-default= link_to_index_local CatalogItem            
+        %li.ui-state-default= link_to_logout User
     
-    #content{ :style => "margin-left: 10px;" }
-      = yield
+    #content{ :style => "margin-left: 10px;" }= yield
 
     %iframe#upload_frame{ :name => "upload_frame" }
           

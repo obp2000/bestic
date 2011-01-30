@@ -15,5 +15,5 @@
       %b= attr.capitalize.constantize.class_name_rus_cap.pluralize.colon
       = render :partial => "catalog_items/attr_with_any", :locals => { :object => @object, :attr => attr }    
     = @object.blurb
-    .photos= render :partial => "photo", :collection => @object.photos
+    .photos= render :partial => "catalog_items/photo", :collection => @object.photos
     .clear

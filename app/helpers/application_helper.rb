@@ -59,10 +59,10 @@ module ApplicationHelper
 
   def link_to1( image, text, url, opts = {} ); link_to( image_with_text( image, text ), ( send( *url ) rescue url ), opts ) end
 
-  def image_with_text( image, text ); ( image_tag( *image ) rescue "" ) + text end
+  def image_with_text( image, text ); ( image_tag( *image ) rescue "" ) + ( text || "" ) end
 
-  def render_show( appear_tag, fade_tag )
-    action :replace_html, appear_tag, :partial => "show"
+  def render_show( appear_tag, fade_tag, show_partial )
+    action :replace_html, appear_tag, :partial => show_partial 
     fade_appear fade_tag, appear_tag          
   end
 
@@ -98,6 +98,8 @@ module ApplicationHelper
   end
 
   def colour_render( colour ); "&nbsp;&nbsp;" * ( colour.html_code.split.second ? 1 : 2 ) end
+
+  def set_draggable( object ); draggable_element object.tag, :revert => true end
 
 end
 

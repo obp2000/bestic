@@ -29,14 +29,17 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem( 'thinking-sphinx', :lib => 'thinking_sphinx', :version => '1.3.20'  )
+
 #  config.gem "RedCloth"
 #  config.gem "maruku"
-  config.gem "responds_to_parent"
 #  config.gem "will_paginate"
+  
+  config.gem( 'thinking-sphinx', :lib => 'thinking_sphinx', :version => '1.3.20'  )
+  config.gem "responds_to_parent"
   config.gem "haml"
   config.gem "jrails"
-  config.gem "webrat"  
+  config.gem "webrat"
+  config.gem "json", :version => "1.4.6"   
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.

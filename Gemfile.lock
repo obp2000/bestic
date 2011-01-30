@@ -1,3 +1,8 @@
+PATH
+  remote: vendor/gems/rmagick-2.12.0-x86-mswin32/bin
+  specs:
+    rmagick (2.12.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -14,11 +19,17 @@ GEM
     after_commit (1.0.8)
       activerecord (< 3.0.0)
     cgi_multipart_eof_fix (2.5.0)
-    configuration (1.1.0)
+    configuration (1.2.0)
     gem_plugin (0.2.3)
-    haml (3.0.24)
+    ghazel-SystemTimer (1.2.1.1-x86-mingw32)
+    haml (3.0.25)
+    heroku (1.17.10)
+      json (~> 1.4.6)
+      launchy (~> 0.3.2)
+      rest-client (>= 1.4.0, < 1.7.0)
     jrails (0.6.0)
-    json_pure (1.4.6)
+    json (1.4.6-x86-mingw32)
+    json_pure (1.5.1)
     launchy (0.3.7)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
@@ -27,9 +38,10 @@ GEM
       cgi_multipart_eof_fix (>= 2.4)
       gem_plugin (>= 0.2.3)
     mysql (2.8.1-x86-mingw32)
+    mysql2 (0.2.6-x86-mingw32)
     nokogiri (1.4.4.1-x86-mingw32)
     rack (1.1.0)
-    rack-test (0.5.6)
+    rack-test (0.5.7)
       rack (>= 1.0)
     rails (2.3.10)
       actionmailer (= 2.3.10)
@@ -38,19 +50,34 @@ GEM
       activeresource (= 2.3.10)
       activesupport (= 2.3.10)
       rake (>= 0.8.3)
+    rails-upgrade (0.0.2)
+      activesupport (>= 2.0.2)
+      term-ansicolor (> 0.0.0)
     rake (0.8.7)
     responds_to_parent (1.0.20091013)
     rest-client (1.6.1)
       mime-types (>= 1.16)
-    restful_authentication (1.1.6)
-      rails (~> 2.3.4)
-    riddle (1.2.1)
+    riddle (1.2.2)
+    sequel (3.17.0)
+    sinatra (1.0)
+      rack (>= 1.0)
     sphinx (0.9.10.2122)
-    thinking-sphinx (1.4.0)
+    sqlite3 (1.3.3-x86-mingw32)
+    sqlite3-ruby (1.3.3)
+      sqlite3 (>= 1.3.3)
+    taps (0.3.15)
+      json (~> 1.4.6)
+      rack (>= 1.0.1)
+      rest-client (>= 1.4.0, < 1.7.0)
+      sequel (~> 3.17.0)
+      sinatra (~> 1.0.0)
+      sqlite3-ruby (~> 1.2)
+    term-ansicolor (1.0.5)
+    thinking-sphinx (1.3.20)
       activerecord (>= 1.15.6, < 3.0.0)
-      after_commit (>= 1.0.7)
-      riddle (>= 1.2.0)
-    webrat (0.7.2)
+      after_commit (>= 1.0.6)
+      riddle (>= 1.0.10)
+    webrat (0.7.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
       rack-test (>= 0.5.3)
@@ -59,18 +86,23 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  RedCloth
   cgi_multipart_eof_fix
+  ghazel-SystemTimer
   haml
+  heroku
   jrails
+  json (= 1.4.6)
   json_pure
   launchy
   mongrel
   mysql
+  mysql2
   rails (= 2.3.10)
+  rails-upgrade
   responds_to_parent
   rest-client
-  restful_authentication
+  rmagick (= 2.12.0)!
   sphinx
-  thinking-sphinx
+  taps
+  thinking-sphinx (= 1.3.20)
   webrat

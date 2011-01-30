@@ -14,7 +14,8 @@
     :index_partial, :index_image, :index_text,  :replace, :fade_tag, :appear_tag, :delete_text, :nav_image, :nav_text, 
     :new_image, :new_text, :show_image, :name_rus, :submit_with_options, :change_text,
     :index_render_block, :show_render_block, :new_render_block, :edit_render_block, :create_render_block,
-    :update_render_block, :destroy_render_block, :paginate_options
+    :update_render_block, :destroy_render_block, :paginate_options,
+    :show_partial
 
   self.class_name_rus = ""
   self.class_name_rus_cap = ""  
@@ -45,6 +46,7 @@
   self.update_render_block = lambda { render Create_or_update_template_hash }
   self.destroy_render_block = lambda { render Destroy_template_hash }
   self.paginate_options = {}
+  self.show_partial = "show"
 
   attr_accessor_with_default( :show_text ) { name }
   attr_accessor_with_default( :delete_title ) { "Удалить #{self.class.class_name_rus} #{name rescue id}?" }
@@ -94,9 +96,13 @@
 
     def create_or_update_partial; new_or_edit_partial end
     
-    def render_index( page, objects ); page.insert_index_partial index_tag, index_partial, objects; page.attach_js( "attach_js" ) end      
+    def render_index( page, objects )
+      page.insert_index_partial index_tag, index_partial, objects
+      page.attach_js( "attach_js" ) 
+    end      
 
-    def render_show( page ); page.render_show appear_tag, fade_tag; page.attach_js( "attach_yoxview" ) end     
+    def render_show( page )
+      page.render_show appear_tag, fade_tag, show_partial; page.attach_js( "attach_yoxview" ) end     
 
     def link_to_new( page )
       page.link_to_remote1 new_image, new_text, new_path, :method => :get, :html => { :id => "link_to_new" } end

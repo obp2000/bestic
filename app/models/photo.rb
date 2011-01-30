@@ -31,5 +31,7 @@ class Photo < ItemAttribute
   end
 
   def link_to_show_with_comment( page ); link_to_show( page, comment ) end
+    
+#  def render_index( page, objects ); super; page.attach_js( "attach_yoxview" ) end     
 
 end

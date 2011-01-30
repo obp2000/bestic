@@ -10,7 +10,8 @@ describe "catalog_items/_show" do
   
   it "shows only one existing catalog item's details" do
     template.should_receive( :link_to_back )            
-    template.should_receive(:render).with( :partial => "photo", :collection => assigns[:object].photos )
+    template.should_receive(:render).with( :partial => "catalog_items/photo",
+              :collection => assigns[:object].photos )
     template.should_receive( :render ).with( :partial => "catalog_items/attr_with_any",
               :locals => { :object => assigns[:object], :attr => "size" } )
     template.should_receive( :render ).with( :partial => "catalog_items/attr_with_any",

@@ -8,9 +8,6 @@
        
   %body
     #wrapper
-      #header
-        = render :partial => "catalog_items/header"
-      #nav
-        = render :partial => "catalog_items/nav" unless controller_name == "sessions" or controller_name == "users"
-      #content
-        = yield
+      #header= render :partial => "catalog_items/header"
+      #nav= render :partial => "catalog_items/nav" unless controller_name == "sessions" or controller_name == "users"
+      #content= yield

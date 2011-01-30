@@ -5,6 +5,7 @@ class CatalogItem < Item
   self.season_icon = "amor.png"
   self.season_name = "Все сезоны"
   self.index_partial = "catalog_items/index"
+  self.show_partial = "catalog_items/show" 
   self.index_text = "Назад в магазин"    
   self.fade_tag = "catalog_items"
   self.appear_tag = "details"    

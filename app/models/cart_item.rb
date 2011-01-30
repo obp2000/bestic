@@ -51,7 +51,7 @@ end
 class Hash
   
   def conditions_hash( session )
-    { :item_id => self[ :id ].gsub(/catalog_item_/, ""), :size_id => self[ :size_id ], :colour_id => self[ :colour_id ],
-              :cart_id => session.cart.id } end  
+    { :item_id => self[ :id ].gsub(/\D/u, ""), :size_id => self[ :size_id ], :colour_id => self[ :colour_id ], :cart_id => session.cart.id }
+  end  
   
 end

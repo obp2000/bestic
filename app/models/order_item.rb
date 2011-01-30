@@ -11,7 +11,9 @@ class OrderItem < ActiveRecord1
   self.class_name_rus_cap = "Товар"    
 
   def order_item_sum; price * amount end
-    
-  def notice; "#{name} #{size.name} #{colour.name} (#{ price.to_i } #{RUB}) - #{amount} #{SHT}" end    
+
+  def notice
+    "#{name} #{size.name rescue ""} #{colour.name rescue ""} (#{ price.to_i } #{RUB}) - #{amount} #{SHT}"
+  end     
   
 end
